@@ -1,16 +1,29 @@
 {
   "menu": [
     {
-      "url": "/",
-      "name": "Home",
-      "icon": "menu-icon icon-base ti tabler-smart-home",
-      "slug": "pages-home"
+      "menuHeader": "Kelulusan"
     },
     {
-      "url": "/page-2",
-      "icon": "menu-icon icon-base ti tabler-file",
-      "name": "Page 2",
-      "slug": "pages-page-2"
+      "url": "/admin/siswa",
+      "icon": "menu-icon icon-base ti tabler-users",
+      "name": "Data Siswa",
+      "slug": "admin.siswa"
+    },
+    {
+      "url": "/admin/pengaturan-kelulusan",
+      "icon": "menu-icon icon-base ti tabler-settings",
+      "name": "Pengaturan Kelulusan",
+      "slug": "admin.pengaturan-kelulusan"
+    },
+    {
+      "url": "/",
+      "icon": "menu-icon icon-base ti tabler-certificate",
+      "name": "Halaman Cek Kelulusan",
+      "slug": "kelulusan.index",
+      "target": "_blank"
+    },
+    {
+      "menuHeader": "Lainnya"
     },
     {
       "url": "/pages/misc-error",
@@ -24,13 +37,6 @@
       "name": "Login",
       "icon": "menu-icon icon-base ti tabler-login",
       "slug": "auth-login-basic",
-      "target": "_blank"
-    },
-    {
-      "url": "/auth/register-basic",
-      "name": "Register",
-      "icon": "menu-icon icon-base ti tabler-user",
-      "slug": "auth-register-basic",
       "target": "_blank"
     }
   ]

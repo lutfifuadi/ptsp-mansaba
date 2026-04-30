@@ -5,7 +5,17 @@
   @if ($bordered-style == true){
     /* Bordered Skin Variables */
     &[data-skin="bordered"]{
-      --#{$prefix}body-bg: var(--#{$prefix}paper-bg);
+      --#{$prefix}body-bg: #F4E5EE;
+      background: linear-gradient(135deg, #F4E5EE 0%, #EEE7F8 100%) !important;
+      background-attachment: fixed;
+
+      body,
+      .layout-wrapper,
+      .layout-container,
+      .layout-page,
+      .content-wrapper {
+        background-color: transparent !important;
+      }
       --#{$prefix}navbar-bg: var(--#{$prefix}paper-bg);
       --#{$prefix}navbar-box-shadow: none;
       --#{$prefix}navbar-border-color: var(--#{$prefix}border-color);

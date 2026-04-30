@@ -73,7 +73,7 @@ return [
     |
     */
 
-    'home' => '/',
+    'home' => '/dashboard',
 
     /*
     |--------------------------------------------------------------------------
@@ -162,7 +162,7 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        // Features::registration(), // Dinonaktifkan: portal admin-only, registrasi tidak dibuka ke publik
         Features::resetPasswords(),
         // Features::emailVerification(),
         Features::updateProfileInformation(),
