@@ -81,10 +81,16 @@
         }
 
         /* ---- DATA TABLE ---- */
+        .table-wrapper {
+            border: 1px solid #dde5ef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 12px;
             font-size: 9.5pt;
         }
 
@@ -125,14 +131,15 @@
         }
 
         .data-section-head {
-            background: rgba(26, 74, 128, 0.88);
+            background: #1e8449;
             color: #fff;
             font-weight: bold;
             font-size: 8.5pt;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding: 5px 8px;
-            margin: 10px 0 5px;
+            padding: 5px 10px;
+            margin: 15px 0 5px;
+            border-radius: 4px;
         }
 
         /* ---- TEKS KETERANGAN ---- */
@@ -255,23 +262,25 @@
     </div>
 
     {{-- ── DATA LEMBAGA ── --}}
-    <table class="data-table">
-        <tr>
-            <td class="label">NPSN Madrasah</td>
-            <td class="sep">:</td>
-            <td class="value">{{ $pengaturan['npsn'] ?: '—' }}</td>
-        </tr>
-        <tr>
-            <td class="label">Kabupaten/Kota</td>
-            <td class="sep">:</td>
-            <td class="value">{{ $kotaLembaga }}</td>
-        </tr>
-        <tr>
-            <td class="label">Provinsi</td>
-            <td class="sep">:</td>
-            <td class="value">{{ $pengaturan['provinsi'] ?: 'Jawa Barat' }}</td>
-        </tr>
-    </table>
+    <div class="table-wrapper">
+        <table class="data-table">
+            <tr>
+                <td class="label">NPSN Madrasah</td>
+                <td class="sep">:</td>
+                <td class="value">{{ $pengaturan['npsn'] ?: '—' }}</td>
+            </tr>
+            <tr>
+                <td class="label">Kabupaten/Kota</td>
+                <td class="sep">:</td>
+                <td class="value">{{ $kotaLembaga }}</td>
+            </tr>
+            <tr>
+                <td class="label">Provinsi</td>
+                <td class="sep">:</td>
+                <td class="value">{{ $pengaturan['provinsi'] ?: 'Jawa Barat' }}</td>
+            </tr>
+        </table>
+    </div>
 
     <div class="keterangan-box" style="margin: 5px 0;">
         Menerangkan bahwa :
@@ -279,33 +288,35 @@
 
     {{-- ── DATA SISWA ── --}}
     <div class="data-section-head">Data Peserta Didik</div>
-    <table class="data-table">
-        <tr class="odd">
-            <td class="label">Nama Lengkap</td>
-            <td class="sep">:</td>
-            <td class="value"><strong>{{ strtoupper($siswa->nama_lengkap) }}</strong></td>
-        </tr>
-        <tr class="even">
-            <td class="label">NISN</td>
-            <td class="sep">:</td>
-            <td class="value">{{ $siswa->nisn ?: '—' }}</td>
-        </tr>
-        <tr class="odd">
-            <td class="label">NIS (Nomor Induk Sekolah)</td>
-            <td class="sep">:</td>
-            <td class="value">{{ $siswa->nis ?: '—' }}</td>
-        </tr>
-        <tr class="even">
-            <td class="label">Nomor Peserta</td>
-            <td class="sep">:</td>
-            <td class="value">{{ $siswa->no_peserta ?: '—' }}</td>
-        </tr>
-        <tr class="odd">
-            <td class="label">Madrasah Asal</td>
-            <td class="sep">:</td>
-            <td class="value">{{ $siswa->madrasah_asal ?: $nama_lembaga }}</td>
-        </tr>
-    </table>
+    <div class="table-wrapper">
+        <table class="data-table">
+            <tr class="odd">
+                <td class="label">Nama Lengkap</td>
+                <td class="sep">:</td>
+                <td class="value"><strong>{{ strtoupper($siswa->nama_lengkap) }}</strong></td>
+            </tr>
+            <tr class="even">
+                <td class="label">NISN</td>
+                <td class="sep">:</td>
+                <td class="value">{{ $siswa->nisn ?: '—' }}</td>
+            </tr>
+            <tr class="odd">
+                <td class="label">NIS (Nomor Induk Sekolah)</td>
+                <td class="sep">:</td>
+                <td class="value">{{ $siswa->nis ?: '—' }}</td>
+            </tr>
+            <tr class="even">
+                <td class="label">Nomor Peserta</td>
+                <td class="sep">:</td>
+                <td class="value">{{ $siswa->no_peserta ?: '—' }}</td>
+            </tr>
+            <tr class="odd">
+                <td class="label">Madrasah Asal</td>
+                <td class="sep">:</td>
+                <td class="value">{{ $siswa->madrasah_asal ?: $nama_lembaga }}</td>
+            </tr>
+        </table>
+    </div>
 
     <div class="keterangan-box">
         Dinyatakan <strong>{{ $isLulus ? 'LULUS' : 'TIDAK LULUS' }}</strong> dari satuan pendidikan berdasarkan kriteria kelulusan <strong>{{ $nama_lembaga }}</strong> Tahun Ajaran <strong>{{ $tahun_pelajaran }}</strong>.
@@ -316,35 +327,55 @@
     </div>
 
 
-    {{-- ── TTD ── --}}
-    <div class="ttd-wrap">
-        <div class="ttd-inner" style="position: relative;">
-            <div style="font-size:9pt;">{{ $kotaLembaga }}, {{ $tanggalCetak }}</div>
-            <div style="font-size:8.5pt; margin-top:2px;">{{ $jabatanTTD }},</div>
+    {{-- ── TTD & QR CODE ── --}}
+    <div style="margin-top: 20px;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+                {{-- QR Code di sebelah kiri --}}
+                <td style="width: 45%; vertical-align: bottom; text-align: left; padding-left: 20px;">
+                    @if (isset($qrCodeSvg))
+                        <div style="border: 1px solid #1e8449; border-radius: 6px; background-color: #f0fff4; padding: 10px; display: inline-block; width: 120px; text-align: center;">
+                            <div style="font-size: 7pt; font-weight: bold; color: #1e8449; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                E-Verified
+                            </div>
+                            <img src="data:image/svg+xml;base64,{{ base64_encode($qrCodeSvg) }}" style="width: 100px; height: 100px; display: block; margin: 0 auto;" alt="QR Verification">
+                            <div style="font-size: 6pt; color: #1e8449; margin-top: 5px; font-style: italic; line-height: 1.2;">
+                                Pindai untuk verifikasi<br>keaslian dokumen.
+                            </div>
+                        </div>
+                    @endif
+                </td>
 
-            {{-- TTD Kepala Sekolah --}}
-            @if ($ttdSrc)
-                <div
-                    style="height: 80px; display: flex; align-items: center; justify-content: center; overflow: visible;">
-                    <img src="{{ $ttdSrc }}"
-                        style="max-height: 115px; max-width: 420px; display: block; margin-top: -15px;"
-                        alt="TTD">
-                </div>
-            @else
-                <span class="ttd-space"></span>
-            @endif
+                {{-- TTD di sebelah kanan --}}
+                <td style="width: 60%; vertical-align: top; text-align: right;">
+                    <div class="ttd-inner" style="position: relative; display: inline-block; width: 250px; text-align: center;">
+                        <div style="font-size:9pt;">{{ $kotaLembaga }}, {{ $tanggalCetak }}</div>
+                        <div style="font-size:8.5pt; margin-top:2px;">{{ $jabatanTTD }},</div>
 
-            <div style="font-size:9.5pt; font-weight:bold; text-decoration: underline; white-space: nowrap;">
-                {{ $namaKepala ?: '..........................................' }}</div>
-            <div style="font-size:9pt;">NIP. {{ $nipKepala ?: '..........................................' }}</div>
+                        {{-- TTD Kepala Sekolah --}}
+                        @if ($ttdSrc)
+                            <div style="height: 80px; display: flex; align-items: center; justify-content: center; overflow: visible;">
+                                <img src="{{ $ttdSrc }}" style="max-height: 115px; max-width: 420px; display: block; margin-top: -15px;" alt="TTD">
+                            </div>
+                        @else
+                            <span class="ttd-space"></span>
+                        @endif
 
-            {{-- Stempel --}}
-            @if ($stempelSrc)
-                <div style="position: absolute; left: -45px; top: 10px; z-index: 50; opacity: 1;">
-                    <img src="{{ $stempelSrc }}" style="max-width: 140px; max-height: 140px;" alt="Stempel">
-                </div>
-            @endif
-        </div>
+                        <div style="font-size:9.5pt; font-weight:bold; text-decoration: underline; white-space: nowrap;">
+                            {{ $namaKepala ?: '..........................................' }}</div>
+                        <div style="font-size:9pt;">NIP. {{ $nipKepala ?: '..........................................' }}</div>
+
+                        {{-- Stempel --}}
+                        @if ($stempelSrc)
+                            <div style="position: absolute; left: -45px; top: 10px; z-index: 50; opacity: 1;">
+                                <img src="{{ $stempelSrc }}" style="max-width: 140px; max-height: 140px;" alt="Stempel">
+                            </div>
+                        @endif
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
 
     {{-- ── FOOTER ── --}}

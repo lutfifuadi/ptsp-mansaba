@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\Siswa;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Traits\HandlesPdfImages;
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\Image\SvgImageBackEnd;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Renderer\RendererStyle\Fill;
+use BaconQrCode\Renderer\Color\Rgb;
+use BaconQrCode\Renderer\Color\Gray;
+use BaconQrCode\Writer;
 
 class PengaturanKelulusanController extends Controller
 {
@@ -213,11 +220,20 @@ class PengaturanKelulusanController extends Controller
         $status = $siswa->status_kelulusan;
         $tanggalCetak = Carbon::now('Asia/Jakarta')->locale('id')->translatedFormat('d F Y');
 
+        // Generate Dummy QR Code for Preview
+        $renderer = new ImageRenderer(
+            new RendererStyle(100, 0, null, null, Fill::uniformColor(new Gray(100), new Rgb(30, 132, 73))),
+            new SvgImageBackEnd()
+        );
+        $writer = new Writer($renderer);
+        $qrCodeSvg = $writer->writeString(route('kelulusan.index'));
+
         $pdf = Pdf::loadView('pdf.surat-kelulusan', [
             'siswa'        => $siswa,
             'pengaturan'   => $pengaturan,
             'status'       => $status,
             'tanggalCetak' => $tanggalCetak,
+            'qrCodeSvg'    => $qrCodeSvg,
         ])
         ->setPaper('a4', 'portrait')
         ->setOptions([
