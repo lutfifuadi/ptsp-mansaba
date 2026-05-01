@@ -9,6 +9,7 @@ public/vendor/
 /storage/*.key
 /storage/pail
 /vendor
+/bootstrap/cache/*.php
 
 # .env
 .env
