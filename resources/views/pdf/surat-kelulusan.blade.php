@@ -281,21 +281,26 @@
     <div class="data-section-head">Data Peserta Didik</div>
     <table class="data-table">
         <tr class="odd">
-            <td class="label">Nama</td>
+            <td class="label">Nama Lengkap</td>
             <td class="sep">:</td>
             <td class="value"><strong>{{ strtoupper($siswa->nama_lengkap) }}</strong></td>
         </tr>
         <tr class="even">
-            <td class="label">Nomor Peserta Ujian Madrasah</td>
-            <td class="sep">:</td>
-            <td class="value">{{ $siswa->nis ?: '—' }}</td>
-        </tr>
-        <tr class="odd">
             <td class="label">NISN</td>
             <td class="sep">:</td>
             <td class="value">{{ $siswa->nisn ?: '—' }}</td>
         </tr>
+        <tr class="odd">
+            <td class="label">NIS (Nomor Induk Sekolah)</td>
+            <td class="sep">:</td>
+            <td class="value">{{ $siswa->nis ?: '—' }}</td>
+        </tr>
         <tr class="even">
+            <td class="label">Nomor Peserta</td>
+            <td class="sep">:</td>
+            <td class="value">{{ $siswa->no_peserta ?: '—' }}</td>
+        </tr>
+        <tr class="odd">
             <td class="label">Madrasah Asal</td>
             <td class="sep">:</td>
             <td class="value">{{ $siswa->madrasah_asal ?: $nama_lembaga }}</td>

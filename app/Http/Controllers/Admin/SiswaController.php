@@ -19,7 +19,8 @@ class SiswaController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('nisn', 'like', "%{$search}%")
                   ->orWhere('nama_lengkap', 'like', "%{$search}%")
-                  ->orWhere('nis', 'like', "%{$search}%");
+                  ->orWhere('nis', 'like', "%{$search}%")
+                  ->orWhere('no_peserta', 'like', "%{$search}%");
             });
         }
 
@@ -56,6 +57,7 @@ class SiswaController extends Controller
         $data = $request->validate([
             'nisn'             => ['required', 'digits:10', 'unique:siswa,nisn'],
             'nis'              => ['nullable', 'string', 'max:20'],
+            'no_peserta'       => ['nullable', 'string', 'max:50'],
             'nama_lengkap'     => ['required', 'string', 'max:255'],
             'tempat_lahir'     => ['nullable', 'string', 'max:100'],
             'tanggal_lahir'    => ['nullable', 'date'],
@@ -85,6 +87,7 @@ class SiswaController extends Controller
         $data = $request->validate([
             'nisn'             => ['required', 'digits:10', 'unique:siswa,nisn,' . $siswa->id],
             'nis'              => ['nullable', 'string', 'max:20'],
+            'no_peserta'       => ['nullable', 'string', 'max:50'],
             'nama_lengkap'     => ['required', 'string', 'max:255'],
             'tempat_lahir'     => ['nullable', 'string', 'max:100'],
             'tanggal_lahir'    => ['nullable', 'date'],

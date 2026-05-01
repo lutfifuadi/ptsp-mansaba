@@ -12,8 +12,9 @@
         href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap"
         onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
-  <!-- QR Code library -->
+  <!-- Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -60,7 +61,7 @@
 
     .cel-badge {
       display: inline-flex; align-items: center; justify-content: center;
-      width: 96px; height: 96px; border-radius: 50%;
+      width: 96px; height: 96px; border-radius: 4px;
       background: linear-gradient(135deg, #155c30 0%, #27ae60 50%, #2ecc71 100%);
       box-shadow:
         0 0 0 8px rgba(46,204,113,0.12),
@@ -120,7 +121,7 @@
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
       padding: 14px 36px;
       background: linear-gradient(135deg, #1e8449, #2ecc71);
-      border: none; border-radius: 50px;
+      border: none; border-radius: 4px;
       color: #fff; font-size: 0.95rem; font-weight: 700;
       font-family: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       cursor: pointer; letter-spacing: 0.5px;
@@ -132,7 +133,7 @@
     .cel-btn:active { transform: translateY(0); }
 
     .cel-ring {
-      position: absolute; border-radius: 50%;
+      position: absolute; border-radius: 4px;
       border: 1.5px solid rgba(46,204,113,0.18);
       animation: ringExpand 2s ease-out infinite;
       pointer-events: none;
@@ -150,7 +151,7 @@
       pointer-events: none;
     }
     .cel-star {
-      position: absolute; border-radius: 50%;
+      position: absolute; border-radius: 4px;
       background: #2ecc71;
       animation: starTwinkle 2s ease-in-out infinite;
     }
@@ -211,7 +212,7 @@
       width: 100%; max-width: 720px;
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 4px;
       overflow: hidden;
       animation: rise 0.6s cubic-bezier(0.22,1,0.36,1) both;
     }
@@ -260,12 +261,12 @@
       display: flex; align-items: center; gap: 24px;
       padding: 24px 28px;
       border: 1px solid var(--border-g);
-      border-radius: 6px;
+      border-radius: 4px;
       margin-bottom: 24px;
       background: rgba(0,0,0,0.2);
     }
     .s-icon {
-      width: 64px; height: 64px; flex-shrink: 0; border-radius: 50%;
+      width: 64px; height: 64px; flex-shrink: 0; border-radius: 4px;
       display: flex; align-items: center; justify-content: center;
     }
     .s-icon svg { width: 32px; height: 32px; color: #fff; }
@@ -362,7 +363,7 @@
       margin-top: 20px;
       padding: 20px 24px;
       border: 1px solid var(--border-g);
-      border-radius: 6px;
+      border-radius: 4px;
       background: rgba(46,204,113,0.03);
       display: flex;
       align-items: center;
@@ -371,7 +372,7 @@
     .qr-box {
       flex-shrink: 0;
       background: #fff;
-      border-radius: 6px;
+      border-radius: 4px;
       padding: 8px;
       width: 112px; height: 112px;
       display: flex; align-items: center; justify-content: center;
@@ -508,8 +509,9 @@
         @endif
 
         <div class="grid">
-          <div class="gi">{{ $siswa->nisn }}</div>
-          <div class="gi">{{ $siswa->nama_lengkap }}</div>
+          <div class="gi"><span style="color:var(--muted); font-size: 0.72rem; text-transform:uppercase; letter-spacing: 0.05em; display:block; margin-bottom: 4px;">NISN</span>{{ $siswa->nisn }}</div>
+          <div class="gi"><span style="color:var(--muted); font-size: 0.72rem; text-transform:uppercase; letter-spacing: 0.05em; display:block; margin-bottom: 4px;">No. Peserta</span>{{ $siswa->no_peserta ?? '-' }}</div>
+          <div class="gi full"><span style="color:var(--muted); font-size: 0.72rem; text-transform:uppercase; letter-spacing: 0.05em; display:block; margin-bottom: 4px;">Nama Lengkap</span>{{ $siswa->nama_lengkap }}</div>
         </div>
 
         @if($siswa->status_kelulusan === 'lulus' && $siswa->validation_token)
@@ -591,76 +593,50 @@
     starsContainer.appendChild(s);
   }
 
-  /* ── Confetti ── */
-  const canvas = document.getElementById('confettiCanvas');
-  const ctx    = canvas.getContext('2d');
-  let W, H, pieces = [], animId;
-  const COLORS = ['#2ecc71','#27ae60','#f0c040','#ffffff','#1abc9c','#f39c12','#a8e6cf'];
+  /* ── Confetti (Premium) ── */
+  function fireConfetti() {
+    const duration = 5 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 10000 };
 
-  function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  function spawn() {
-    return {
-      x: Math.random() * W,
-      y: -12,
-      w: Math.random() * 10 + 5,
-      h: Math.random() * 6  + 4,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      vx: (Math.random() - 0.5) * 3,
-      vy: Math.random() * 3 + 2,
-      rot: Math.random() * 360,
-      vr: (Math.random() - 0.5) * 8,
-      alpha: 1,
-    };
-  }
-
-  /* initial burst */
-  for (let i = 0; i < 160; i++) {
-    const p = spawn();
-    p.y = Math.random() * H * 0.6;
-    pieces.push(p);
-  }
-
-  let spawnTimer = 0;
-  function loop() {
-    ctx.clearRect(0, 0, W, H);
-    spawnTimer++;
-    if (spawnTimer < 120) { /* spawn for ~2s */
-      for (let i = 0; i < 4; i++) pieces.push(spawn());
+    function randomInRange(min, max) {
+      return Math.random() * (max - min) + min;
     }
-    pieces.forEach(p => {
-      p.x  += p.vx;
-      p.y  += p.vy;
-      p.rot += p.vr;
-      p.vy += 0.04;
-      if (p.y > H * 0.75) p.alpha -= 0.015;
-      ctx.save();
-      ctx.globalAlpha = Math.max(0, p.alpha);
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot * Math.PI / 180);
-      ctx.fillStyle = p.color;
-      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
-      ctx.restore();
-    });
-    pieces = pieces.filter(p => p.alpha > 0 && p.y < H + 20);
-    animId = requestAnimationFrame(loop);
-  }
-  loop();
 
-  /* ── Auto dismiss after 5s ── */
-  const autoTimer = setTimeout(() => dismissCelebration(), 5000);
+    const interval = setInterval(function() {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      // since particles fall down, start a bit higher than random
+      confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+      confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+    }, 250);
+
+    /* Initial Burst */
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 },
+      zIndex: 10000
+    });
+  }
+
+  fireConfetti();
+
+  /* ── Auto dismiss after 7s ── */
+  const autoTimer = setTimeout(() => dismissCelebration(), 7000);
 
   window.dismissCelebration = function () {
     clearTimeout(autoTimer);
-    cancelAnimationFrame(animId);
     const overlay = document.getElementById('celebrationOverlay');
-    overlay.classList.add('hide');
-    overlay.addEventListener('animationend', () => overlay.remove(), { once: true });
+    if (overlay) {
+      overlay.classList.add('hide');
+      overlay.addEventListener('animationend', () => overlay.remove(), { once: true });
+    }
   };
 })();
 </script>

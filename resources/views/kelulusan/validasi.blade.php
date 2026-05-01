@@ -212,12 +212,10 @@
             <div class="dg-label">NISN</div>
             <div class="dg-value">{{ $siswa->nisn }}</div>
           </div>
-          @if($siswa->nis)
           <div class="data-group">
-            <div class="dg-label">NIS</div>
-            <div class="dg-value">{{ $siswa->nis }}</div>
+            <div class="dg-label">Nomor Peserta</div>
+            <div class="dg-value text-primary fw-bold">{{ $siswa->no_peserta ?? '-' }}</div>
           </div>
-          @endif
         </div>
 
         <div class="grid-2">

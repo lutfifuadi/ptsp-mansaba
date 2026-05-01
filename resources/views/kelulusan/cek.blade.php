@@ -517,6 +517,7 @@
   <div class="bg-pattern"></div>
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
+  <canvas id="festiveCanvas" style="position:fixed;inset:0;z-index:2;pointer-events:none;"></canvas>
 
   @php
     $schoolLogo = \App\Models\Pengaturan::get('logo_kanan');
@@ -676,6 +677,62 @@
       setInterval(updateCountdown, 1000);
     })();
     @endif
+
+    /* ── Festive Background Particles ── */
+    (function() {
+      const canvas = document.getElementById('festiveCanvas');
+      const ctx = canvas.getContext('2d');
+      let W, H, particles = [];
+
+      function resize() {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      class Particle {
+        constructor() {
+          this.reset();
+        }
+        reset() {
+          this.x = Math.random() * W;
+          this.y = Math.random() * H;
+          this.size = Math.random() * 2 + 1;
+          this.speedX = (Math.random() - 0.5) * 0.5;
+          this.speedY = Math.random() * 0.5 + 0.2;
+          this.color = Math.random() > 0.5 ? '#c9a84c' : '#2ecc71'; // Gold or Green
+          this.opacity = Math.random() * 0.5 + 0.2;
+        }
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          if (this.y > H) {
+            this.y = -10;
+            this.x = Math.random() * W;
+          }
+        }
+        draw() {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.globalAlpha = this.opacity;
+          ctx.fill();
+        }
+      }
+
+      for (let i = 0; i < 60; i++) particles.push(new Particle());
+
+      function animate() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach(p => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
 
     @if($sudahDibuka)
     (function () {
