@@ -57,8 +57,13 @@ class SiswaController extends Controller
             'nisn'             => ['required', 'digits:10', 'unique:siswa,nisn'],
             'nis'              => ['nullable', 'string', 'max:20'],
             'nama_lengkap'     => ['required', 'string', 'max:255'],
+            'tempat_lahir'     => ['nullable', 'string', 'max:100'],
+            'tanggal_lahir'    => ['nullable', 'date'],
+            'nama_orang_tua'   => ['nullable', 'string', 'max:255'],
+            'no_peserta_ujian' => ['nullable', 'string', 'max:50'],
             'kelas'            => ['required', 'string', 'max:50'],
             'jurusan'          => ['required', 'string', 'max:100'],
+            'madrasah_asal'    => ['nullable', 'string', 'max:255'],
             'status_kelulusan' => ['required', 'in:lulus,tidak_lulus,pending'],
         ], [
             'nisn.unique' => 'NISN sudah terdaftar.',
@@ -81,8 +86,13 @@ class SiswaController extends Controller
             'nisn'             => ['required', 'digits:10', 'unique:siswa,nisn,' . $siswa->id],
             'nis'              => ['nullable', 'string', 'max:20'],
             'nama_lengkap'     => ['required', 'string', 'max:255'],
+            'tempat_lahir'     => ['nullable', 'string', 'max:100'],
+            'tanggal_lahir'    => ['nullable', 'date'],
+            'nama_orang_tua'   => ['nullable', 'string', 'max:255'],
+            'no_peserta_ujian' => ['nullable', 'string', 'max:50'],
             'kelas'            => ['required', 'string', 'max:50'],
             'jurusan'          => ['required', 'string', 'max:100'],
+            'madrasah_asal'    => ['nullable', 'string', 'max:255'],
             'status_kelulusan' => ['required', 'in:lulus,tidak_lulus,pending'],
         ]);
 

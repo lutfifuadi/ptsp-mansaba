@@ -30,8 +30,13 @@ class SiswaImport implements ToModel, WithHeadingRow, SkipsOnError
             [
                 'nis'              => trim($row['nis'] ?? ''),
                 'nama_lengkap'     => trim($row['nama_lengkap'] ?? ''),
+                'tempat_lahir'     => trim($row['tempat_lahir'] ?? ''),
+                'tanggal_lahir'    => !empty($row['tanggal_lahir']) ? \Carbon\Carbon::parse($row['tanggal_lahir'])->format('Y-m-d') : null,
+                'nama_orang_tua'   => trim($row['nama_orang_tua'] ?? ''),
+                'no_peserta_ujian' => trim($row['no_peserta_ujian'] ?? ''),
                 'kelas'            => trim($row['kelas'] ?? ''),
                 'jurusan'          => trim($row['jurusan'] ?? ''),
+                'madrasah_asal'    => trim($row['madrasah_asal'] ?? ''),
                 'status_kelulusan' => $status,
             ]
         );

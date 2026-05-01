@@ -8,512 +8,663 @@
   <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap"
+        onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+  <!-- QR Code library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --green-deepest: #061410;
-      --green-deep:    #0a1f12;
-      --green-dark:    #0d2b18;
-      --green-mid:     #155c30;
-      --green-accent:  #1e8449;
-      --green-bright:  #27ae60;
-      --green-glow:    #2ecc71;
-      --gold:          #c9a84c;
-      --gold-light:    #f0d080;
-      --cream:         #f5f0e8;
-      --white:         #ffffff;
-      --text-muted:    rgba(255,255,255,0.55);
-      --card-bg:       rgba(13, 43, 24, 0.82);
-      --card-border:   rgba(46, 204, 113, 0.18);
-      --shadow:        0 24px 80px rgba(0,0,0,0.55);
-      --radius:        4px;
-    }
-
-    html, body {
-      height: 100%;
+    /* ── CELEBRATION OVERLAY ── */
+    #celebrationOverlay {
+      position: fixed; inset: 0; z-index: 9999;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: radial-gradient(ellipse at 50% 40%,
+        rgba(5,25,15,0.97) 0%,
+        rgba(2,12,7,0.99) 100%);
+      animation: overlayIn 0.6s cubic-bezier(0.22,1,0.36,1) both;
       overflow: hidden;
     }
-
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: var(--green-deepest);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      position: relative;
-    }
-
-    /* ── Background layers ───────────────────────────────── */
-    .bg-layer {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(ellipse at 20% 30%, #0f3d20 0%, transparent 55%),
-                  radial-gradient(ellipse at 80% 70%, #0b2e18 0%, transparent 55%),
-                  linear-gradient(160deg, #061410 0%, #0d2b18 50%, #061410 100%);
-      animation: bgPulse 8s ease-in-out infinite alternate;
-      z-index: 0;
-    }
-    @keyframes bgPulse {
-      0%   { filter: brightness(1); }
-      100% { filter: brightness(1.12); }
-    }
-    .bg-pattern {
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='rgba(46,204,113,0.10)' stroke-width='0.6'%3E%3Cpolygon points='40,4 44.6,18 59,12 50,26 65,32 50,36 59,50 44.6,44 40,58 35.4,44 21,50 30,36 15,32 30,26 21,12 35.4,18'/%3E%3Crect x='28' y='28' width='24' height='24' transform='rotate(45 40 40)'/%3E%3Ccircle cx='40' cy='40' r='10'/%3E%3C/g%3E%3C/svg%3E");
-      background-size: 80px 80px;
-      z-index: 1;
+    #celebrationOverlay.hide {
+      animation: overlayOut 0.8s cubic-bezier(0.55,0,1,0.45) forwards;
       pointer-events: none;
     }
-    .orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(60px);
-      z-index: 1;
+    @keyframes overlayIn {
+      from { opacity:0; }
+      to   { opacity:1; }
+    }
+    @keyframes overlayOut {
+      0%   { opacity:1; transform: scale(1); }
+      100% { opacity:0; transform: scale(1.04); }
+    }
+
+    #confettiCanvas {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
       pointer-events: none;
     }
-    .orb-1 {
-      width: 340px; height: 340px;
-      background: radial-gradient(circle, rgba(30,132,73,0.18) 0%, transparent 70%);
-      top: -80px; left: -80px;
-      animation: orbFloat1 12s ease-in-out infinite;
+
+    .cel-inner {
+      position: relative; z-index: 2;
+      text-align: center;
+      padding: 0 24px;
+      animation: celIn 0.9s 0.3s cubic-bezier(0.22,1,0.36,1) both;
     }
-    .orb-2 {
-      width: 280px; height: 280px;
-      background: radial-gradient(circle, rgba(201,168,76,0.10) 0%, transparent 70%);
-      bottom: -60px; right: -60px;
-      animation: orbFloat2 14s ease-in-out infinite;
-    }
-    @keyframes orbFloat1 {
-      0%, 100% { transform: translate(0,0); }
-      50%       { transform: translate(40px, 30px); }
-    }
-    @keyframes orbFloat2 {
-      0%, 100% { transform: translate(0,0); }
-      50%       { transform: translate(-30px, -40px); }
+    @keyframes celIn {
+      from { opacity:0; transform: translateY(32px) scale(0.92); }
+      to   { opacity:1; transform: translateY(0) scale(1); }
     }
 
-    /* ── Page wrapper ────────────────────────────────────── */
-    .page-wrapper {
-      position: relative;
-      z-index: 10;
-      width: 100%;
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+    .cel-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 96px; height: 96px; border-radius: 50%;
+      background: linear-gradient(135deg, #155c30 0%, #27ae60 50%, #2ecc71 100%);
+      box-shadow:
+        0 0 0 8px rgba(46,204,113,0.12),
+        0 0 0 16px rgba(46,204,113,0.06),
+        0 20px 60px rgba(46,204,113,0.4);
+      margin: 0 auto 28px;
+      animation: badgePop 0.7s 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
     }
+    @keyframes badgePop {
+      from { opacity:0; transform: scale(0.4) rotate(-20deg); }
+      to   { opacity:1; transform: scale(1) rotate(0deg); }
+    }
+    .cel-badge svg { width: 48px; height: 48px; color: #fff; }
 
-    /* ── Card ────────────────────────────────────────────── */
-    .card-islamic {
-      width: 100%;
-      max-width: 640px;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      padding: 32px 36px;
-      box-shadow: var(--shadow), inset 0 1px 0 rgba(46,204,113,0.12);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      animation: cardEnter 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-    @keyframes cardEnter {
-      from { opacity: 0; transform: translateY(28px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    /* ── Compact school header ───────────────────────────── */
-    .school-mini {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      margin-bottom: 18px;
-      animation: fadeSlideDown 0.5s 0.1s ease both;
-    }
-    .school-mini-icon {
-      width: 36px; height: 36px;
-      background: linear-gradient(135deg, var(--green-mid), var(--green-accent));
-      border-radius: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-    .school-mini-icon svg { width: 18px; height: 18px; fill: white; }
-    .school-mini-info { text-align: left; }
-    .school-mini-info h6 {
-      font-family: 'Amiri', serif;
-      font-size: 1.15rem;
+    .cel-title {
+      font-family: 'Lora', Georgia, Cambria, "Times New Roman", Times, serif;
+      font-size: clamp(2rem, 7vw, 3.4rem);
       font-weight: 700;
-      line-height: 1.2;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      background: linear-gradient(135deg, #ffffff 30%, var(--green-glow) 100%);
+      line-height: 1.1;
+      margin-bottom: 14px;
+      background: linear-gradient(135deg, #fff 20%, #2ecc71 60%, #fff 100%);
+      background-size: 200% auto;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      text-shadow: none;
+      animation: shimmer 3s linear infinite, titleIn 0.8s 0.6s ease both;
     }
-    .school-mini-info span {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.78rem;
+    @keyframes shimmer {
+      0%   { background-position: 200% center; }
+      100% { background-position: -200% center; }
+    }
+    @keyframes titleIn {
+      from { opacity:0; transform: translateY(16px); }
+      to   { opacity:1; transform: translateY(0); }
+    }
+
+    .cel-name {
+      font-family: 'Lora', Georgia, Cambria, "Times New Roman", Times, serif;
+      font-size: clamp(1.1rem, 4vw, 1.6rem);
       font-weight: 600;
-      color: var(--white);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      display: inline-block;
-      margin-top: 4px;
-    }
-
-    /* ── Divider ─────────────────────────────────────────── */
-    .section-divider {
-      height: 1px;
-      background: linear-gradient(to right, transparent, rgba(46,204,113,0.25), transparent);
-      margin: 14px 0;
-    }
-
-    /* ── Status block ────────────────────────────────────── */
-    .status-block {
-      text-align: center;
-      padding: 20px 0 16px;
-      animation: statusEnter 0.6s 0.2s cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-    @keyframes statusEnter {
-      from { opacity: 0; transform: scale(0.85); }
-      to   { opacity: 1; transform: scale(1); }
-    }
-
-    /* Lulus */
-    .status-lulus .status-badge {
-      width: 72px; height: 72px;
-      background: linear-gradient(135deg, #1a5c2e, #27ae60);
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 12px;
-      box-shadow: 0 0 0 8px rgba(39,174,96,0.12), 0 8px 28px rgba(39,174,96,0.35);
-      animation: luluyPulse 2.5s ease-in-out infinite;
-    }
-    @keyframes luluyPulse {
-      0%, 100% { box-shadow: 0 0 0 8px rgba(39,174,96,0.12), 0 8px 28px rgba(39,174,96,0.35); }
-      50%       { box-shadow: 0 0 0 14px rgba(39,174,96,0.08), 0 12px 36px rgba(39,174,96,0.45); }
-    }
-    .status-lulus .status-badge svg { width: 34px; height: 34px; color: white; }
-    .status-lulus h3 {
-      font-family: 'Amiri', serif;
-      font-size: 1.55rem;
-      font-weight: 700;
-      color: var(--green-glow);
-      margin-bottom: 6px;
-      text-shadow: 0 0 20px rgba(46,204,113,0.3);
-    }
-    .status-lulus p { font-size: 0.85rem; color: var(--text-muted); }
-    .status-lulus p strong { color: var(--green-glow); }
-
-    /* Tidak Lulus */
-    .status-tidak .status-badge {
-      width: 72px; height: 72px;
-      background: linear-gradient(135deg, #6b1818, #c0392b);
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 12px;
-      box-shadow: 0 8px 28px rgba(192,57,43,0.35);
-    }
-    .status-tidak .status-badge svg { width: 34px; height: 34px; color: white; }
-    .status-tidak h3 {
-      font-family: 'Amiri', serif;
-      font-size: 1.55rem;
-      font-weight: 700;
-      color: #e74c3c;
-      margin-bottom: 6px;
-    }
-    .status-tidak p { font-size: 0.85rem; color: var(--text-muted); }
-    .status-tidak p strong { color: #e74c3c; }
-
-    /* Menunggu */
-    .status-pending .status-badge {
-      width: 72px; height: 72px;
-      background: linear-gradient(135deg, #6b5b18, #d4ac0d);
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 12px;
-      box-shadow: 0 8px 28px rgba(212,172,13,0.3);
-    }
-    .status-pending .status-badge svg { width: 34px; height: 34px; color: white; }
-    .status-pending h3 {
-      font-family: 'Amiri', serif;
-      font-size: 1.55rem;
-      font-weight: 700;
       color: #f0c040;
-      margin-bottom: 6px;
-    }
-    .status-pending p { font-size: 0.85rem; color: var(--text-muted); }
-
-    /* ── Data table ──────────────────────────────────────── */
-    .data-section {
-      animation: fadeSlideUp 0.5s 0.35s ease both;
-    }
-    @keyframes fadeSlideUp {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .data-title {
-      font-size: 0.68rem;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      color: var(--green-glow);
-      font-weight: 600;
       margin-bottom: 10px;
-    }
-    .data-table { width: 100%; border-collapse: collapse; }
-    .data-table tr td {
-      padding: 7px 0;
-      border-bottom: 1px solid rgba(46,204,113,0.07);
-      vertical-align: top;
-    }
-    .data-table tr:last-child td { border-bottom: none; }
-    .data-table .td-label {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      width: 120px;
-      padding-right: 10px;
-    }
-    .data-table .td-value {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: rgba(255,255,255,0.88);
+      animation: titleIn 0.8s 0.75s ease both;
+      text-shadow: 0 0 30px rgba(240,192,64,0.5);
     }
 
-    /* ── Action buttons ──────────────────────────────────── */
-    .action-section {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 18px;
-      animation: fadeSlideUp 0.5s 0.45s ease both;
+    .cel-sub {
+      font-size: clamp(0.85rem, 3vw, 1rem);
+      color: rgba(255,255,255,0.65);
+      max-width: 400px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+      animation: titleIn 0.8s 0.9s ease both;
     }
-    .btn-download {
-      width: 100%;
-      padding: 14px 20px;
-      background: linear-gradient(135deg, var(--green-accent), var(--green-bright));
-      border: none;
-      border-radius: 12px;
-      color: white;
-      font-size: 0.92rem;
-      font-weight: 600;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-decoration: none;
+
+    .cel-btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 36px;
+      background: linear-gradient(135deg, #1e8449, #2ecc71);
+      border: none; border-radius: 50px;
+      color: #fff; font-size: 0.95rem; font-weight: 700;
+      font-family: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      cursor: pointer; letter-spacing: 0.5px;
+      box-shadow: 0 8px 28px rgba(46,204,113,0.45);
       transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
-      box-shadow: 0 6px 20px rgba(39,174,96,0.35);
-      position: relative;
-      overflow: hidden;
+      animation: titleIn 0.8s 1.1s ease both;
     }
-    .btn-download::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
-      border-radius: inherit;
+    .cel-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(46,204,113,0.55); filter: brightness(1.1); }
+    .cel-btn:active { transform: translateY(0); }
+
+    .cel-ring {
+      position: absolute; border-radius: 50%;
+      border: 1.5px solid rgba(46,204,113,0.18);
+      animation: ringExpand 2s ease-out infinite;
       pointer-events: none;
     }
-    .btn-download:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 32px rgba(39,174,96,0.5);
-      filter: brightness(1.08);
-      color: white;
-      text-decoration: none;
+    .cel-ring:nth-child(1) { width: 180px; height: 180px; animation-delay: 0s; }
+    .cel-ring:nth-child(2) { width: 280px; height: 280px; animation-delay: 0.5s; }
+    .cel-ring:nth-child(3) { width: 380px; height: 380px; animation-delay: 1s; }
+    @keyframes ringExpand {
+      0%   { opacity: 0.6; transform: scale(0.85); }
+      100% { opacity: 0; transform: scale(1.15); }
     }
-    .btn-download svg { width: 17px; height: 17px; }
 
-    .btn-back {
-      width: 100%;
-      padding: 12px 20px;
-      background: transparent;
-      border: 1.5px solid rgba(46,204,113,0.25);
-      border-radius: 12px;
-      color: rgba(255,255,255,0.65);
-      font-size: 0.88rem;
-      font-weight: 500;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      cursor: pointer;
+    .cel-stars {
+      position: absolute; inset: 0;
+      pointer-events: none;
+    }
+    .cel-star {
+      position: absolute; border-radius: 50%;
+      background: #2ecc71;
+      animation: starTwinkle 2s ease-in-out infinite;
+    }
+    @keyframes starTwinkle {
+      0%, 100% { opacity: 0.1; transform: scale(0.8); }
+      50%       { opacity: 0.7; transform: scale(1.3); }
+    }
+
+    :root {
+      --bg:         #07130e;
+      --bg-card:    #0c1f16;
+      --bg-item:    #0f2619;
+      --bg-hover:   #122d1e;
+      --border:     rgba(255,255,255,0.06);
+      --border-g:   rgba(46,204,113,0.18);
+      --green:      #2ecc71;
+      --green-dk:   #1e8449;
+      --muted:      rgba(255,255,255,0.38);
+      --subtle:     rgba(255,255,255,0.65);
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      overflow: hidden;
+      font-family: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: #fff;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 55% 45% at 12% 18%, rgba(21,92,48,0.22) 0%, transparent 100%),
+        radial-gradient(ellipse 45% 40% at 88% 82%, rgba(10,50,28,0.18) 0%, transparent 100%);
+      pointer-events: none;
+    }
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M30 2L34 14L46 10L38 22L50 28L38 32L46 44L34 40L30 52L26 40L14 44L22 32L10 28L22 22L14 10L26 14Z' fill='none' stroke='rgba(46,204,113,0.05)' stroke-width='0.7'/%3E%3C/svg%3E");
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    .shell {
+      position: relative; z-index: 1;
+      width: 100%; height: 100%;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      text-decoration: none;
-      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      padding: 20px 20px;
     }
-    .btn-back:hover {
-      border-color: rgba(46,204,113,0.5);
+
+    .card {
+      width: 100%; max-width: 720px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      animation: rise 0.6s cubic-bezier(0.22,1,0.36,1) both;
+    }
+    @keyframes rise {
+      from { opacity:0; transform:translateY(20px) scale(0.98); }
+      to   { opacity:1; transform:translateY(0) scale(1); }
+    }
+
+    /* ── Header ── */
+    .c-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 28px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand { display: flex; align-items: center; gap: 11px; }
+    .brand-icon {
+      width: 36px; height: 36px; flex-shrink: 0;
+      background: linear-gradient(135deg, var(--green-dk), var(--green));
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .brand-icon svg { width: 18px; height: 18px; fill: #fff; }
+    .brand-name {
+      font-size: 0.95rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,0.88); line-height: 1;
+    }
+    .brand-sub {
+      font-size: 0.75rem; font-weight: 400;
+      color: var(--muted); margin-top: 4px;
+    }
+    .badge-resmi {
+      font-size: 0.7rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--green);
+      background: rgba(46,204,113,0.07);
+      border: 1px solid var(--border-g);
+      padding: 5px 12px; border-radius: 4px;
+    }
+
+    /* ── Body ── */
+    .c-body { padding: 28px 32px; }
+
+    /* Status */
+    .status-row {
+      display: flex; align-items: center; gap: 24px;
+      padding: 24px 28px;
+      border: 1px solid var(--border-g);
+      border-radius: 6px;
+      margin-bottom: 24px;
+      background: rgba(0,0,0,0.2);
+    }
+    .s-icon {
+      width: 64px; height: 64px; flex-shrink: 0; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .s-icon svg { width: 32px; height: 32px; color: #fff; }
+    .s-icon.lulus   { background: linear-gradient(135deg,#155c30,#27ae60); animation: glow 3s ease-in-out infinite; }
+    .s-icon.tidak   { background: linear-gradient(135deg,#7b1a1a,#c0392b); }
+    .s-icon.pending { background: linear-gradient(135deg,#6b5b18,#d4ac0d); }
+    @keyframes glow {
+      0%,100%{ box-shadow:0 0 0 7px rgba(39,174,96,0.10); }
+      50%    { box-shadow:0 0 0 12px rgba(39,174,96,0.05); }
+    }
+    .s-title {
+      font-family: 'Lora', Georgia, Cambria, "Times New Roman", Times, serif;
+      font-size: 1.85rem; font-weight: 700; line-height: 1.2;
+    }
+    .s-title.lulus   { color: var(--green); }
+    .s-title.tidak   { color: #e74c3c; }
+    .s-title.pending { color: #f0c040; }
+    .s-desc { font-size: 1rem; color: var(--subtle); margin-top: 6px; }
+    .s-desc strong { font-weight: 600; }
+    .s-desc strong.lulus { color: var(--green); }
+    .s-desc strong.tidak { color: #e74c3c; }
+
+    /* Grid — value only, no labels */
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .gi {
+      background: var(--bg-item);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 14px 18px;
+      font-size: 1rem; font-weight: 600;
       color: rgba(255,255,255,0.9);
-      background: rgba(46,204,113,0.06);
+      transition: background 0.18s, border-color 0.18s;
+    }
+    .gi:hover { background: var(--bg-hover); border-color: var(--border-g); }
+    .gi.full  { grid-column: 1 / -1; }
+
+    /* ── Footer ── */
+    .c-foot {
+      display: flex; align-items: center; gap: 10px;
+      padding: 20px 32px 24px;
+      border-top: 1px solid var(--border);
+    }
+    .btn-dl {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 20px;
+      background: var(--green); color: #061a0e;
+      font-family: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 0.95rem; font-weight: 700;
+      border: none; border-radius: 4px;
+      cursor: pointer; text-decoration: none;
+      transition: filter 0.2s, transform 0.15s;
+    }
+    .btn-dl:hover { filter: brightness(1.08); transform: translateY(-1px); color: #061a0e; text-decoration: none; }
+    .btn-dl svg { width: 18px; height: 18px; flex-shrink: 0; }
+
+    .btn-bk {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 14px 20px;
+      background: transparent; color: var(--subtle);
+      font-family: 'DM Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 0.9rem; font-weight: 500;
+      border: 1px solid var(--border); border-radius: 4px;
+      cursor: pointer; text-decoration: none; white-space: nowrap;
+      transition: border-color 0.18s, color 0.18s, background 0.18s;
+    }
+    .btn-bk:hover { border-color: var(--border-g); color: #fff; background: rgba(46,204,113,0.05); text-decoration: none; }
+    .btn-bk svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+    .copy {
+      margin-top: 12px;
+      font-size: 0.65rem; color: rgba(255,255,255,0.14);
+      letter-spacing: 0.04em; text-align: center;
+    }
+
+    /* On very small screens allow scroll */
+    @media (max-height: 580px), (max-width: 480px) {
+      html, body { overflow-y: auto; height: auto; }
+      .shell { height: auto; min-height: 100vh; padding: 20px 14px 28px; }
+      .c-head, .c-body, .c-foot { padding-left: 18px; padding-right: 18px; }
+      .grid { grid-template-columns: 1fr; }
+      .gi.full { grid-column: 1; }
+      .c-foot { flex-direction: column; }
+      .btn-dl, .btn-bk { width: 100%; }
+      .badge-resmi { display: none; }
+      .status-row { flex-direction: column; text-align: center; }
+    }
+    /* ── QR Code Section ── */
+    .qr-section {
+      margin-top: 20px;
+      padding: 20px 24px;
+      border: 1px solid var(--border-g);
+      border-radius: 6px;
+      background: rgba(46,204,113,0.03);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .qr-box {
+      flex-shrink: 0;
+      background: #fff;
+      border-radius: 6px;
+      padding: 8px;
+      width: 112px; height: 112px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .qr-box canvas, .qr-box img {
+      display: block;
+    }
+    .qr-info { flex: 1; min-width: 0; }
+    .qr-label {
+      font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--green); margin-bottom: 6px;
+    }
+    .qr-title {
+      font-size: 1rem; font-weight: 600;
+      color: rgba(255,255,255,0.9); margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .qr-desc {
+      font-size: 0.82rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .qr-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      margin-top: 10px;
+      font-size: 0.78rem; font-weight: 600;
+      color: var(--green);
       text-decoration: none;
+      transition: opacity 0.18s;
     }
-    .btn-back svg { width: 16px; height: 16px; }
-
-    /* ── Footer ──────────────────────────────────────────── */
-    .page-footer {
-      margin-top: 14px;
-      text-align: center;
-      color: rgba(255,255,255,0.2);
-      font-size: 0.7rem;
-    }
-
-    /* ── Animations ──────────────────────────────────────── */
-    @keyframes fadeSlideDown {
-      from { opacity: 0; transform: translateY(-10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── Responsive ──────────────────────────────────────── */
-    @media (min-width: 992px) {
-      .card-islamic { padding: 40px 50px; }
-    }
+    .qr-link:hover { opacity: 0.75; text-decoration: none; }
+    .qr-link svg { width: 12px; height: 12px; flex-shrink: 0; }
     @media (max-width: 480px) {
-      html, body { overflow: auto; }
-      .card-islamic { padding: 22px 18px; max-width: 98%; border-radius: 16px; }
-      .status-lulus h3, .status-tidak h3, .status-pending h3 { font-size: 1.3rem; }
-      .data-table .td-label { width: 100px; }
+      .qr-section { flex-direction: column; text-align: center; }
+      .qr-info { width: 100%; }
     }
   </style>
 </head>
 <body>
-  <div class="bg-layer"></div>
-  <div class="bg-pattern"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
 
-  <div class="page-wrapper">
-    <div class="card-islamic">
+@if($siswa->status_kelulusan === 'lulus')
+<!-- ── CELEBRATION OVERLAY ── -->
+<div id="celebrationOverlay">
+  <canvas id="confettiCanvas"></canvas>
 
-      {{-- Compact school header --}}
-      <div class="school-mini">
-        <div class="school-mini-icon">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
-          </svg>
+  <!-- Rings -->
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
+    <div class="cel-ring"></div>
+    <div class="cel-ring"></div>
+    <div class="cel-ring"></div>
+  </div>
+
+  <!-- Stars background -->
+  <div class="cel-stars" id="celStars"></div>
+
+  <div class="cel-inner">
+    <div class="cel-badge">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+      </svg>
+    </div>
+    <div class="cel-title">🎉 Selamat!</div>
+    <div class="cel-name">{{ $siswa->nama_lengkap }}</div>
+    <div class="cel-sub">
+      Anda dinyatakan <strong style="color:#2ecc71">LULUS</strong> dari MAN 1 Kota Bandung.<br>
+      Semoga ilmu yang didapat menjadi bekal kesuksesan di masa depan.
+    </div>
+    <button class="cel-btn" onclick="dismissCelebration()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+      Lihat Detail Kelulusan
+    </button>
+  </div>
+</div>
+@endif
+  <div class="shell">
+    <div class="card">
+
+      <div class="c-head">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/></svg>
+          </div>
+          <div>
+            <div class="brand-name">MAN 1 Kota Bandung</div>
+            <div class="brand-sub">Pengumuman Kelulusan &mdash; {{ \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026') }}</div>
+          </div>
         </div>
-        <div class="school-mini-info">
-          <h6>PENGUMUMAN KELULUSAN</h6>
-          <span>MAN 1 Kota Bandung &mdash; {{ \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026') }}</span>
-        </div>
+        <div class="badge-resmi">Resmi</div>
       </div>
 
-      <div class="section-divider"></div>
+      <div class="c-body">
 
-      {{-- Status Block --}}
-      @if($siswa->status_kelulusan === 'lulus')
-        <div class="status-block status-lulus">
-          <div class="status-badge">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
-              <polyline points="22 4 12 14.01 9 11.01"/>
-            </svg>
-          </div>
-          <h3>SELAMAT, ANDA LULUS!</h3>
-          <p>Anda dinyatakan <strong>LULUS</strong> dari MAN 1 Kota Bandung.</p>
-        </div>
-
-      @elseif($siswa->status_kelulusan === 'tidak_lulus')
-        <div class="status-block status-tidak">
-          <div class="status-badge">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18"/>
-              <line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-          </div>
-          <h3>TIDAK LULUS</h3>
-          <p>Anda dinyatakan <strong>TIDAK LULUS</strong> dari MAN 1 Kota Bandung.</p>
-        </div>
-
-      @else
-        <div class="status-block status-pending">
-          <div class="status-badge">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
-            </svg>
-          </div>
-          <h3>MENUNGGU</h3>
-          <p>Status kelulusan Anda belum diumumkan.</p>
-        </div>
-      @endif
-
-      <div class="section-divider"></div>
-
-      {{-- Data Siswa --}}
-      <div class="data-section">
-        <div class="data-title">Data Siswa</div>
-        <table class="data-table">
-          <tbody>
-            <tr>
-              <td class="td-label">NISN</td>
-              <td class="td-value">{{ $siswa->nisn }}</td>
-            </tr>
-            @if($siswa->nis)
-            <tr>
-              <td class="td-label">NIS</td>
-              <td class="td-value">{{ $siswa->nis }}</td>
-            </tr>
-            @endif
-            <tr>
-              <td class="td-label">Nama Lengkap</td>
-              <td class="td-value">{{ $siswa->nama_lengkap }}</td>
-            </tr>
-            <tr>
-              <td class="td-label">Kelas</td>
-              <td class="td-value">{{ $siswa->kelas }}</td>
-            </tr>
-            <tr>
-              <td class="td-label">Jurusan</td>
-              <td class="td-value">{{ $siswa->jurusan }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      {{-- Action Buttons --}}
-      <div class="action-section">
         @if($siswa->status_kelulusan === 'lulus')
-          <a href="{{ route('kelulusan.pdf', $siswa->nisn) }}" class="btn-download" target="_blank" rel="noopener noreferrer">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-              <polyline points="7 10 12 15 17 10"/>
-              <line x1="12" y1="15" x2="12" y2="3"/>
+          <div class="status-row">
+            <div class="s-icon lulus">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <div>
+              <div class="s-title lulus">Selamat, Anda Lulus!</div>
+              <div class="s-desc">Anda dinyatakan <strong class="lulus">LULUS</strong> dari MAN 1 Kota Bandung.</div>
+            </div>
+          </div>
+
+        @elseif($siswa->status_kelulusan === 'tidak_lulus')
+          <div class="status-row" style="border-color:rgba(231,76,60,0.18)">
+            <div class="s-icon tidak">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </div>
+            <div>
+              <div class="s-title tidak">Tidak Lulus</div>
+              <div class="s-desc">Anda dinyatakan <strong class="tidak">TIDAK LULUS</strong> dari MAN 1 Kota Bandung.</div>
+            </div>
+          </div>
+
+        @else
+          <div class="status-row" style="border-color:rgba(212,172,13,0.18)">
+            <div class="s-icon pending">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div>
+              <div class="s-title pending">Menunggu</div>
+              <div class="s-desc">Status kelulusan Anda belum diumumkan.</div>
+            </div>
+          </div>
+        @endif
+
+        <div class="grid">
+          <div class="gi">{{ $siswa->nisn }}</div>
+          <div class="gi">{{ $siswa->nama_lengkap }}</div>
+        </div>
+
+        @if($siswa->status_kelulusan === 'lulus' && $siswa->validation_token)
+        <div class="qr-section">
+          <div class="qr-box">
+            <div id="qrcode"></div>
+          </div>
+          <div class="qr-info">
+            <div class="qr-label">🔒 Verifikasi Digital</div>
+            <div class="qr-title">QR Code Bukti Kelulusan</div>
+            <div class="qr-desc">
+              Scan QR Code ini untuk memverifikasi kelulusan secara online.
+              Dapat digunakan oleh instansi atau sekolah lain untuk konfirmasi.
+            </div>
+            <a href="{{ route('kelulusan.validasi', $siswa->validation_token) }}" class="qr-link" target="_blank" rel="noopener noreferrer">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                <polyline points="15 3 21 3 21 9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              Buka Link Validasi
+            </a>
+          </div>
+        </div>
+        <script>
+        (function() {
+          var validasiUrl = "{{ route('kelulusan.validasi', $siswa->validation_token) }}";
+          new QRCode(document.getElementById('qrcode'), {
+            text: validasiUrl,
+            width: 96,
+            height: 96,
+            colorDark: '#000000',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.M
+          });
+        })();
+        </script>
+        @endif
+
+      </div>
+
+      <div class="c-foot">
+        @if($siswa->status_kelulusan === 'lulus')
+          <a href="{{ route('kelulusan.pdf', $siswa->nisn) }}" class="btn-dl" target="_blank" rel="noopener noreferrer">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
             Download Surat Kelulusan (PDF)
           </a>
         @endif
-        <a href="{{ route('kelulusan.index') }}" class="btn-back">
+        <a href="{{ route('kelulusan.index') }}" class="btn-bk">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="19" y1="12" x2="5" y2="12"/>
-            <polyline points="12 19 5 12 12 5"/>
+            <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
           </svg>
-          Kembali ke Halaman Cek
+          Kembali
         </a>
       </div>
 
     </div>
-
-    <div class="page-footer">
-      &copy; {{ date('Y') }} MAN 1 Kota Bandung &mdash; Sistem Pengumuman Kelulusan
-    </div>
+    <div class="copy">&copy; {{ date('Y') }} MAN 1 Kota Bandung &mdash; Sistem Pengumuman Kelulusan</div>
   </div>
+
+@if($siswa->status_kelulusan === 'lulus')
+<script>
+(function () {
+  /* ── Stars ── */
+  const starsContainer = document.getElementById('celStars');
+  for (let i = 0; i < 30; i++) {
+    const s = document.createElement('div');
+    s.className = 'cel-star';
+    const size = Math.random() * 4 + 2;
+    s.style.cssText = [
+      `width:${size}px`, `height:${size}px`,
+      `top:${Math.random()*100}%`, `left:${Math.random()*100}%`,
+      `animation-delay:${Math.random()*2}s`,
+      `animation-duration:${1.5+Math.random()*2}s`,
+      `background:${['#2ecc71','#f0c040','#ffffff','#27ae60'][Math.floor(Math.random()*4)]}`
+    ].join(';');
+    starsContainer.appendChild(s);
+  }
+
+  /* ── Confetti ── */
+  const canvas = document.getElementById('confettiCanvas');
+  const ctx    = canvas.getContext('2d');
+  let W, H, pieces = [], animId;
+  const COLORS = ['#2ecc71','#27ae60','#f0c040','#ffffff','#1abc9c','#f39c12','#a8e6cf'];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function spawn() {
+    return {
+      x: Math.random() * W,
+      y: -12,
+      w: Math.random() * 10 + 5,
+      h: Math.random() * 6  + 4,
+      color: COLORS[Math.floor(Math.random() * COLORS.length)],
+      vx: (Math.random() - 0.5) * 3,
+      vy: Math.random() * 3 + 2,
+      rot: Math.random() * 360,
+      vr: (Math.random() - 0.5) * 8,
+      alpha: 1,
+    };
+  }
+
+  /* initial burst */
+  for (let i = 0; i < 160; i++) {
+    const p = spawn();
+    p.y = Math.random() * H * 0.6;
+    pieces.push(p);
+  }
+
+  let spawnTimer = 0;
+  function loop() {
+    ctx.clearRect(0, 0, W, H);
+    spawnTimer++;
+    if (spawnTimer < 120) { /* spawn for ~2s */
+      for (let i = 0; i < 4; i++) pieces.push(spawn());
+    }
+    pieces.forEach(p => {
+      p.x  += p.vx;
+      p.y  += p.vy;
+      p.rot += p.vr;
+      p.vy += 0.04;
+      if (p.y > H * 0.75) p.alpha -= 0.015;
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, p.alpha);
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    });
+    pieces = pieces.filter(p => p.alpha > 0 && p.y < H + 20);
+    animId = requestAnimationFrame(loop);
+  }
+  loop();
+
+  /* ── Auto dismiss after 5s ── */
+  const autoTimer = setTimeout(() => dismissCelebration(), 5000);
+
+  window.dismissCelebration = function () {
+    clearTimeout(autoTimer);
+    cancelAnimationFrame(animId);
+    const overlay = document.getElementById('celebrationOverlay');
+    overlay.classList.add('hide');
+    overlay.addEventListener('animationend', () => overlay.remove(), { once: true });
+  };
+})();
+</script>
+@endif
+
 </body>
 </html>

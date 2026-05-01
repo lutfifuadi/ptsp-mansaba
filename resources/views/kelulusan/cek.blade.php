@@ -8,7 +8,10 @@
   <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -37,7 +40,7 @@
     }
 
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background-color: var(--green-deepest);
       display: flex;
       align-items: center;
@@ -117,7 +120,7 @@
     /* ── Card ────────────────────────────────────────────────── */
     .card-islamic {
       width: 100%;
-      max-width: 600px;
+      max-width: 850px;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: var(--radius);
@@ -134,7 +137,7 @@
 
     /* ── Bismillah ───────────────────────────────────────────── */
     .bismillah {
-      font-family: 'Amiri', serif;
+      font-family: 'Amiri', Georgia, Cambria, "Times New Roman", Times, serif;
       font-size: 1.5rem;
       color: var(--gold);
       text-align: center;
@@ -182,7 +185,7 @@
     }
     .school-icon svg { width: 32px; height: 32px; fill: var(--white); }
     .school-header h1 {
-      font-family: 'Amiri', serif;
+      font-family: 'Amiri', Georgia, Cambria, "Times New Roman", Times, serif;
       font-size: 2rem;
       font-weight: 700;
       color: var(--white);
@@ -197,7 +200,7 @@
       background-clip: text;
     }
     .school-header p {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 0.95rem;
       font-weight: 600;
       text-transform: uppercase;
@@ -266,7 +269,7 @@
       border-radius: 12px;
       padding: 14px 18px;
       font-size: 1.05rem;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--white);
       letter-spacing: 2px;
       transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
@@ -293,7 +296,7 @@
       color: var(--white);
       font-size: 0.95rem;
       font-weight: 600;
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -346,7 +349,7 @@
       50%       { transform: scale(1.06); opacity: 0.85; }
     }
     .countdown-title {
-      font-family: 'Amiri', serif;
+      font-family: 'Amiri', Georgia, Cambria, "Times New Roman", Times, serif;
       font-size: 1.15rem;
       color: rgba(255,255,255,0.85);
       text-align: center;
@@ -422,7 +425,7 @@
       background: linear-gradient(90deg, var(--green-accent), var(--green-glow));
     }
     .cd-num {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 1.9rem;
       font-weight: 700;
       color: var(--white);

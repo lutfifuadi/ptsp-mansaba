@@ -1,290 +1,354 @@
-<!DOCTYPE html>
+@php
+    use Carbon\Carbon;
+
+    $isLulus = $status === 'lulus';
+    
+    $nama_lembaga = $pengaturan['nama_lembaga'];
+    $alamat_lembaga = $pengaturan['alamat_lembaga'];
+    $tahun_pelajaran = $pengaturan['tahun_ajaran'];
+    
+    // Header Text Config
+    $header1 = $pengaturan['header_baris_1'];
+    $header2 = $pengaturan['header_baris_2'] ?: mb_strtoupper($nama_lembaga);
+    
+    // Titles & Labels Config
+    $judulDokumen = $isLulus ? $pengaturan['judul_lulus'] : $pengaturan['judul_tidak_lulus'];
+    // Hapus frasa yang diminta
+    $judulDokumen = str_ireplace(' DAN NILAI IJAZAH', '', $judulDokumen);
+    $labelStatus = $isLulus ? $pengaturan['label_lulus'] : $pengaturan['label_tidak_lulus'];
+    
+    // Replace placeholders in texts
+    $replaceMap = [
+        '${nama_lembaga}' => $nama_lembaga,
+        '${tahun_ajaran}' => $tahun_pelajaran,
+    ];
+    
+    // Signatory Config
+    $namaKepala = $pengaturan['nama_kepala_sekolah'];
+    $nipKepala = $pengaturan['nip_kepala_sekolah'];
+    $ttdSrc = $pengaturan['ttd_kepala_sekolah'];
+    $stempelSrc = $pengaturan['stempel_sekolah'];
+    $jabatanTTD = str_replace(array_keys($replaceMap), array_values($replaceMap), $pengaturan['jabatan_penandatangan']);
+    
+    // Logos Config
+    $logoLeft = $pengaturan['logo_kiri'];
+    $logoRight = $pengaturan['logo_kanan'];
+
+    $kotaLembaga = $pengaturan['kabupaten_kota'] ?: 'Kota Bandung';
+    
+    // Format Tanggal Surat dari Pengaturan
+    $tanggalCetak = Carbon::parse($pengaturan['tanggal_surat'] ?? date('Y-m-d'))->locale('id')->translatedFormat('d F Y');
+@endphp
+<!doctype html>
 <html lang="id">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Surat Kelulusan - {{ $siswa->nama_lengkap }}</title>
-  <style>
-    @page {
-      margin: 2cm 2.5cm;
-    }
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: 'Times New Roman', Times, serif;
-      font-size: 12pt;
-      color: #000;
-      line-height: 1.5;
-    }
+    <meta charset="utf-8">
+    <title>{{ $judulDokumen }} – {{ $siswa->nama_lengkap ?? 'Siswa' }}</title>
+    <style>
+        @page {
+            size: A4 portrait;
+            margin: 0;
+        }
 
-    /* KOP SURAT */
-    .kop {
-      display: table;
-      width: 100%;
-      border-bottom: 3px double #000;
-      padding-bottom: 10px;
-      margin-bottom: 16px;
-    }
-    .kop-logo {
-      display: table-cell;
-      vertical-align: middle;
-      width: 80px;
-      text-align: center;
-    }
-    .kop-logo img {
-      width: 70px;
-      height: 70px;
-    }
-    .kop-logo .logo-placeholder {
-      width: 70px;
-      height: 70px;
-      border: 2px solid #000;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 8pt;
-      text-align: center;
-      color: #555;
-      margin: auto;
-    }
-    .kop-text {
-      display: table-cell;
-      vertical-align: middle;
-      text-align: center;
-    }
-    .kop-instansi {
-      font-size: 9pt;
-      letter-spacing: 0.5px;
-    }
-    .kop-nama {
-      font-size: 18pt;
-      font-weight: bold;
-      text-transform: uppercase;
-      line-height: 1.2;
-    }
-    .kop-alamat {
-      font-size: 9pt;
-      margin-top: 2px;
-    }
+        html,
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 10pt;
+            color: #1a1a1a;
+            line-height: 1.45;
+            margin: 3mm 5mm;
+            padding: 0;
+        }
 
-    /* JUDUL SURAT */
-    .judul-surat {
-      text-align: center;
-      margin: 20px 0 6px;
-    }
-    .judul-surat h2 {
-      font-size: 14pt;
-      font-weight: bold;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      text-decoration: underline;
-    }
-    .nomor-surat {
-      text-align: center;
-      font-size: 11pt;
-      margin-bottom: 20px;
-    }
+        body {
+            padding: 20px;
+        }
 
-    /* BADAN SURAT */
-    .pembuka {
-      text-align: justify;
-      margin-bottom: 14px;
-    }
-    .data-siswa {
-      margin: 14px 0 14px 20px;
-    }
-    .data-siswa table {
-      border-collapse: collapse;
-    }
-    .data-siswa td {
-      padding: 3px 6px;
-      vertical-align: top;
-    }
-    .data-siswa td:first-child {
-      width: 160px;
-      font-weight: normal;
-    }
-    .data-siswa td:nth-child(2) {
-      width: 16px;
-      text-align: center;
-    }
-    .data-siswa td:last-child {
-      font-weight: bold;
-    }
-    .penutup {
-      text-align: justify;
-      margin-bottom: 14px;
-    }
+        /* ---- KOP ---- */
+        .kop-wrap {
+            width: 100%;
+            box-sizing: border-box;
+            border-bottom: 3px double #1a1a1a;
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
 
-    /* TANDA TANGAN */
-    .ttd-section {
-      display: table;
-      width: 100%;
-      margin-top: 30px;
-    }
-    .ttd-kiri {
-      display: table-cell;
-      width: 50%;
-      vertical-align: top;
-    }
-    .ttd-kanan {
-      display: table-cell;
-      width: 50%;
-      vertical-align: top;
-      text-align: center;
-    }
-    .ttd-kanan .kota-tanggal {
-      margin-bottom: 6px;
-      text-align: center;
-    }
-    .ttd-kanan .jabatan {
-      font-weight: bold;
-      margin-bottom: 4px;
-    }
-    .ttd-gambar {
-      position: relative;
-      height: 90px;
-      margin: 4px auto;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .ttd-gambar img.ttd {
-      height: 70px;
-      position: relative;
-      z-index: 2;
-    }
-    .ttd-gambar img.stempel {
-      height: 80px;
-      position: absolute;
-      left: 20px;
-      opacity: 0.8;
-      z-index: 1;
-    }
-    .ttd-nama {
-      font-weight: bold;
-      text-decoration: underline;
-      text-align: center;
-    }
-    .ttd-nip {
-      font-size: 10pt;
-      text-align: center;
-    }
+        /* ---- JUDUL ---- */
+        .doc-title-wrap {
+            text-align: center;
+            margin: 10px 0 6px;
+        }
 
-    /* FOOTER */
-    .footer-surat {
-      margin-top: 30px;
-      border-top: 1px solid #666;
-      padding-top: 6px;
-      font-size: 9pt;
-      color: #666;
-      text-align: center;
-    }
-  </style>
+        /* ---- DATA TABLE ---- */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 12px;
+            font-size: 9.5pt;
+        }
+
+        .data-table td {
+            padding: 4px 8px;
+            vertical-align: top;
+        }
+
+        .data-table td.label {
+            width: 38%;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .data-table td.sep {
+            width: 4%;
+            text-align: center;
+        }
+
+        .data-table td.value {
+            width: 58%;
+        }
+
+        .data-table tr.odd td {
+            background: rgba(247, 249, 252, 0.6);
+        }
+
+        .data-table tr.even td {
+            background: transparent;
+        }
+
+        .data-table tr td {
+            border-bottom: 1px solid #dde5ef;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-section-head {
+            background: rgba(26, 74, 128, 0.88);
+            color: #fff;
+            font-weight: bold;
+            font-size: 8.5pt;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 5px 8px;
+            margin: 10px 0 5px;
+        }
+
+        /* ---- TEKS KETERANGAN ---- */
+        .keterangan-box {
+            font-size: 9.5pt;
+            line-height: 1.8;
+            margin: 10px 0;
+            text-align: justify;
+        }
+
+        /* ---- TTD ---- */
+        .ttd-wrap {
+            margin-top: 20px;
+            text-align: right;
+        }
+
+        .ttd-inner {
+            display: inline-block;
+            width: 250px;
+            text-align: center;
+        }
+
+        .ttd-space {
+            height: 80px;
+            display: block;
+        }
+
+        /* ---- FOOTER ---- */
+        .doc-footer {
+            margin-top: 16px;
+            font-size: 7.5pt;
+            color: #888;
+            border-top: 1px solid #ddd;
+            padding-top: 5px;
+            text-align: center;
+        }
+
+        /* ---- NOMOR BOX ---- */
+        .nomor-box {
+            border: 2px solid #1a4a80;
+            background: #f0f5ff;
+            padding: 5px 14px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    </style>
 </head>
+
 <body>
 
-  {{-- KOP SURAT --}}
-  <div class="kop">
-    <div class="kop-logo">
-      <div class="logo-placeholder">LOGO</div>
+    {{-- ── WATERMARK (LOGO SEKOLAH) ── --}}
+    @if ($logoRight)
+        <div
+            style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 350px; z-index: -1000; opacity: 0.1; text-align: center;">
+            <img src="{{ $logoRight }}" style="width: 100%; height: auto;" alt="Watermark">
+        </div>
+    @endif
+
+    <div class="kop-wrap">
+        <table style="width:100%; border-collapse:collapse; table-layout:fixed;">
+            <tr>
+                {{-- Logo Kiri --}}
+                <td style="width:35px; text-align:left; vertical-align:middle; padding:0;">
+                    @if ($logoLeft)
+                        <img src="{{ $logoLeft }}" style="max-width:115px; max-height:115px; display:inline-block;"
+                            alt="Logo Left">
+                    @endif
+                </td>
+
+                {{-- Teks Tengah --}}
+                <td style="text-align:center; vertical-align:middle; padding:0;">
+                    <div style="font-size:11pt; text-transform:uppercase; font-weight:bold; white-space:nowrap;">
+                        {{ $header1 ?: 'KEMENTERIAN AGAMA REPUBLIK INDONESIA' }}
+                    </div>
+                    <div style="font-size:11pt; text-transform:uppercase; font-weight:bold; margin-top:1px; white-space:nowrap;">
+                        {{ $header2 ?: 'KANTOR KEMENTERIAN AGAMA KOTA BANDUNG' }}
+                    </div>
+                    <div style="font-size:14pt; font-weight:bold; text-transform:uppercase; margin-top:2px; white-space:nowrap;">
+                        {{ $nama_lembaga }}
+                    </div>
+                    <div style="font-size:8pt; margin-top:3px; white-space:nowrap;">
+                        {{ $alamat_lembaga }}
+                    </div>
+                    <div style="font-size:8pt; margin-top:1px; white-space:nowrap;">
+                        Telp. {{ $pengaturan['telepon'] ?: '—' }} @if($pengaturan['fax']) Fax. {{ $pengaturan['fax'] }} @endif @if($pengaturan['kode_pos']) KP {{ $pengaturan['kode_pos'] }} @endif | {{ $pengaturan['email'] ?: '—' }} | {{ $pengaturan['website'] ?: '—' }}
+                    </div>
+                </td>
+
+                {{-- Logo Kanan --}}
+                <td style="width:35px; text-align:right; vertical-align:middle; padding:0;">
+                    @if ($logoRight)
+                        <img src="{{ $logoRight }}" style="max-width:115px; max-height:115px; display:inline-block;"
+                            alt="Logo Right">
+                    @endif
+                </td>
+            </tr>
+        </table>
     </div>
-    <div class="kop-text">
-      <div class="kop-instansi">KEMENTERIAN AGAMA REPUBLIK INDONESIA</div>
-      <div class="kop-nama">Madrasah Aliyah Negeri 1 Kota Bandung</div>
-      <div class="kop-alamat">Jl. H. Alpi No. 40, Cijerah, Bandung Kulon, Kota Bandung 40212</div>
-      <div class="kop-alamat">Telp. (022) 6030138 | Website: man1kotabandung.sch.id</div>
+
+    {{-- ── JUDUL & SUBTITLE ── --}}
+    <div class="doc-title-wrap">
+        <div style="font-size:14pt; font-weight:bold; text-transform:uppercase; text-decoration: underline;">
+            {{ $judulDokumen }}
+        </div>
+        <div style="font-size:12pt; font-weight:bold; text-transform:uppercase; margin-top: 2px;">
+            {{ $nama_lembaga }}
+        </div>
+        <div style="margin-top: 0;">
+            <div style="font-size:11pt; font-weight:bold; text-transform:uppercase;">
+                TAHUN AJARAN {{ $tahun_pelajaran }}
+            </div>
+            <div style="font-size:11pt; font-weight:bold; margin-top: 2px;">
+                Nomor : {{ $pengaturan['nomor_surat'] ?: '0001/Ma.10.19.0064/PP.01.1/'.date('Y') }}
+            </div>
+        </div>
     </div>
-  </div>
 
-  {{-- JUDUL --}}
-  <div class="judul-surat">
-    <h2>Surat Keterangan Lulus</h2>
-  </div>
-  @if($pengaturan['nomor_surat'])
-  <div class="nomor-surat">Nomor: {{ $pengaturan['nomor_surat'] }}</div>
-  @endif
+    <div class="keterangan-box">
+        Yang bertanda tangan di bawah ini, Kepala <strong>{{ $nama_lembaga }}</strong> :
+    </div>
 
-  {{-- BADAN --}}
-  <div class="pembuka">
-    Yang bertanda tangan di bawah ini, Kepala Madrasah Aliyah Negeri 1 Kota Bandung, dengan ini menerangkan bahwa siswa:
-  </div>
-
-  <div class="data-siswa">
-    <table>
-      <tr>
-        <td>Nama Lengkap</td>
-        <td>:</td>
-        <td>{{ strtoupper($siswa->nama_lengkap) }}</td>
-      </tr>
-      <tr>
-        <td>NISN</td>
-        <td>:</td>
-        <td>{{ $siswa->nisn }}</td>
-      </tr>
-      @if($siswa->nis)
-      <tr>
-        <td>NIS</td>
-        <td>:</td>
-        <td>{{ $siswa->nis }}</td>
-      </tr>
-      @endif
-      <tr>
-        <td>Kelas</td>
-        <td>:</td>
-        <td>{{ $siswa->kelas }}</td>
-      </tr>
-      <tr>
-        <td>Jurusan / Program</td>
-        <td>:</td>
-        <td>{{ $siswa->jurusan }}</td>
-      </tr>
-      <tr>
-        <td>Tahun Ajaran</td>
-        <td>:</td>
-        <td>{{ $pengaturan['tahun_ajaran'] }}</td>
-      </tr>
+    {{-- ── DATA LEMBAGA ── --}}
+    <table class="data-table">
+        <tr>
+            <td class="label">NPSN Madrasah</td>
+            <td class="sep">:</td>
+            <td class="value">{{ $pengaturan['npsn'] ?: '—' }}</td>
+        </tr>
+        <tr>
+            <td class="label">Kabupaten/Kota</td>
+            <td class="sep">:</td>
+            <td class="value">{{ $kotaLembaga }}</td>
+        </tr>
+        <tr>
+            <td class="label">Provinsi</td>
+            <td class="sep">:</td>
+            <td class="value">{{ $pengaturan['provinsi'] ?: 'Jawa Barat' }}</td>
+        </tr>
     </table>
-  </div>
 
-  <div class="pembuka">
-    Telah dinyatakan <strong>LULUS</strong> dari Madrasah Aliyah Negeri 1 Kota Bandung pada Tahun Ajaran {{ $pengaturan['tahun_ajaran'] }}.
-  </div>
-
-  <div class="penutup">
-    Surat keterangan ini dibuat untuk digunakan sebagaimana mestinya dan berlaku sebelum Ijazah resmi diterbitkan.
-  </div>
-
-  {{-- TANDA TANGAN --}}
-  <div class="ttd-section">
-    <div class="ttd-kiri"></div>
-    <div class="ttd-kanan">
-      <div class="kota-tanggal">Bandung, {{ $tanggalSurat }}</div>
-      <div class="jabatan">Kepala Madrasah,</div>
-
-      <div class="ttd-gambar">
-        @if($pengaturan['stempel_sekolah'])
-          <img src="{{ public_path('storage/' . $pengaturan['stempel_sekolah']) }}" class="stempel" alt="Stempel">
-        @endif
-        @if($pengaturan['ttd_kepala_sekolah'])
-          <img src="{{ public_path('storage/' . $pengaturan['ttd_kepala_sekolah']) }}" class="ttd" alt="TTD">
-        @endif
-      </div>
-
-      <div class="ttd-nama">{{ $pengaturan['nama_kepala_sekolah'] }}</div>
-      @if($pengaturan['nip_kepala_sekolah'])
-        <div class="ttd-nip">{{ $pengaturan['nip_kepala_sekolah'] }}</div>
-      @endif
+    <div class="keterangan-box" style="margin: 5px 0;">
+        Menerangkan bahwa :
     </div>
-  </div>
 
-  <div class="footer-surat">
-    Dokumen ini digenerate secara digital oleh sistem MAN 1 Kota Bandung pada {{ $tanggalSurat }}
-  </div>
+    {{-- ── DATA SISWA ── --}}
+    <div class="data-section-head">Data Peserta Didik</div>
+    <table class="data-table">
+        <tr class="odd">
+            <td class="label">Nama</td>
+            <td class="sep">:</td>
+            <td class="value"><strong>{{ strtoupper($siswa->nama_lengkap) }}</strong></td>
+        </tr>
+        <tr class="even">
+            <td class="label">Nomor Peserta Ujian Madrasah</td>
+            <td class="sep">:</td>
+            <td class="value">{{ $siswa->nis ?: '—' }}</td>
+        </tr>
+        <tr class="odd">
+            <td class="label">NISN</td>
+            <td class="sep">:</td>
+            <td class="value">{{ $siswa->nisn ?: '—' }}</td>
+        </tr>
+        <tr class="even">
+            <td class="label">Madrasah Asal</td>
+            <td class="sep">:</td>
+            <td class="value">{{ $siswa->madrasah_asal ?: $nama_lembaga }}</td>
+        </tr>
+    </table>
+
+    <div class="keterangan-box">
+        Dinyatakan <strong>{{ $isLulus ? 'LULUS' : 'TIDAK LULUS' }}</strong> dari satuan pendidikan berdasarkan kriteria kelulusan <strong>{{ $nama_lembaga }}</strong> Tahun Ajaran <strong>{{ $tahun_pelajaran }}</strong>.
+    </div>
+
+    <div class="keterangan-box" style="margin-top: 0;">
+        Demikian surat keterangan ini diberikan agar dapat dipergunakan sebagaimana mestinya.
+    </div>
+
+
+    {{-- ── TTD ── --}}
+    <div class="ttd-wrap">
+        <div class="ttd-inner" style="position: relative;">
+            <div style="font-size:9pt;">{{ $kotaLembaga }}, {{ $tanggalCetak }}</div>
+            <div style="font-size:8.5pt; margin-top:2px;">{{ $jabatanTTD }},</div>
+
+            {{-- TTD Kepala Sekolah --}}
+            @if ($ttdSrc)
+                <div
+                    style="height: 80px; display: flex; align-items: center; justify-content: center; overflow: visible;">
+                    <img src="{{ $ttdSrc }}"
+                        style="max-height: 115px; max-width: 420px; display: block; margin-top: -15px;"
+                        alt="TTD">
+                </div>
+            @else
+                <span class="ttd-space"></span>
+            @endif
+
+            <div style="font-size:9.5pt; font-weight:bold; text-decoration: underline; white-space: nowrap;">
+                {{ $namaKepala ?: '..........................................' }}</div>
+            <div style="font-size:9pt;">NIP. {{ $nipKepala ?: '..........................................' }}</div>
+
+            {{-- Stempel --}}
+            @if ($stempelSrc)
+                <div style="position: absolute; left: -45px; top: 10px; z-index: 50; opacity: 1;">
+                    <img src="{{ $stempelSrc }}" style="max-width: 140px; max-height: 140px;" alt="Stempel">
+                </div>
+            @endif
+        </div>
+    </div>
+
+    {{-- ── FOOTER ── --}}
+    <div class="doc-footer">
+        Dicetak pada: {{ $tanggalCetak }} &nbsp;|&nbsp;
+        {{ $pengaturan['footer_teks'] }} &nbsp;|&nbsp;
+        Nomor: {{ $pengaturan['nomor_surat'] ?: 'SKL/'.$siswa->nisn.'/'.date('Y') }}
+    </div>
 
 </body>
+
 </html>

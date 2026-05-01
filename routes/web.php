@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\PengaturanKelulusanController;
 Route::get('/', [KelulusanController::class, 'index'])->name('kelulusan.index');
 Route::post('/cek', [KelulusanController::class, 'cek'])->name('kelulusan.cek');
 Route::get('/download/{nisn}', [KelulusanController::class, 'downloadPdf'])->name('kelulusan.pdf');
+Route::get('/validasi/{token}', [KelulusanController::class, 'validasi'])->middleware('throttle:60,1')->name('kelulusan.validasi');
 
 Route::get('/page-2', [Page2::class, 'index'])->name('pages-page-2');
 
@@ -49,5 +50,6 @@ Route::middleware([
     // Pengaturan Kelulusan
     Route::get('/pengaturan-kelulusan', [PengaturanKelulusanController::class, 'index'])->name('pengaturan-kelulusan.index');
     Route::put('/pengaturan-kelulusan', [PengaturanKelulusanController::class, 'update'])->name('pengaturan-kelulusan.update');
+    Route::get('/pengaturan-kelulusan/preview', [PengaturanKelulusanController::class, 'preview'])->name('pengaturan-kelulusan.preview');
   });
 });

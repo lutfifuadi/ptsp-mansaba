@@ -13,7 +13,10 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
   <link rel="icon" type="image/x-icon" href="{{ asset('assets/img/favicon/favicon.ico') }}" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -32,7 +35,7 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
     html, body { height: 100%; overflow: hidden; }
 
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background-color: var(--green-deepest);
       height: 100vh; overflow: hidden;
       display: flex; flex-direction: column;
@@ -93,7 +96,7 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
     }
 
     .hero-bismillah {
-      font-family: 'Amiri', serif; font-size: 1.8rem;
+      font-family: 'Amiri', Georgia, Cambria, "Times New Roman", Times, serif; font-size: 1.8rem;
       color: var(--gold); margin-bottom: 12px;
       text-shadow: 0 0 24px rgba(201,168,76,0.45);
       animation: fadeSlideDown 0.6s 0.1s ease both;
@@ -119,7 +122,7 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
     .hero-school-icon svg { width: 36px; height: 36px; fill: var(--white); }
 
     .hero-title {
-      font-family: 'Amiri', serif;
+      font-family: 'Amiri', Georgia, Cambria, "Times New Roman", Times, serif;
       font-size: clamp(2rem, 2.8vw, 2.8rem);
       font-weight: 700; line-height: 1.1;
       letter-spacing: 2px; text-transform: uppercase;
@@ -188,7 +191,7 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
     }
 
     .form-heading {
-      font-family: 'Amiri', serif; font-size: 1.7rem; font-weight: 700;
+      font-family: 'Amiri', Georgia, Cambria, "Times New Roman", Times, serif; font-size: 1.7rem; font-weight: 700;
       color: var(--white); margin-bottom: 4px;
     }
     .form-sub {
@@ -221,7 +224,7 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
       width: 100%;
       background: rgba(6,20,16,0.75); border: 1.5px solid rgba(46,204,113,0.18);
       border-radius: 12px; padding: 13px 16px;
-      font-size: 0.95rem; font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem; font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--white);
       transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
       outline: none; -webkit-appearance: none;
@@ -270,7 +273,7 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
       background: linear-gradient(135deg, var(--green-accent) 0%, var(--green-bright) 100%);
       border: none; border-radius: 12px;
       color: var(--white); font-size: 0.93rem; font-weight: 600;
-      font-family: 'Plus Jakarta Sans', sans-serif; cursor: pointer;
+      font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 8px;
       transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
       box-shadow: 0 6px 20px rgba(39,174,96,0.35);
