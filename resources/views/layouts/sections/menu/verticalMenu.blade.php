@@ -11,8 +11,22 @@ $configData = Helper::appClasses();
   @if (!isset($navbarFull))
   <div class="app-brand demo">
     <a href="{{ url('/') }}" class="app-brand-link">
-      <span class="app-brand-logo demo">@include('_partials.macros')</span>
-      <span class="app-brand-text demo menu-text fw-bold ms-3">{{ config('variables.templateName') }}</span>
+      <span class="app-brand-logo demo">
+        @php
+          $schoolLogo = \App\Models\Pengaturan::get('logo_kanan');
+          if ($schoolLogo && !str_starts_with($schoolLogo, 'http')) {
+            $schoolLogo = \Illuminate\Support\Facades\Storage::url($schoolLogo);
+          }
+        @endphp
+        @if($schoolLogo)
+          <img src="{{ $schoolLogo }}" alt="Logo" style="width: 30px; height: 30px; object-fit: contain;">
+        @else
+          @include('_partials.macros')
+        @endif
+      </span>
+      <span class="app-brand-text demo menu-text fw-bold ms-3" style="font-size: 1rem; line-height: 1.2; white-space: normal;">
+        {{ \App\Models\Pengaturan::get('nama_sekolah', 'MAN 1 Kota Bandung') }}
+      </span>
     </a>
 
     <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
