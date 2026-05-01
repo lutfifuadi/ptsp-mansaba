@@ -182,6 +182,13 @@
       justify-content: center;
       margin-bottom: 12px;
       box-shadow: 0 8px 24px rgba(30,132,73,0.35), 0 0 0 1px rgba(46,204,113,0.2);
+      overflow: hidden;
+    }
+    .school-icon img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
     }
     .school-icon svg { width: 32px; height: 32px; fill: var(--white); }
     .school-header h1 {
@@ -511,15 +518,26 @@
   <div class="orb orb-1"></div>
   <div class="orb orb-2"></div>
 
+  @php
+    $schoolLogo = \App\Models\Pengaturan::get('logo_kanan');
+    if ($schoolLogo && !str_starts_with($schoolLogo, 'http')) {
+      $schoolLogo = \Illuminate\Support\Facades\Storage::url($schoolLogo);
+    }
+  @endphp
+
   <div class="page-wrapper">
     <div class="card-islamic">
 
       {{-- School Header --}}
       <div class="school-header">
         <div class="school-icon">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
-          </svg>
+          @if($schoolLogo)
+            <img src="{{ $schoolLogo }}" alt="Logo Sekolah">
+          @else
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z"/>
+            </svg>
+          @endif
         </div>
         <h1>PENGUMUMAN KELULUSAN</h1>
         <p>MAN 1 Kota Bandung</p>
