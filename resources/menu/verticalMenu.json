@@ -1,6 +1,12 @@
 {
   "menu": [
     {
+      "url": "/dashboard",
+      "icon": "menu-icon icon-base ti tabler-smart-home",
+      "name": "Dashboard",
+      "slug": "dashboard"
+    },
+    {
       "menuHeader": "Kelulusan"
     },
     {
@@ -11,32 +17,15 @@
     },
     {
       "url": "/admin/pengaturan-kelulusan",
-      "icon": "menu-icon icon-base ti tabler-settings",
+      "icon": "menu-icon icon-base ti tabler-settings-automation",
       "name": "Pengaturan Kelulusan",
       "slug": "admin.pengaturan-kelulusan"
     },
     {
       "url": "/",
-      "icon": "menu-icon icon-base ti tabler-certificate",
+      "icon": "menu-icon icon-base ti tabler-external-link",
       "name": "Halaman Cek Kelulusan",
       "slug": "kelulusan.index",
-      "target": "_blank"
-    },
-    {
-      "menuHeader": "Lainnya"
-    },
-    {
-      "url": "/pages/misc-error",
-      "name": "Error",
-      "icon": "menu-icon icon-base ti tabler-alert-triangle",
-      "slug": "pages-misc-error",
-      "target": "_blank"
-    },
-    {
-      "url": "/auth/login-basic",
-      "name": "Login",
-      "icon": "menu-icon icon-base ti tabler-login",
-      "slug": "auth-login-basic",
       "target": "_blank"
     }
   ]

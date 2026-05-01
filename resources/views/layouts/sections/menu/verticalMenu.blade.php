@@ -24,8 +24,8 @@ $configData = Helper::appClasses();
           @include('_partials.macros')
         @endif
       </span>
-      <span class="app-brand-text demo menu-text fw-bold ms-3" style="font-size: 1rem; line-height: 1.2; white-space: normal;">
-        {{ \App\Models\Pengaturan::get('nama_sekolah', 'MAN 1 Kota Bandung') }}
+      <span class="app-brand-text demo menu-text fw-bold ms-3" style="font-size: 1.2rem; letter-spacing: 1px;">
+        E-SKL
       </span>
     </a>
 
