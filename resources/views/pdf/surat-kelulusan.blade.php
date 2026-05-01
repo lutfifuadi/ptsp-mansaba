@@ -2,40 +2,40 @@
     use Carbon\Carbon;
 
     $isLulus = $status === 'lulus';
-    
+
     $nama_lembaga = $pengaturan['nama_lembaga'];
     $alamat_lembaga = $pengaturan['alamat_lembaga'];
     $tahun_pelajaran = $pengaturan['tahun_ajaran'];
-    
+
     // Header Text Config
     $header1 = $pengaturan['header_baris_1'];
     $header2 = $pengaturan['header_baris_2'] ?: mb_strtoupper($nama_lembaga);
-    
+
     // Titles & Labels Config
     $judulDokumen = $isLulus ? $pengaturan['judul_lulus'] : $pengaturan['judul_tidak_lulus'];
     // Hapus frasa yang diminta
     $judulDokumen = str_ireplace(' DAN NILAI IJAZAH', '', $judulDokumen);
     $labelStatus = $isLulus ? $pengaturan['label_lulus'] : $pengaturan['label_tidak_lulus'];
-    
+
     // Replace placeholders in texts
     $replaceMap = [
         '${nama_lembaga}' => $nama_lembaga,
         '${tahun_ajaran}' => $tahun_pelajaran,
     ];
-    
+
     // Signatory Config
     $namaKepala = $pengaturan['nama_kepala_sekolah'];
     $nipKepala = $pengaturan['nip_kepala_sekolah'];
     $ttdSrc = $pengaturan['ttd_kepala_sekolah'];
     $stempelSrc = $pengaturan['stempel_sekolah'];
     $jabatanTTD = str_replace(array_keys($replaceMap), array_values($replaceMap), $pengaturan['jabatan_penandatangan']);
-    
+
     // Logos Config
     $logoLeft = $pengaturan['logo_kiri'];
     $logoRight = $pengaturan['logo_kanan'];
 
     $kotaLembaga = $pengaturan['kabupaten_kota'] ?: 'Kota Bandung';
-    
+
     // Format Tanggal Surat dari Pengaturan
     $tanggalCetak = Carbon::parse($pengaturan['tanggal_surat'] ?? date('Y-m-d'))->locale('id')->translatedFormat('d F Y');
 @endphp
@@ -252,7 +252,7 @@
                 TAHUN AJARAN {{ $tahun_pelajaran }}
             </div>
             <div style="font-size:11pt; font-weight:bold; margin-top: 2px;">
-                Nomor : {{ $pengaturan['nomor_surat'] ?: '0001/Ma.10.19.0064/PP.01.1/'.date('Y') }}
+                {{ $pengaturan['nomor_surat'] ?: '0001/Ma.10.19.0064/PP.01.1/'.date('Y') }}
             </div>
         </div>
     </div>
