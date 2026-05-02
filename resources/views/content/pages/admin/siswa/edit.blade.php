@@ -6,7 +6,7 @@ $configData = Helper::appClasses();
 
 @section('title', 'Edit Siswa - Admin')
 
-@@section('page-style')
+@section('page-style')
 <style>
   .header-gradient {
     background: linear-gradient(135deg, #f5f7ff 0%, #ffffff 100%);
@@ -48,7 +48,7 @@ $configData = Helper::appClasses();
     </a>
   </div>
 
-  <div class="card border-0 shadow-sm" style="max-width: 700px; border-radius: 4px;">
+  <div class="card border-0 shadow-sm" style="border-radius: 4px;">
     <div class="card-header bg-white border-bottom py-3">
       <h5 class="mb-0 fw-bold"><i class="icon-base ti tabler-user-edit text-primary me-2"></i>Edit Data: <span class="text-primary">{{ $siswa->nama_lengkap }}</span></h5>
     </div>

@@ -115,6 +115,8 @@ class SiswaController extends Controller
 
     public function import(Request $request)
     {
+        set_time_limit(0); // Unlimited execution time for import process
+
         $request->validate([
             'file' => ['required', 'file', 'mimes:xlsx,xls,csv', 'max:5120'],
         ], [
@@ -122,9 +124,13 @@ class SiswaController extends Controller
             'file.max'   => 'Ukuran file maksimal 5MB.',
         ]);
 
-        Excel::import(new SiswaImport(), $request->file('file'));
-
-        return redirect()->route('admin.siswa.index')->with('success', 'Import data siswa berhasil.');
+        try {
+            Excel::import(new SiswaImport(), $request->file('file'));
+            return redirect()->route('admin.siswa.index')->with('success', 'Import data siswa berhasil.');
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('[SiswaController] Import failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal mengimpor data. Pastikan format file benar. Detail: ' . $e->getMessage());
+        }
     }
 
     public function bulkStatus(Request $request)

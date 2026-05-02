@@ -326,6 +326,11 @@
                 <td class="sep">:</td>
                 <td class="value">{{ $siswa->madrasah_asal ?: $nama_lembaga }}</td>
             </tr>
+            <tr class="even">
+                <td class="label">Tempat & Tanggal Lahir</td>
+                <td class="sep">:</td>
+                <td class="value">{{ $siswa->tempat_lahir ?: '—' }}, {{ $siswa->tanggal_lahir ? \Carbon\Carbon::parse($siswa->tanggal_lahir)->locale('id')->translatedFormat('d F Y') : '—' }}</td>
+            </tr>
         </table>
     </div>
 

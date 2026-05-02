@@ -117,7 +117,7 @@
         </td>
         <td>
           @if($s->tempat_lahir && $s->tanggal_lahir)
-            {{ $s->tempat_lahir }}, {{ \Carbon\Carbon::parse($s->tanggal_lahir)->translatedFormat('d F Y') }}
+            {{ $s->tempat_lahir }}, {{ \Carbon\Carbon::parse($s->tanggal_lahir)->locale('id')->translatedFormat('d F Y') }}
           @else
             -
           @endif

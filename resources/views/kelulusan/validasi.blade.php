@@ -366,7 +366,7 @@
                         <div class="data-label">Tempat, Tanggal Lahir</div>
                         <div class="data-value">
                             @if($siswa->tempat_lahir && $siswa->tanggal_lahir)
-                                {{ $siswa->tempat_lahir }}, {{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->translatedFormat('d F Y') }}
+                                {{ $siswa->tempat_lahir }}, {{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->locale('id')->translatedFormat('d F Y') }}
                             @else
                                 -
                             @endif

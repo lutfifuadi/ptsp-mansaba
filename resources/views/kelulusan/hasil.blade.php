@@ -512,6 +512,7 @@
           <div class="gi"><span style="color:var(--muted); font-size: 0.72rem; text-transform:uppercase; letter-spacing: 0.05em; display:block; margin-bottom: 4px;">NISN</span>{{ $siswa->nisn }}</div>
           <div class="gi"><span style="color:var(--muted); font-size: 0.72rem; text-transform:uppercase; letter-spacing: 0.05em; display:block; margin-bottom: 4px;">No. Peserta</span>{{ $siswa->no_peserta ?? '-' }}</div>
           <div class="gi full"><span style="color:var(--muted); font-size: 0.72rem; text-transform:uppercase; letter-spacing: 0.05em; display:block; margin-bottom: 4px;">Nama Lengkap</span>{{ $siswa->nama_lengkap }}</div>
+          <div class="gi full"><span style="color:var(--muted); font-size: 0.72rem; text-transform:uppercase; letter-spacing: 0.05em; display:block; margin-bottom: 4px;">Tempat, Tanggal Lahir</span>{{ $siswa->tempat_lahir ?? '-' }}, {{ $siswa->tanggal_lahir ? \Carbon\Carbon::parse($siswa->tanggal_lahir)->locale('id')->translatedFormat('d F Y') : '-' }}</div>
         </div>
 
         @if($siswa->status_kelulusan === 'lulus' && $siswa->validation_token)
