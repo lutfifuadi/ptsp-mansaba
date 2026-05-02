@@ -183,9 +183,24 @@ class KelulusanController extends Controller
         }
 
         $pengaturan = [
-            'nama_lembaga' => Pengaturan::get('nama_lembaga', 'NAMA SEKOLAH'),
-            'tahun_ajaran' => Pengaturan::get('tahun_ajaran', '2025/2026'),
-            'tanggal_surat' => Pengaturan::get('tanggal_surat', date('Y-m-d')),
+            'nama_lembaga'        => Pengaturan::get('nama_lembaga', 'NAMA SEKOLAH'),
+            'tahun_ajaran'        => Pengaturan::get('tahun_ajaran', '2025/2026'),
+            'tanggal_surat'       => Pengaturan::get('tanggal_surat', date('Y-m-d')),
+            'npsn'                => Pengaturan::get('npsn'),
+            'alamat_lembaga'      => Pengaturan::get('alamat_lembaga'),
+            'kabupaten_kota'      => Pengaturan::get('kabupaten_kota'),
+            'provinsi'            => Pengaturan::get('provinsi'),
+            'telepon'             => Pengaturan::get('telepon'),
+            'email'               => Pengaturan::get('email'),
+            'website'             => Pengaturan::get('website'),
+            'header_baris_1'      => Pengaturan::get('header_baris_1'),
+            'logo_kiri'           => Pengaturan::get('logo_kiri'),
+            'logo_kanan'          => Pengaturan::get('logo_kanan'),
+            'nama_kepala_sekolah' => Pengaturan::get('nama_kepala_sekolah'),
+            'nip_kepala_sekolah'  => Pengaturan::get('nip_kepala_sekolah'),
+            'jabatan_penandatangan' => Pengaturan::get('jabatan_penandatangan', 'Kepala Madrasah'),
+            'nomor_surat'         => Pengaturan::get('nomor_surat'),
+            'footer_teks'         => Pengaturan::get('footer_teks', 'Dokumen ini diterbitkan secara resmi oleh Sistem Informasi Kelulusan'),
         ];
 
         return view('kelulusan.validasi', compact('siswa', 'pengaturan'));
