@@ -17,5 +17,6 @@ class PengaturanSeeder extends Seeder
         Pengaturan::set('stempel_sekolah', null);
         Pengaturan::set('tahun_ajaran', '2025/2026');
         Pengaturan::set('nomor_surat', '');
+        Pengaturan::set('versi_surat', 'lengkap');
     }
 }

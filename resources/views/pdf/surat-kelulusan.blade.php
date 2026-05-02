@@ -21,7 +21,20 @@
     $replaceMap = [
         '${nama_lembaga}' => $nama_lembaga,
         '${tahun_ajaran}' => $tahun_pelajaran,
+        '${nama_siswa}'   => strtoupper($siswa->nama_lengkap),
+        '${nisn}'         => $siswa->nisn,
     ];
+
+    // Process Dynamic Texts
+    $teksPembuka = str_replace(array_keys($replaceMap), array_values($replaceMap), $pengaturan['teks_pembuka'] ?? 'Yang bertanda tangan di bawah ini, Kepala ${nama_lembaga} :');
+    $teksPembuka = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $teksPembuka);
+
+    $redaksiRaw = $isLulus ? ($pengaturan['redaksi_lulus'] ?? '') : ($pengaturan['redaksi_tidak_lulus'] ?? '');
+    $redaksi = str_replace(array_keys($replaceMap), array_values($replaceMap), $redaksiRaw);
+    $redaksi = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $redaksi);
+
+    $teksPenutup = str_replace(array_keys($replaceMap), array_values($replaceMap), $pengaturan['teks_penutup'] ?? 'Demikian surat keterangan ini diberikan agar dapat dipergunakan sebagaimana mestinya.');
+    $teksPenutup = preg_replace('/\*\*(.*?)\*\*/', '<strong>$1</strong>', $teksPenutup);
 
     // Signatory Config
     $namaKepala = $pengaturan['nama_kepala_sekolah'];
@@ -211,13 +224,13 @@
 
                 {{-- Teks Tengah --}}
                 <td style="text-align:center; vertical-align:middle; padding:0;">
-                    <div style="font-size:11pt; text-transform:uppercase; font-weight:bold; white-space:nowrap;">
+                    <div style="font-size:14pt; text-transform:uppercase; font-weight:bold; white-space:nowrap;">
                         {{ $header1 ?: 'KEMENTERIAN AGAMA REPUBLIK INDONESIA' }}
                     </div>
-                    <div style="font-size:11pt; text-transform:uppercase; font-weight:bold; margin-top:1px; white-space:nowrap;">
+                    <div style="font-size:12pt; text-transform:uppercase; font-weight:bold; margin-top:1px; white-space:nowrap;">
                         {{ $header2 ?: 'KANTOR KEMENTERIAN AGAMA KOTA BANDUNG' }}
                     </div>
-                    <div style="font-size:14pt; font-weight:bold; text-transform:uppercase; margin-top:2px; white-space:nowrap;">
+                    <div style="font-size:11pt; font-weight:bold; text-transform:uppercase; margin-top:2px; white-space:nowrap;">
                         {{ $nama_lembaga }}
                     </div>
                     <div style="font-size:8pt; margin-top:3px; white-space:nowrap;">
@@ -241,27 +254,28 @@
 
     {{-- ── JUDUL & SUBTITLE ── --}}
     <div class="doc-title-wrap">
-        <div style="font-size:14pt; font-weight:bold; text-transform:uppercase; text-decoration: underline;">
+        <div style="font-size:11pt; font-weight:bold; text-transform:uppercase; text-decoration: underline;">
             {{ $judulDokumen }}
         </div>
         <div style="font-size:12pt; font-weight:bold; text-transform:uppercase; margin-top: 2px;">
             {{ $nama_lembaga }}
         </div>
         <div style="margin-top: 0;">
-            <div style="font-size:11pt; font-weight:bold; text-transform:uppercase;">
+            <div style="font-size:10pt; font-weight:bold; text-transform:uppercase;">
                 TAHUN AJARAN {{ $tahun_pelajaran }}
             </div>
-            <div style="font-size:11pt; font-weight:bold; margin-top: 2px;">
+            <div style="font-size:10pt; font-weight:bold; margin-top: 2px;">
                 {{ $pengaturan['nomor_surat'] ?: '0001/Ma.10.19.0064/PP.01.1/'.date('Y') }}
             </div>
         </div>
     </div>
 
     <div class="keterangan-box">
-        Yang bertanda tangan di bawah ini, Kepala <strong>{{ $nama_lembaga }}</strong> :
+        {!! $teksPembuka !!}
     </div>
 
     {{-- ── DATA LEMBAGA ── --}}
+    @if(isset($pengaturan['versi_surat']) && $pengaturan['versi_surat'] !== 'tanpa_data')
     <div class="table-wrapper">
         <table class="data-table">
             <tr>
@@ -281,13 +295,10 @@
             </tr>
         </table>
     </div>
-
-    <div class="keterangan-box" style="margin: 5px 0;">
-        Menerangkan bahwa :
-    </div>
+    @endif
 
     {{-- ── DATA SISWA ── --}}
-    <div class="data-section-head">Data Peserta Didik</div>
+    <div class="data-section-head">Data siswa</div>
     <div class="table-wrapper">
         <table class="data-table">
             <tr class="odd">
@@ -319,11 +330,11 @@
     </div>
 
     <div class="keterangan-box">
-        Dinyatakan <strong>{{ $isLulus ? 'LULUS' : 'TIDAK LULUS' }}</strong> dari satuan pendidikan berdasarkan kriteria kelulusan <strong>{{ $nama_lembaga }}</strong> Tahun Ajaran <strong>{{ $tahun_pelajaran }}</strong>.
+        {!! $redaksi !!}
     </div>
 
     <div class="keterangan-box" style="margin-top: 0;">
-        Demikian surat keterangan ini diberikan agar dapat dipergunakan sebagaimana mestinya.
+        {!! $teksPenutup !!}
     </div>
 
 
@@ -379,7 +390,7 @@
     </div>
 
     {{-- ── FOOTER ── --}}
-    <div class="doc-footer">
+    <div class="doc-footer" style="font-style: italic;">
         Dicetak pada: {{ $tanggalCetak }} &nbsp;|&nbsp;
         {{ $pengaturan['footer_teks'] }} &nbsp;|&nbsp;
         Nomor: {{ $pengaturan['nomor_surat'] ?: 'SKL/'.$siswa->nisn.'/'.date('Y') }}

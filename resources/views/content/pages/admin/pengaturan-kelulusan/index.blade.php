@@ -27,13 +27,14 @@ $configData = Helper::appClasses();
     </div>
   @endif
 
-  <form method="POST" action="{{ route('admin.pengaturan-kelulusan.update') }}" enctype="multipart/form-data">
-    @csrf @method('PUT')
+  <div class="row g-4">
 
-    <div class="row g-4">
-
-      {{-- Section 1: Jadwal & KOP --}}
-      <div class="col-12 col-lg-6">
+    {{-- ═══════════════════════════════════════════════════════════════════
+         Card 1: Jadwal & KOP
+    ══════════════════════════════════════════════════════════════════════ --}}
+    <div class="col-12 col-lg-6">
+      <form method="POST" action="{{ route('admin.pengaturan-kelulusan.update-jadwal-kop') }}" enctype="multipart/form-data">
+        @csrf
         <div class="card h-100 shadow-sm border-0">
           <div class="card-header bg-label-primary">
             <h5 class="mb-0 text-primary"><i class="icon-base ti tabler-settings me-2"></i>1. Jadwal & Header (KOP)</h5>
@@ -44,6 +45,7 @@ $configData = Helper::appClasses();
                 <label class="form-label fw-bold">Tanggal Pengumuman (WIB) <span class="text-danger">*</span></label>
                 <input type="datetime-local" name="tanggal_pengumuman" class="form-control @error('tanggal_pengumuman') is-invalid @enderror"
                   value="{{ old('tanggal_pengumuman', \Carbon\Carbon::parse($pengaturan['tanggal_pengumuman'])->format('Y-m-d\TH:i')) }}" required>
+                @error('tanggal_pengumuman')<div class="invalid-feedback">{{ $message }}</div>@enderror
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label fw-bold">Tahun Ajaran <span class="text-danger">*</span></label>
@@ -96,11 +98,21 @@ $configData = Helper::appClasses();
               </div>
             </div>
           </div>
+          <div class="card-footer bg-transparent border-0 pt-0 pb-4 px-4">
+            <button type="submit" class="btn btn-primary w-100">
+              <i class="icon-base ti tabler-device-floppy me-2"></i>Simpan Jadwal & KOP
+            </button>
+          </div>
         </div>
-      </div>
+      </form>
+    </div>
 
-      {{-- Section 2: Identitas Lembaga --}}
-      <div class="col-12 col-lg-6">
+    {{-- ═══════════════════════════════════════════════════════════════════
+         Card 2: Identitas Lembaga
+    ══════════════════════════════════════════════════════════════════════ --}}
+    <div class="col-12 col-lg-6">
+      <form method="POST" action="{{ route('admin.pengaturan-kelulusan.update-identitas') }}" enctype="multipart/form-data">
+        @csrf
         <div class="card h-100 shadow-sm border-0">
           <div class="card-header bg-label-info">
             <h5 class="mb-0 text-info"><i class="icon-base ti tabler-school me-2"></i>2. Identitas Lembaga</h5>
@@ -116,7 +128,7 @@ $configData = Helper::appClasses();
                 <input type="text" name="npsn" class="form-control" value="{{ old('npsn', $pengaturan['npsn']) }}">
               </div>
             </div>
-            
+
             <div class="mb-3">
               <label class="form-label fw-bold">Alamat Lengkap</label>
               <textarea name="alamat_lembaga" rows="2" class="form-control">{{ old('alamat_lembaga', $pengaturan['alamat_lembaga']) }}</textarea>
@@ -143,11 +155,21 @@ $configData = Helper::appClasses();
               <div class="col-md-6"><label class="form-label fw-bold small">Website</label><input type="text" name="website" class="form-control form-control-sm" value="{{ old('website', $pengaturan['website']) }}"></div>
             </div>
           </div>
+          <div class="card-footer bg-transparent border-0 pt-0 pb-4 px-4">
+            <button type="submit" class="btn btn-info w-100">
+              <i class="icon-base ti tabler-device-floppy me-2"></i>Simpan Identitas Lembaga
+            </button>
+          </div>
         </div>
-      </div>
+      </form>
+    </div>
 
-      {{-- Section 3: Legalisasi --}}
-      <div class="col-12 col-lg-6">
+    {{-- ═══════════════════════════════════════════════════════════════════
+         Card 3: Legalisasi
+    ══════════════════════════════════════════════════════════════════════ --}}
+    <div class="col-12 col-lg-6">
+      <form method="POST" action="{{ route('admin.pengaturan-kelulusan.update-legalisasi') }}" enctype="multipart/form-data">
+        @csrf
         <div class="card h-100 shadow-sm border-0">
           <div class="card-header bg-label-success">
             <h5 class="mb-0 text-success"><i class="icon-base ti tabler-user-check me-2"></i>3. Kepala Sekolah & Legalisasi</h5>
@@ -190,16 +212,35 @@ $configData = Helper::appClasses();
               </div>
             </div>
           </div>
+          <div class="card-footer bg-transparent border-0 pt-0 pb-4 px-4">
+            <button type="submit" class="btn btn-success w-100">
+              <i class="icon-base ti tabler-device-floppy me-2"></i>Simpan Kepala Sekolah & Legalisasi
+            </button>
+          </div>
         </div>
-      </div>
+      </form>
+    </div>
 
-      {{-- Section 4: Redaksi & Konten --}}
-      <div class="col-12 col-lg-6">
+    {{-- ═══════════════════════════════════════════════════════════════════
+         Card 4: Redaksi & Konten
+    ══════════════════════════════════════════════════════════════════════ --}}
+    <div class="col-12 col-lg-6">
+      <form method="POST" action="{{ route('admin.pengaturan-kelulusan.update-redaksi') }}" enctype="multipart/form-data">
+        @csrf
         <div class="card h-100 shadow-sm border-0">
           <div class="card-header bg-label-warning">
             <h5 class="mb-0 text-warning"><i class="icon-base ti tabler-file-text me-2"></i>4. Redaksi & Konten PDF</h5>
           </div>
           <div class="card-body pt-4">
+            <div class="mb-3">
+              <label class="form-label fw-bold">Versi Surat Kelulusan <span class="text-danger">*</span></label>
+              <select name="versi_surat" class="form-select @error('versi_surat') is-invalid @enderror">
+                <option value="lengkap" {{ old('versi_surat', $pengaturan['versi_surat'] ?? 'lengkap') === 'lengkap' ? 'selected' : '' }}>Lengkap (Dengan NPSN, Kota, Provinsi)</option>
+                <option value="tanpa_data" {{ old('versi_surat', $pengaturan['versi_surat'] ?? '') === 'tanpa_data' ? 'selected' : '' }}>Sederhana (Tanpa Data NPSN, Kota, Provinsi)</option>
+              </select>
+              @error('versi_surat')<div class="invalid-feedback">{{ $message }}</div>@enderror
+            </div>
+
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label class="form-label fw-bold">Judul Dokumen (Lulus)</label>
@@ -256,19 +297,22 @@ $configData = Helper::appClasses();
               <input type="text" name="footer_teks" class="form-control" value="{{ old('footer_teks', $pengaturan['footer_teks']) }}">
             </div>
           </div>
+          <div class="card-footer bg-transparent border-0 pt-0 pb-4 px-4">
+            <button type="submit" class="btn btn-warning w-100">
+              <i class="icon-base ti tabler-device-floppy me-2"></i>Simpan Redaksi & Konten
+            </button>
+          </div>
         </div>
-      </div>
-
+      </form>
     </div>
 
-    <div class="mt-5 d-flex justify-content-center gap-3">
-      <button type="submit" class="btn btn-primary btn-lg px-5 shadow">
-        <i class="icon-base ti tabler-device-floppy me-2"></i> Simpan Konfigurasi Lengkap
-      </button>
-      <a href="{{ route('admin.pengaturan-kelulusan.preview') }}" target="_blank" class="btn btn-label-secondary btn-lg px-5 shadow">
-        <i class="icon-base ti tabler-eye me-2"></i> Pratinjau PDF (Live)
-      </a>
-    </div>
+  </div>
 
-  </form>
+  {{-- Tombol Pratinjau tetap di bawah, berdiri sendiri --}}
+  <div class="mt-4 d-flex justify-content-end">
+    <a href="{{ route('admin.pengaturan-kelulusan.preview') }}" target="_blank" class="btn btn-label-secondary btn-lg px-5 shadow">
+      <i class="icon-base ti tabler-eye me-2"></i> Pratinjau PDF (Live)
+    </a>
+  </div>
+
 @endsection

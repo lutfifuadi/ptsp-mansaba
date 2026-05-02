@@ -104,6 +104,7 @@ class KelulusanController extends Controller
             'tanggal_surat'         => Pengaturan::get('tanggal_surat', date('Y-m-d')),
             'tahun_ajaran'          => Pengaturan::get('tahun_ajaran', '2025/2026'),
             'nomor_surat'           => Pengaturan::get('nomor_surat'),
+            'versi_surat'           => Pengaturan::get('versi_surat', 'lengkap'),
             
             // Header
             'header_baris_1'        => Pengaturan::get('header_baris_1', 'KEMENTERIAN AGAMA REPUBLIK INDONESIA'),
@@ -117,8 +118,8 @@ class KelulusanController extends Controller
             'teks_pembuka'          => Pengaturan::get('teks_pembuka', 'Yang bertanda tangan di bawah ini, Kepala ${nama_lembaga}, dengan ini menerangkan bahwa siswa berikut:'),
             'label_lulus'           => Pengaturan::get('label_lulus', 'LULUS'),
             'label_tidak_lulus'     => Pengaturan::get('label_tidak_lulus', 'TIDAK LULUS'),
-            'redaksi_lulus'         => Pengaturan::get('redaksi_lulus'),
-            'redaksi_tidak_lulus'   => Pengaturan::get('redaksi_tidak_lulus'),
+            'redaksi_lulus'         => Pengaturan::get('redaksi_lulus', "Dinyatakan **LULUS** dari satuan pendidikan \${nama_lembaga} pada Tahun Pelajaran \${tahun_ajaran} berdasarkan kriteria kelulusan yang telah ditetapkan. Surat keterangan ini dapat digunakan sampai diterbitkannya ijazah asli."),
+            'redaksi_tidak_lulus'   => Pengaturan::get('redaksi_tidak_lulus', "Dinyatakan **TIDAK LULUS** dari satuan pendidikan \${nama_lembaga} pada Tahun Pelajaran \${tahun_ajaran} berdasarkan kriteria kelulusan yang telah ditetapkan."),
             'teks_penutup'          => Pengaturan::get('teks_penutup', 'Demikian surat keterangan ini diberikan agar dapat dipergunakan sebagaimana mestinya.'),
 
             // Signatory

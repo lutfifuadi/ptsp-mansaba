@@ -51,5 +51,9 @@ Route::middleware([
     Route::get('/pengaturan-kelulusan', [PengaturanKelulusanController::class, 'index'])->name('pengaturan-kelulusan.index');
     Route::put('/pengaturan-kelulusan', [PengaturanKelulusanController::class, 'update'])->name('pengaturan-kelulusan.update');
     Route::get('/pengaturan-kelulusan/preview', [PengaturanKelulusanController::class, 'preview'])->name('pengaturan-kelulusan.preview');
+    Route::post('/pengaturan-kelulusan/jadwal-kop', [PengaturanKelulusanController::class, 'updateJadwalKop'])->name('pengaturan-kelulusan.update-jadwal-kop');
+    Route::post('/pengaturan-kelulusan/identitas', [PengaturanKelulusanController::class, 'updateIdentitas'])->name('pengaturan-kelulusan.update-identitas');
+    Route::post('/pengaturan-kelulusan/legalisasi', [PengaturanKelulusanController::class, 'updateLegalisasi'])->name('pengaturan-kelulusan.update-legalisasi');
+    Route::post('/pengaturan-kelulusan/redaksi', [PengaturanKelulusanController::class, 'updateRedaksi'])->name('pengaturan-kelulusan.update-redaksi');
   });
 });
