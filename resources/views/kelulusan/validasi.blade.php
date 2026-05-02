@@ -306,13 +306,20 @@
                 </div>
                 
                 <div class="institution-header">
-                    @if($pengaturan['logo_kiri'])
-                        <img src="{{ asset('storage/'.$pengaturan['logo_kiri']) }}" alt="Logo" class="logo">
-                    @elseif($pengaturan['logo_kanan'])
-                        <img src="{{ asset('storage/'.$pengaturan['logo_kanan']) }}" alt="Logo" class="logo">
-                    @else
-                        <img src="{{ asset('assets/images/logo.png') }}" alt="Logo" class="logo">
-                    @endif
+                    @php
+                        $logoPath = $pengaturan['logo_kiri'] ?: $pengaturan['logo_kanan'];
+                        if ($logoPath) {
+                            if (str_starts_with($logoPath, 'http')) {
+                                $logoUrl = $logoPath;
+                            } else {
+                                $logoUrl = asset('storage/' . $logoPath);
+                            }
+                        } else {
+                            $logoUrl = asset('assets/images/logo.png');
+                        }
+                    @endphp
+                    
+                    <img src="{{ $logoUrl }}" alt="Logo" class="logo" onerror="this.src='{{ asset('assets/images/logo.png') }}'">
                     
                     <div class="institution-info">
                         <h1>{{ $pengaturan['nama_lembaga'] }}</h1>
