@@ -230,7 +230,7 @@
                     <div style="font-size:12pt; text-transform:uppercase; font-weight:bold; margin-top:1px; white-space:nowrap;">
                         {{ $header2 ?: 'KANTOR KEMENTERIAN AGAMA KOTA BANDUNG' }}
                     </div>
-                    <div style="font-size:11pt; font-weight:bold; text-transform:uppercase; margin-top:2px; white-space:nowrap;">
+                    <div style="font-size:13pt; font-weight:bold; text-transform:uppercase; margin-top:2px; white-space:nowrap;">
                         {{ $nama_lembaga }}
                     </div>
                     <div style="font-size:8pt; margin-top:3px; white-space:nowrap;">
