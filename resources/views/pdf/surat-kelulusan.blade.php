@@ -350,7 +350,13 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-right: 2px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
                                 E-Verified
                             </div>
-                            <img src="data:image/svg+xml;base64,{{ base64_encode($qrCodeSvg) }}" style="width: 100px; height: 100px; display: block; margin: 0 auto;" alt="QR Verification">
+                            @if(isset($validationUrl))
+                                <a href="{{ $validationUrl }}" target="_blank" style="text-decoration: none;">
+                                    <img src="data:image/svg+xml;base64,{{ base64_encode($qrCodeSvg) }}" style="width: 100px; height: 100px; display: block; margin: 0 auto; border: none;" alt="QR Verification">
+                                </a>
+                            @else
+                                <img src="data:image/svg+xml;base64,{{ base64_encode($qrCodeSvg) }}" style="width: 100px; height: 100px; display: block; margin: 0 auto;" alt="QR Verification">
+                            @endif
                             <div style="font-size: 6pt; color: #1e8449; margin-top: 5px; font-style: italic; line-height: 1.2;">
                                 Pindai untuk verifikasi<br>keaslian dokumen.
                             </div>

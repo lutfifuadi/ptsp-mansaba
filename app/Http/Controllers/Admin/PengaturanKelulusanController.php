@@ -344,12 +344,15 @@ class PengaturanKelulusanController extends Controller
         $tanggalCetak = Carbon::now('Asia/Jakarta')->locale('id')->translatedFormat('d F Y');
 
         // Generate Dummy QR Code for Preview
+        $siswa->validation_token = $siswa->validation_token ?? 'contoh-token-validasi-123';
+        $dummyUrl = route('kelulusan.validasi', ['token' => $siswa->validation_token]);
+
         $renderer = new ImageRenderer(
             new RendererStyle(100, 0, null, null, Fill::uniformColor(new Gray(100), new Rgb(30, 132, 73))),
             new SvgImageBackEnd()
         );
         $writer = new Writer($renderer);
-        $qrCodeSvg = $writer->writeString(route('kelulusan.index'));
+        $qrCodeSvg = $writer->writeString($dummyUrl);
 
         $pdf = Pdf::loadView('pdf.surat-kelulusan', [
             'siswa'        => $siswa,
@@ -357,6 +360,7 @@ class PengaturanKelulusanController extends Controller
             'status'       => $status,
             'tanggalCetak' => $tanggalCetak,
             'qrCodeSvg'    => $qrCodeSvg,
+            'validationUrl'=> $dummyUrl,
         ])
         ->setPaper('a4', 'portrait')
         ->setOptions([

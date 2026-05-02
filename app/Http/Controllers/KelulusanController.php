@@ -152,6 +152,7 @@ class KelulusanController extends Controller
                 'status'       => $status,
                 'tanggalCetak' => $tanggalCetak,
                 'qrCodeSvg'    => $qrCodeSvg,
+                'validationUrl'=> $validationUrl,
             ])
             ->setPaper('a4', 'portrait')
             ->setOptions([
