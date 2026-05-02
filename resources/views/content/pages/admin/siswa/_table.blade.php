@@ -93,6 +93,8 @@
         <th>#</th>
         <th>NISN / NIS</th>
         <th>Nama Lengkap</th>
+        <th>TTL</th>
+        <th>Jenis Kelamin</th>
         <th>Kelas & Jurusan</th>
         <th>Status</th>
         <th class="text-end pe-4">Aksi</th>
@@ -112,6 +114,20 @@
         </td>
         <td>
           <div class="fw-bold">{{ $s->nama_lengkap }}</div>
+        </td>
+        <td>
+          @if($s->tempat_lahir && $s->tanggal_lahir)
+            {{ $s->tempat_lahir }}, {{ \Carbon\Carbon::parse($s->tanggal_lahir)->translatedFormat('d F Y') }}
+          @else
+            -
+          @endif
+        </td>
+        <td>
+          @if($s->jenis_kelamin)
+            {{ ucwords(str_replace('-', ' ', $s->jenis_kelamin)) }}
+          @else
+            -
+          @endif
         </td>
         <td>
           <div class="badge bg-label-secondary" style="border-radius: 4px;">{{ $s->kelas }}</div>
@@ -148,7 +164,7 @@
       </tr>
       @empty
       <tr>
-        <td colspan="7" class="text-center py-5">
+        <td colspan="9" class="text-center py-5">
           <div class="text-muted mb-2"><i class="icon-base ti tabler-user-off fs-1"></i></div>
           <div class="fw-bold">Tidak ada data siswa.</div>
           <div class="text-muted small">Coba sesuaikan filter atau cari kata kunci lain.</div>

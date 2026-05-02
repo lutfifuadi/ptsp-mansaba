@@ -33,6 +33,7 @@ class SiswaImport implements ToModel, WithHeadingRow, SkipsOnError
                 'nama_lengkap'     => trim($row['nama_lengkap'] ?? ''),
                 'tempat_lahir'     => trim($row['tempat_lahir'] ?? ''),
                 'tanggal_lahir'    => !empty($row['tanggal_lahir']) ? \Carbon\Carbon::parse($row['tanggal_lahir'])->format('Y-m-d') : null,
+                'jenis_kelamin'    => $this->normalizeGender(trim($row['jenis_kelamin'] ?? '')),
                 'nama_orang_tua'   => trim($row['nama_orang_tua'] ?? ''),
                 'no_peserta_ujian' => trim($row['no_peserta_ujian'] ?? ''),
                 'kelas'            => trim($row['kelas'] ?? ''),
@@ -41,5 +42,20 @@ class SiswaImport implements ToModel, WithHeadingRow, SkipsOnError
                 'status_kelulusan' => $status,
             ]
         );
+    }
+
+    private function normalizeGender(string $value): ?string
+    {
+        $value = strtolower(trim($value));
+
+        if (in_array($value, ['laki-laki', 'laki laki', 'laki', 'pria', 'male'], true)) {
+            return 'laki-laki';
+        }
+
+        if (in_array($value, ['perempuan', 'wanita', 'female', 'p'], true)) {
+            return 'perempuan';
+        }
+
+        return null;
     }
 }

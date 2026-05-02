@@ -374,6 +374,17 @@
                     </div>
                     
                     <div class="data-item">
+                        <div class="data-label">Jenis Kelamin</div>
+                        <div class="data-value">
+                            @if($siswa->jenis_kelamin)
+                                {{ ucwords(str_replace('-', ' ', $siswa->jenis_kelamin)) }}
+                            @else
+                                -
+                            @endif
+                        </div>
+                    </div>
+                    
+                    <div class="data-item">
                         <div class="data-label">Nama Orang Tua</div>
                         <div class="data-value">{{ $siswa->nama_orang_tua ?: '-' }}</div>
                     </div>

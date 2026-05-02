@@ -179,8 +179,9 @@ $configData = Helper::appClasses();
           <div class="alert alert-label-primary d-flex mb-4" role="alert" style="border-radius: 4px;">
           <i class="icon-base ti tabler-info-circle me-2 fs-4"></i>
           <div class="small">
-            Format kolom: <strong>nisn, nis, no_peserta, nama_lengkap, kelas, jurusan, status_kelulusan</strong><br>
-            Status: <code>lulus</code>, <code>tidak_lulus</code>, atau <code>pending</code>
+            Format kolom: <strong>nisn, nis, no_peserta, nama_lengkap, tempat_lahir, tanggal_lahir, jenis_kelamin, nama_orang_tua, no_peserta_ujian, kelas, jurusan, madrasah_asal, status_kelulusan</strong><br>
+            Status: <code>lulus</code>, <code>tidak_lulus</code>, atau <code>pending</code><br>
+            Jenis kelamin: <code>laki-laki</code> atau <code>perempuan</code>
           </div>
         </div>
         <form method="POST" action="{{ route('admin.siswa.import') }}" enctype="multipart/form-data">
