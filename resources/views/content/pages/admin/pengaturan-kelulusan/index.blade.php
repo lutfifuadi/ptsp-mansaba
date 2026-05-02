@@ -42,7 +42,7 @@ $configData = Helper::appClasses();
           <div class="card-body pt-4">
             <div class="row">
               <div class="col-md-4 mb-3">
-                <label class="form-label fw-bold">Tanggal Pengumuman (WIB) <span class="text-danger">*</span></label>
+                <label class="form-label fw-bold">Pengumuman (WIB) <span class="text-danger">*</span></label>
                 <input type="datetime-local" name="tanggal_pengumuman" class="form-control @error('tanggal_pengumuman') is-invalid @enderror"
                   value="{{ old('tanggal_pengumuman', \Carbon\Carbon::parse($pengaturan['tanggal_pengumuman'])->format('Y-m-d\TH:i')) }}" required>
                 @error('tanggal_pengumuman')<div class="invalid-feedback">{{ $message }}</div>@enderror
