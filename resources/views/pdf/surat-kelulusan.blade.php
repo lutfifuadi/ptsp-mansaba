@@ -312,9 +312,19 @@
                 <td class="value">{{ $siswa->nisn ?: '—' }}</td>
             </tr>
             <tr class="odd">
-                <td class="label">NIS (Nomor Induk Sekolah)</td>
+                <td class="label">NIS</td>
                 <td class="sep">:</td>
                 <td class="value">{{ $siswa->nis ?: '—' }}</td>
+            </tr>
+            <tr class="even">
+                <td class="label">Jenis Kelamin</td>
+                <td class="sep">:</td>
+                <td class="value">{{ $siswa->jenis_kelamin ? ucwords(str_replace('-', ' ', $siswa->jenis_kelamin)) : '—' }}</td>
+            </tr>
+            <tr class="odd">
+                <td class="label">Tempat & Tanggal Lahir</td>
+                <td class="sep">:</td>
+                <td class="value">{{ $siswa->tempat_lahir ?: '—' }}, {{ $siswa->tanggal_lahir ? \Carbon\Carbon::parse($siswa->tanggal_lahir)->locale('id')->translatedFormat('d F Y') : '—' }}</td>
             </tr>
             <tr class="even">
                 <td class="label">Nomor Peserta</td>
@@ -325,11 +335,6 @@
                 <td class="label">Madrasah Asal</td>
                 <td class="sep">:</td>
                 <td class="value">{{ $siswa->madrasah_asal ?: $nama_lembaga }}</td>
-            </tr>
-            <tr class="even">
-                <td class="label">Tempat & Tanggal Lahir</td>
-                <td class="sep">:</td>
-                <td class="value">{{ $siswa->tempat_lahir ?: '—' }}, {{ $siswa->tanggal_lahir ? \Carbon\Carbon::parse($siswa->tanggal_lahir)->locale('id')->translatedFormat('d F Y') : '—' }}</td>
             </tr>
         </table>
     </div>
