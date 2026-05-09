@@ -94,7 +94,7 @@ $configData = Helper::appClasses();
 @endsection
 
 @section('content')
-<div class="row g-4">
+<div class="row g-3">
   <!-- Status Pengumuman Banner -->
   <div class="col-12">
     <div class="premium-banner p-4 text-white d-flex flex-column flex-md-row justify-content-between align-items-md-center">

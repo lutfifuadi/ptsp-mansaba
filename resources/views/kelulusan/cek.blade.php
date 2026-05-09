@@ -115,11 +115,11 @@
 
     .landing-header {
       text-align: center;
-      margin-bottom: 50px;
+      margin-bottom: 36px;
       animation: fadeInDown 0.8s ease both;
     }
     .school-logo {
-      width: 80px; height: 80px; margin-bottom: 20px;
+      width: 80px; height: 80px; margin-bottom: 16px;
       filter: drop-shadow(0 0 20px rgba(46,204,113,0.3));
     }
     .landing-header h1 {
@@ -145,7 +145,7 @@
     .options-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 30px;
+      gap: 24px;
       width: 100%;
       animation: fadeInUp 0.8s 0.2s ease both;
     }
@@ -154,14 +154,14 @@
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 4px;
-      padding: 40px 30px;
+      padding: 34px 26px;
       text-align: center;
       text-decoration: none;
       transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 20px;
+      gap: 16px;
       position: relative;
       overflow: hidden;
       backdrop-filter: blur(18px);
@@ -229,7 +229,7 @@
     }
 
     .footer {
-      margin-top: 60px;
+      margin-top: 48px;
       text-align: center;
       color: rgba(255,255,255,0.2);
       font-size: 0.75rem;
@@ -241,9 +241,10 @@
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
     @media (max-width: 768px) {
-      .options-grid { grid-template-columns: 1fr; gap: 20px; }
+      .options-grid { grid-template-columns: 1fr; gap: 16px; }
       .landing-header h1 { font-size: 2rem; }
-      .option-card { padding: 30px 20px; }
+      .option-card { padding: 26px 18px; }
+      .landing-header { margin-bottom: 30px; }
     }
   </style>
 </head>
