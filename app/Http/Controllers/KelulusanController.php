@@ -22,6 +22,11 @@ class KelulusanController extends Controller
     use HandlesPdfImages;
     public function index()
     {
+        return view('kelulusan.cek');
+    }
+
+    public function showForm()
+    {
         $tanggalPengumuman = Carbon::createFromFormat(
             'Y-m-d H:i:s',
             Pengaturan::get('tanggal_pengumuman', '2026-05-04 00:00:00'),
@@ -30,7 +35,7 @@ class KelulusanController extends Controller
 
         $sudahDibuka = Carbon::now('Asia/Jakarta')->gte($tanggalPengumuman);
 
-        return view('kelulusan.cek', compact('sudahDibuka', 'tanggalPengumuman'));
+        return view('kelulusan.form', compact('sudahDibuka', 'tanggalPengumuman'));
     }
 
     public function cek(Request $request)
@@ -113,14 +118,14 @@ class KelulusanController extends Controller
             'logo_kanan'            => $this->encodeImageToBase64($this->resolveImagePath(Pengaturan::get('logo_kanan'))) ?: $this->encodeImageToBase64(public_path('assets/images/logo.png')),
 
             // Content
-            'judul_lulus'           => Pengaturan::get('judul_lulus', 'SURAT KETERANGAN LULUS'),
-            'judul_tidak_lulus'     => Pengaturan::get('judul_tidak_lulus', 'SURAT KETERANGAN TIDAK LULUS'),
-            'teks_pembuka'          => Pengaturan::get('teks_pembuka', 'Yang bertanda tangan di bawah ini, Kepala ${nama_lembaga}, dengan ini menerangkan bahwa siswa berikut:'),
-            'label_lulus'           => Pengaturan::get('label_lulus', 'LULUS'),
-            'label_tidak_lulus'     => Pengaturan::get('label_tidak_lulus', 'TIDAK LULUS'),
-            'redaksi_lulus'         => Pengaturan::get('redaksi_lulus', "Dinyatakan **LULUS** dari satuan pendidikan \${nama_lembaga} pada Tahun Pelajaran \${tahun_ajaran} berdasarkan kriteria kelulusan yang telah ditetapkan. Surat keterangan ini dapat digunakan sampai diterbitkannya ijazah asli."),
-            'redaksi_tidak_lulus'   => Pengaturan::get('redaksi_tidak_lulus', "Dinyatakan **TIDAK LULUS** dari satuan pendidikan \${nama_lembaga} pada Tahun Pelajaran \${tahun_ajaran} berdasarkan kriteria kelulusan yang telah ditetapkan."),
-            'teks_penutup'          => Pengaturan::get('teks_penutup', 'Demikian surat keterangan ini diberikan agar dapat dipergunakan sebagaimana mestinya.'),
+            'judul_lulus'           => Pengaturan::get($siswa->tipe_kelulusan === 'PMBM' ? 'pmbm_judul_lulus' : 'judul_lulus', 'SURAT KETERANGAN LULUS'),
+            'judul_tidak_lulus'     => Pengaturan::get($siswa->tipe_kelulusan === 'PMBM' ? 'pmbm_judul_tidak_lulus' : 'judul_tidak_lulus', 'SURAT KETERANGAN TIDAK LULUS'),
+            'teks_pembuka'          => Pengaturan::get($siswa->tipe_kelulusan === 'PMBM' ? 'pmbm_teks_pembuka' : 'teks_pembuka', 'Yang bertanda tangan di bawah ini, Kepala ${nama_lembaga}, dengan ini menerangkan bahwa siswa berikut:'),
+            'label_lulus'           => Pengaturan::get($siswa->tipe_kelulusan === 'PMBM' ? 'pmbm_label_lulus' : 'label_lulus', 'LULUS'),
+            'label_tidak_lulus'     => Pengaturan::get($siswa->tipe_kelulusan === 'PMBM' ? 'pmbm_label_tidak_lulus' : 'label_tidak_lulus', 'TIDAK LULUS'),
+            'redaksi_lulus'         => Pengaturan::get($siswa->tipe_kelulusan === 'PMBM' ? 'pmbm_redaksi_lulus' : 'redaksi_lulus', "Dinyatakan **LULUS** dari satuan pendidikan \${nama_lembaga} pada Tahun Pelajaran \${tahun_ajaran} berdasarkan kriteria kelulusan yang telah ditetapkan. Surat keterangan ini dapat digunakan sampai diterbitkannya ijazah asli."),
+            'redaksi_tidak_lulus'   => Pengaturan::get($siswa->tipe_kelulusan === 'PMBM' ? 'pmbm_redaksi_tidak_lulus' : 'redaksi_tidak_lulus', "Dinyatakan **TIDAK LULUS** dari satuan pendidikan \${nama_lembaga} pada Tahun Pelajaran \${tahun_ajaran} berdasarkan kriteria kelulusan yang telah ditetapkan."),
+            'teks_penutup'          => Pengaturan::get($siswa->tipe_kelulusan === 'PMBM' ? 'pmbm_teks_penutup' : 'teks_penutup', 'Demikian surat keterangan ini diberikan agar dapat dipergunakan sebagaimana mestinya.'),
 
             // Signatory
             'nama_kepala_sekolah'   => Pengaturan::get('nama_kepala_sekolah'),

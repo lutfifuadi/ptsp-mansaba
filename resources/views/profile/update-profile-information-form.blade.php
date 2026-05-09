@@ -52,6 +52,14 @@
       <x-input-error for="name" />
     </div>
 
+    <!-- Username -->
+    <div class="mb-6">
+      <x-label class="form-label" for="username" value="{{ __('Username') }}" />
+      <x-input id="username" type="text" class="{{ $errors->has('username') ? 'is-invalid' : '' }}" wire:model="state.username"
+        autocomplete="username" />
+      <x-input-error for="username" />
+    </div>
+
     <!-- Email -->
     <div class="mb-6">
       <x-label class="form-label" for="email" value="{{ __('Email') }}" />

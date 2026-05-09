@@ -202,14 +202,14 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
     /* Alerts */
     .alert-error {
       background: rgba(231,76,60,0.12); border: 1px solid rgba(231,76,60,0.3);
-      border-radius: 10px; padding: 11px 14px;
+      border-radius: 4px; padding: 11px 14px;
       display: flex; align-items: flex-start; gap: 10px; margin-bottom: 18px;
     }
     .alert-error svg { flex-shrink:0; color:#e74c3c; margin-top:1px; }
     .alert-error span { font-size:0.84rem; color:#ff8a80; line-height:1.4; }
     .alert-success {
       background: rgba(39,174,96,0.12); border: 1px solid rgba(39,174,96,0.3);
-      border-radius: 10px; padding: 11px 14px;
+      border-radius: 4px; padding: 11px 14px;
       margin-bottom: 18px; font-size: 0.84rem; color: var(--green-glow);
     }
 
@@ -223,7 +223,7 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
     .form-input {
       width: 100%;
       background: rgba(6,20,16,0.75); border: 1.5px solid rgba(46,204,113,0.18);
-      border-radius: 12px; padding: 13px 16px;
+      border-radius: 4px; padding: 13px 16px;
       font-size: 0.95rem; font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--white);
       transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
@@ -271,7 +271,7 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
     .btn-submit {
       width: 100%; padding: 14px 24px;
       background: linear-gradient(135deg, var(--green-accent) 0%, var(--green-bright) 100%);
-      border: none; border-radius: 12px;
+      border: none; border-radius: 4px;
       color: var(--white); font-size: 0.93rem; font-weight: 600;
       font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; cursor: pointer;
       display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -413,19 +413,19 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
           @csrf
 
           <div class="form-group">
-            <label class="form-label" for="login-email">Email</label>
+            <label class="form-label" for="login-username">Username</label>
             <input
-              type="email"
-              id="login-email"
-              name="email"
-              class="form-input{{ $errors->has('email') ? ' is-invalid' : '' }}"
-              placeholder="admin@sekolah.ac.id"
-              value="{{ old('email') }}"
+              type="text"
+              id="login-username"
+              name="username"
+              class="form-input{{ $errors->has('username') ? ' is-invalid' : '' }}"
+              placeholder="Masukkan username"
+              value="{{ old('username') }}"
               autofocus
-              autocomplete="email"
+              autocomplete="username"
               required
             />
-            @error('email')
+            @error('username')
               <div class="form-error">{{ $message }}</div>
             @enderror
           </div>
@@ -444,10 +444,10 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
               />
               <button type="button" class="btn-toggle-pw" id="btnTogglePw" aria-label="Tampilkan / sembunyikan password">
                 <svg id="iconEye" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
                 </svg>
                 <svg id="iconEyeOff" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                  <path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>
                 </svg>
               </button>
             </div>

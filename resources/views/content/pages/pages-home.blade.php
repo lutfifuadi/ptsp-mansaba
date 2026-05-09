@@ -7,11 +7,11 @@ $configData = Helper::appClasses();
 @section('title', 'Dashboard Admin')
 
 @section('vendor-style')
-<link rel="stylesheet" href="{{asset('assets/vendor/libs/apex-charts/apex-charts.css')}}" />
+@vite(['resources/assets/vendor/libs/apex-charts/apex-charts.scss'])
 @endsection
 
 @section('vendor-script')
-<script src="{{asset('assets/vendor/libs/apex-charts/apexcharts.js')}}"></script>
+@vite(['resources/assets/vendor/libs/apex-charts/apexcharts.js'])
 @endsection
 
 @section('page-style')
@@ -120,7 +120,7 @@ $configData = Helper::appClasses();
             <i class="icon-base ti tabler-lock"></i> DITUTUP
           </div>
         @endif
-        <a href="{{ route('admin.pengaturan-kelulusan.index') }}" class="btn btn-light rounded px-4 shadow-sm fw-semibold" style="border-radius: 4px !important;">
+        <a href="{{ route('admin.pengaturan.kelulusan') }}" class="btn btn-light rounded px-4 shadow-sm fw-semibold" style="border-radius: 4px !important;">
           <i class="icon-base ti tabler-settings-2 me-1"></i> Atur
         </a>
       </div>
@@ -294,7 +294,7 @@ $configData = Helper::appClasses();
               </a>
             </div>
             <div class="col-6">
-              <a href="{{ route('admin.pengaturan-kelulusan.index') }}" class="d-block p-3 quick-action-box text-center text-decoration-none">
+              <a href="{{ route('admin.pengaturan.kelulusan') }}" class="d-block p-3 quick-action-box text-center text-decoration-none">
                 <i class="icon-base ti tabler-settings fs-3 text-primary mb-1"></i>
                 <div class="fw-semibold text-dark small">Pengaturan</div>
               </a>

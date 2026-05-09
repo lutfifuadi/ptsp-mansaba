@@ -23,6 +23,7 @@ class Siswa extends Model
         'jurusan',
         'madrasah_asal',
         'status_kelulusan',
+        'tipe_kelulusan',
         'validation_token',
     ];
 

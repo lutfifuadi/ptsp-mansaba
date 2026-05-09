@@ -42,6 +42,7 @@ class SiswaImport implements ToModel, WithHeadingRow, SkipsOnError, WithBatchIns
             'jurusan'          => trim($row['jurusan'] ?? ''),
             'madrasah_asal'    => trim($row['madrasah_asal'] ?? ''),
             'status_kelulusan' => $status,
+            'tipe_kelulusan'   => strtoupper(trim($row['tipe_kelulusan'] ?? 'XII')),
         ]);
     }
 

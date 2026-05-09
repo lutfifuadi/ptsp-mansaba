@@ -9,13 +9,24 @@ use App\Http\Controllers\authentications\LoginBasic;
 use App\Http\Controllers\authentications\RegisterBasic;
 use App\Http\Controllers\KelulusanController;
 use App\Http\Controllers\Admin\SiswaController;
+use App\Http\Controllers\Admin\CalonMuridController;
+use App\Http\Controllers\Admin\PmbmSettingController;
 use App\Http\Controllers\Admin\PengaturanKelulusanController;
+use App\Http\Controllers\Admin\LembagaSettingController;
+use App\Http\Controllers\Admin\GeneralSettingController;
 
 // Main Page Route
 Route::get('/', [KelulusanController::class, 'index'])->name('kelulusan.index');
+Route::get('/xii-check', [KelulusanController::class, 'showForm'])->name('kelulusan.form');
 Route::post('/cek', [KelulusanController::class, 'cek'])->name('kelulusan.cek');
 Route::get('/download/{nisn}', [KelulusanController::class, 'downloadPdf'])->name('kelulusan.pdf');
 Route::get('/validasi/{token}', [KelulusanController::class, 'validasi'])->middleware('throttle:60,1')->name('kelulusan.validasi');
+
+// PMBM Public Routes
+use App\Http\Controllers\PmbmController;
+Route::get('/pmbm-check', [PmbmController::class, 'index'])->name('pmbm.index');
+Route::post('/pmbm-check/cek', [PmbmController::class, 'cek'])->name('pmbm.cek');
+Route::get('/pmbm-check/download/{no_pendaftaran}', [PmbmController::class, 'downloadPdf'])->name('pmbm.pdf');
 
 Route::get('/page-2', [Page2::class, 'index'])->name('pages-page-2');
 
@@ -47,13 +58,29 @@ Route::middleware([
     Route::post('/siswa/import', [SiswaController::class, 'import'])->name('siswa.import');
     Route::post('/siswa/bulk-status', [SiswaController::class, 'bulkStatus'])->name('siswa.bulk-status');
 
-    // Pengaturan Kelulusan
-    Route::get('/pengaturan-kelulusan', [PengaturanKelulusanController::class, 'index'])->name('pengaturan-kelulusan.index');
-    Route::put('/pengaturan-kelulusan', [PengaturanKelulusanController::class, 'update'])->name('pengaturan-kelulusan.update');
-    Route::get('/pengaturan-kelulusan/preview', [PengaturanKelulusanController::class, 'preview'])->name('pengaturan-kelulusan.preview');
-    Route::post('/pengaturan-kelulusan/jadwal-kop', [PengaturanKelulusanController::class, 'updateJadwalKop'])->name('pengaturan-kelulusan.update-jadwal-kop');
-    Route::post('/pengaturan-kelulusan/identitas', [PengaturanKelulusanController::class, 'updateIdentitas'])->name('pengaturan-kelulusan.update-identitas');
-    Route::post('/pengaturan-kelulusan/legalisasi', [PengaturanKelulusanController::class, 'updateLegalisasi'])->name('pengaturan-kelulusan.update-legalisasi');
-    Route::post('/pengaturan-kelulusan/redaksi', [PengaturanKelulusanController::class, 'updateRedaksi'])->name('pengaturan-kelulusan.update-redaksi');
+    // Data PMBM
+    Route::resource('pmbm', CalonMuridController::class)->names('pmbm');
+    Route::post('/pmbm/import', [CalonMuridController::class, 'import'])->name('pmbm.import');
+    // Pengaturan
+    Route::prefix('pengaturan')->name('pengaturan.')->group(function () {
+      // Lembaga
+      Route::get('/lembaga', [LembagaSettingController::class, 'index'])->name('lembaga');
+      Route::put('/lembaga', [LembagaSettingController::class, 'update'])->name('lembaga.update');
+
+      // Umum
+      Route::get('/umum', [GeneralSettingController::class, 'index'])->name('umum');
+      Route::put('/umum', [GeneralSettingController::class, 'update'])->name('umum.update');
+
+      // Kelulusan (XII)
+      Route::get('/kelulusan', [PengaturanKelulusanController::class, 'index'])->name('kelulusan');
+      Route::put('/kelulusan', [PengaturanKelulusanController::class, 'update'])->name('kelulusan.update');
+      Route::get('/kelulusan/preview', [PengaturanKelulusanController::class, 'preview'])->name('kelulusan.preview');
+      Route::post('/kelulusan/redaksi', [PengaturanKelulusanController::class, 'updateRedaksi'])->name('kelulusan.update-redaksi');
+
+      // PMBM
+      Route::get('/pmbm', [PmbmSettingController::class, 'index'])->name('pmbm');
+      Route::put('/pmbm', [PmbmSettingController::class, 'update'])->name('pmbm.update');
+      Route::get('/pmbm/preview', [PmbmSettingController::class, 'preview'])->name('pmbm.preview');
+    });
   });
 });

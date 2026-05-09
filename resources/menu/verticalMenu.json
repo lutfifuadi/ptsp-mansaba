@@ -7,7 +7,7 @@
       "slug": "dashboard"
     },
     {
-      "menuHeader": "Kelulusan"
+      "menuHeader": "Kelulusan (XII)"
     },
     {
       "url": "/admin/siswa",
@@ -16,15 +16,48 @@
       "slug": "admin.siswa"
     },
     {
-      "url": "/admin/pengaturan-kelulusan",
+      "url": "/admin/pengaturan/kelulusan",
       "icon": "menu-icon icon-base ti tabler-settings-automation",
-      "name": "Pengaturan Kelulusan",
-      "slug": "admin.pengaturan-kelulusan"
+      "name": "Pengaturan XII",
+      "slug": "admin.pengaturan.kelulusan"
+    },
+    {
+      "menuHeader": "PMBM"
+    },
+    {
+      "url": "/admin/pmbm",
+      "icon": "menu-icon icon-base ti tabler-users-plus",
+      "name": "Data Calon Murid",
+      "slug": "admin.pmbm"
+    },
+    {
+      "url": "/admin/pengaturan/pmbm",
+      "icon": "menu-icon icon-base ti tabler-settings-cog",
+      "name": "Pengaturan PMBM",
+      "slug": "admin.pengaturan.pmbm"
+    },
+    {
+      "menuHeader": "Pengaturan Umum"
+    },
+    {
+      "url": "/admin/pengaturan/lembaga",
+      "icon": "menu-icon icon-base ti tabler-school",
+      "name": "Lembaga",
+      "slug": "admin.pengaturan.lembaga"
+    },
+    {
+      "url": "/admin/pengaturan/umum",
+      "icon": "menu-icon icon-base ti tabler-settings-2",
+      "name": "Umum",
+      "slug": "admin.pengaturan.umum"
+    },
+    {
+      "menuHeader": "Lainnya"
     },
     {
       "url": "/",
       "icon": "menu-icon icon-base ti tabler-external-link",
-      "name": "Halaman Cek Kelulusan",
+      "name": "Cek Kelulusan (Frontend)",
       "slug": "kelulusan.index",
       "target": "_blank"
     }

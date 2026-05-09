@@ -94,7 +94,7 @@
         <th>NISN / NIS</th>
         <th>Nama Lengkap</th>
         <th>TTL</th>
-        <th>Jenis Kelamin</th>
+        <th>Tipe</th>
         <th>Kelas & Jurusan</th>
         <th>Status</th>
         <th class="text-end pe-4">Aksi</th>
@@ -123,10 +123,10 @@
           @endif
         </td>
         <td>
-          @if($s->jenis_kelamin)
-            {{ ucwords(str_replace('-', ' ', $s->jenis_kelamin)) }}
+          @if($s->tipe_kelulusan === 'PMBM')
+            <span class="badge bg-label-info" style="border-radius: 4px;">PMBM</span>
           @else
-            -
+            <span class="badge bg-label-primary" style="border-radius: 4px;">Kelas XII</span>
           @endif
         </td>
         <td>
@@ -164,7 +164,7 @@
       </tr>
       @empty
       <tr>
-        <td colspan="9" class="text-center py-5">
+        <td colspan="10" class="text-center py-5">
           <div class="text-muted mb-2"><i class="icon-base ti tabler-user-off fs-1"></i></div>
           <div class="fw-bold">Tidak ada data siswa.</div>
           <div class="text-muted small">Coba sesuaikan filter atau cari kata kunci lain.</div>

@@ -4,7 +4,7 @@ $configData = Helper::appClasses();
 
 @extends('layouts/layoutMaster')
 
-@section('title', 'Data Siswa - Admin')
+@section('title', 'Data Calon Murid PMBM - Admin')
 
 @section('page-style')
 <style>
@@ -75,12 +75,12 @@ $configData = Helper::appClasses();
   {{-- Header --}}
   <div class="header-gradient d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
     <div>
-      <h3 class="fw-bold mb-1 text-primary">Data Siswa</h3>
-      <p class="text-muted mb-0">Kelola informasi siswa, status kelulusan, dan import data massal.</p>
+      <h3 class="fw-bold mb-1 text-primary">Data Calon Murid PMBM</h3>
+      <p class="text-muted mb-0">Kelola informasi calon murid baru, jalur pendaftaran, dan status kelulusan seleksi.</p>
       <nav aria-label="breadcrumb" class="mt-2">
         <ol class="breadcrumb mb-0">
           <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-          <li class="breadcrumb-item active">Data Siswa</li>
+          <li class="breadcrumb-item active">Data Calon Murid</li>
         </ol>
       </nav>
     </div>
@@ -88,8 +88,8 @@ $configData = Helper::appClasses();
       <button class="btn btn-outline-primary bg-white px-4" style="border-radius: 4px;" data-bs-toggle="modal" data-bs-target="#modalImport">
         <i class="icon-base ti tabler-file-import me-1"></i> Import Excel
       </button>
-      <a href="{{ route('admin.siswa.create') }}" class="btn btn-premium-primary rounded" style="border-radius: 4px !important;">
-        <i class="icon-base ti tabler-plus me-1"></i> Tambah Siswa
+      <a href="{{ route('admin.pmbm.create') }}" class="btn btn-premium-primary rounded" style="border-radius: 4px !important;">
+        <i class="icon-base ti tabler-plus me-1"></i> Tambah Calon Murid
       </a>
     </div>
   </div>
@@ -106,62 +106,52 @@ $configData = Helper::appClasses();
     </div>
   @endif
 
+  @if(session('error'))
+    <div class="alert alert-danger alert-dismissible d-flex align-items-center mb-4" role="alert" style="border-radius: 4px;">
+      <i class="icon-base ti tabler-circle-x me-2 fs-4"></i>
+      <div>
+        <h6 class="alert-heading mb-1 fw-bold">Gagal!</h6>
+        <span>{{ session('error') }}</span>
+      </div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  @endif
+
   {{-- Filter --}}
   <div class="card card-filter mb-4 border-0">
     <div class="card-body p-4">
-      <form method="GET" action="{{ route('admin.siswa.index') }}" id="filterForm">
+      <form method="GET" action="{{ route('admin.pmbm.index') }}" id="filterForm">
         <div class="row g-3">
-          <div class="col-12 col-md-3">
+          <div class="col-12 col-md-5">
             <div class="filter-input-group">
-              <label class="filter-label"><i class="icon-base ti tabler-search"></i> Cari Siswa</label>
-              <input type="text" name="search" id="searchInput" class="filter-control" value="{{ request('search') }}" placeholder="NISN atau Nama Lengkap...">
+              <label class="filter-label"><i class="icon-base ti tabler-search"></i> Cari Calon Murid</label>
+              <input type="text" name="search" id="searchInput" class="filter-control" value="{{ request('search') }}" placeholder="Nama, NISN, No Pendaftaran, atau NIK...">
             </div>
           </div>
-          <div class="col-6 col-md-2">
+          <div class="col-6 col-md-3">
             <div class="filter-input-group">
-              <label class="filter-label"><i class="icon-base ti tabler-category"></i> Tipe</label>
-              <select name="tipe" class="filter-control" id="filterTipe">
-                <option value="">Semua Tipe</option>
-                <option value="XII" @selected(request('tipe') == 'XII')>Kelas XII</option>
-                <option value="PMBM" @selected(request('tipe') == 'PMBM')>PMBM</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-6 col-md-2">
-            <div class="filter-input-group">
-              <label class="filter-label"><i class="icon-base ti tabler-chalkboard"></i> Kelas</label>
-              <select name="kelas" class="filter-control" id="filterKelas">
-                <option value="">Semua Kelas</option>
-                @foreach($kelasList as $k)
-                  <option value="{{ $k }}" @selected(request('kelas') == $k)>{{ $k }}</option>
+              <label class="filter-label"><i class="icon-base ti tabler-route"></i> Jalur</label>
+              <select name="jalur" class="filter-control" id="filterJalur">
+                <option value="">Semua Jalur</option>
+                @foreach($jalurList as $j)
+                  <option value="{{ $j }}" @selected(request('jalur') == $j)>{{ $j }}</option>
                 @endforeach
               </select>
             </div>
           </div>
-          <div class="col-6 col-md-2">
-            <div class="filter-input-group">
-              <label class="filter-label"><i class="icon-base ti tabler-school"></i> Jurusan</label>
-              <select name="jurusan" class="filter-control" id="filterJurusan">
-                <option value="">Semua Jurusan</option>
-                @foreach($jurusanList as $j)
-                  <option value="{{ $j }}" @selected(request('jurusan') == $j)>{{ $j }}</option>
-                @endforeach
-              </select>
-            </div>
-          </div>
-          <div class="col-6 col-md-2">
+          <div class="col-6 col-md-3">
             <div class="filter-input-group">
               <label class="filter-label"><i class="icon-base ti tabler-info-circle"></i> Status</label>
               <select name="status" class="filter-control" id="filterStatus">
                 <option value="">Semua Status</option>
-                <option value="lulus" @selected(request('status') == 'lulus')>Lulus</option>
-                <option value="tidak_lulus" @selected(request('status') == 'tidak_lulus')>Tidak Lulus</option>
-                <option value="pending" @selected(request('status') == 'pending')>Pending</option>
+                <option value="Lulus" @selected(request('status') == 'Lulus')>Lulus</option>
+                <option value="Tidak Lulus" @selected(request('status') == 'Tidak Lulus')>Tidak Lulus</option>
+                <option value="Proses" @selected(request('status') == 'Proses')>Proses</option>
               </select>
             </div>
           </div>
-          <div class="col-6 col-md-1">
-            <a href="{{ route('admin.siswa.index') }}" class="btn btn-label-secondary w-100 h-100 d-flex align-items-center justify-content-center" style="border-radius: 4px;">
+          <div class="col-12 col-md-1">
+            <a href="{{ route('admin.pmbm.index') }}" class="btn btn-label-secondary w-100 h-100 d-flex align-items-center justify-content-center" style="border-radius: 4px;">
               <i class="icon-base ti tabler-refresh"></i>
             </a>
           </div>
@@ -173,29 +163,26 @@ $configData = Helper::appClasses();
 
   {{-- Tabel --}}
   <div class="card border-0 shadow-sm overflow-hidden" id="tableContainer" style="border-radius: 4px;">
-    @include('content.pages.admin.siswa._table')
+    @include('content.pages.admin.pmbm._table')
   </div>
-
 
 {{-- Modal Import --}}
 <div class="modal fade" id="modalImport" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content border-0 shadow-lg">
       <div class="modal-header border-bottom p-4">
-        <h5 class="modal-title fw-bold"><i class="icon-base ti tabler-file-import text-primary me-2"></i>Import Data Siswa</h5>
+        <h5 class="modal-title fw-bold"><i class="icon-base ti tabler-file-import text-primary me-2"></i>Import Data Calon Murid</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-4">
           <div class="alert alert-label-primary d-flex mb-4" role="alert" style="border-radius: 4px;">
           <i class="icon-base ti tabler-info-circle me-2 fs-4"></i>
           <div class="small">
-            Format kolom: <strong>nisn, nis, no_peserta, nama_lengkap, tempat_lahir, tanggal_lahir, jenis_kelamin, nama_orang_tua, no_peserta_ujian, kelas, jurusan, madrasah_asal, status_kelulusan, tipe_kelulusan</strong><br>
-            Status: <code>lulus</code>, <code>tidak_lulus</code>, atau <code>pending</code><br>
-            Jenis kelamin: <code>laki-laki</code> atau <code>perempuan</code><br>
-            Tipe: <code>XII</code> atau <code>PMBM</code> (Default: XII)
+            Format kolom: <strong>nama_lengkap, nisn, no_pendaftaran, jalur_pendaftaran, asal_sekolah, tempat_tanggal_lahir, no_hp_calon, no_hp_ortu, nama_ortu, nik, status_kelulusan, keterangan</strong><br>
+            Status: <code>Lulus</code>, <code>Tidak Lulus</code>, atau <code>Proses</code>
           </div>
         </div>
-        <form method="POST" action="{{ route('admin.siswa.import') }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('admin.pmbm.import') }}" enctype="multipart/form-data">
           @csrf
           <div class="mb-4 text-center p-4 border rounded" style="border-style: dashed !important; background: #fcfdfe;">
             <i class="icon-base ti tabler-cloud-upload fs-1 text-muted mb-2"></i>
@@ -221,8 +208,7 @@ $configData = Helper::appClasses();
 
 @section('page-script')
 <script>
-// AJAX Fetch Function
-function fetchStudents(url) {
+function fetchCandidates(url) {
   fetch(url, {
     headers: {
       'X-Requested-With': 'XMLHttpRequest'
@@ -231,11 +217,9 @@ function fetchStudents(url) {
   .then(response => response.text())
   .then(html => {
     document.getElementById('tableContainer').innerHTML = html;
-    updateBulkUI();
   });
 }
 
-// Live Search & Filter
 let debounceTimer;
 const filterForm = document.getElementById('filterForm');
 const inputs = filterForm.querySelectorAll('input, select');
@@ -246,71 +230,24 @@ inputs.forEach(input => {
     debounceTimer = setTimeout(() => {
       const formData = new FormData(filterForm);
       const params = new URLSearchParams(formData);
-      fetchStudents(`${filterForm.action}?${params.toString()}`);
-    }, 400); // 400ms debounce
+      fetchCandidates(`${filterForm.action}?${params.toString()}`);
+    }, 400);
   });
 });
 
-// Event Delegation for Table elements
 document.addEventListener('click', function(e) {
-  // Pagination AJAX
   const pageLink = e.target.closest('.pagination a');
   if (pageLink) {
     e.preventDefault();
-    fetchStudents(pageLink.href);
+    fetchCandidates(pageLink.href);
   }
 
-  // Delete Confirmation
   const formHapus = e.target.closest('.form-hapus');
   if (formHapus && e.target.closest('button[type="submit"]')) {
-    if (!confirm('Yakin ingin menghapus data siswa ini?')) {
+    if (!confirm('Yakin ingin menghapus data calon murid ini?')) {
       e.preventDefault();
     }
   }
-  
-  // Bulk Status Apply
-  if (e.target && e.target.id === 'btnBulkApply') {
-    const ids = Array.from(document.querySelectorAll('.row-check:checked')).map(cb => cb.value);
-    const status = document.getElementById('bulkStatus').value;
-    if (!status) { alert('Pilih status terlebih dahulu.'); return; }
-    if (!confirm('Ubah status ' + ids.length + ' siswa menjadi "' + status + '"?')) return;
-
-    fetch('{{ route("admin.siswa.bulk-status") }}', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-      },
-      body: JSON.stringify({ ids, status })
-    }).then(r => r.json()).then(() => window.location.reload());
-  }
 });
-
-// Event Delegation for Checkboxes
-document.addEventListener('change', function(e) {
-  if (e.target && e.target.id === 'checkAll') {
-    document.querySelectorAll('.row-check').forEach(cb => cb.checked = e.target.checked);
-    updateBulkUI();
-  }
-  
-  if (e.target && e.target.classList.contains('row-check')) {
-    updateBulkUI();
-  }
-});
-
-function updateBulkUI() {
-  const checked = document.querySelectorAll('.row-check:checked');
-  const bulkDiv = document.getElementById('bulkActions');
-  if(bulkDiv) {
-      document.getElementById('selectedCount').textContent = checked.length + ' dipilih';
-      bulkDiv.classList.toggle('d-none', checked.length === 0);
-      bulkDiv.classList.toggle('d-flex', checked.length > 0);
-  }
-}
-
-@if(session('error_import'))
-  var modal = new bootstrap.Modal(document.getElementById('modalImport'));
-  modal.show();
-@endif
 </script>
 @endsection
