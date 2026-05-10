@@ -28,8 +28,9 @@ jobs:
       - name: Create .env file for build
         run: |
           cp .env.example .env
-          # Use Laravel's in-memory array driver — no DB server or file needed
-          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=array/' .env
+          # Use SQLite in-memory for CI build so Laravel can boot without a real DB
+          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
+          sed -i 's/DB_DATABASE=.*/DB_DATABASE=:memory:/' .env
 
       - name: Install NPM dependencies & Build
         run: |
@@ -51,7 +52,7 @@ jobs:
           composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
           # 2. Sekarang vendor/ sudah ada, generate app key
           php artisan key:generate --force
-          # 3. Rebuild autoload & discover packages (DB_CONNECTION=array, tidak butuh DB)
+          # 3. Rebuild autoload & discover packages (Using sqlite :memory:)
           composer dump-autoload --optimize --no-interaction
           php artisan package:discover --ansi
 
