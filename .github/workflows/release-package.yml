@@ -115,7 +115,7 @@ jobs:
           tag_name: ${{ steps.tag_name.outputs.tag }}
           name: Release ${{ steps.tag_name.outputs.tag }}
           body_path: release_notes.md
-          files: absensi-siap-pakai.zip
+          files: aplikasi.zip
           draft: false
           prerelease: false
         env:
