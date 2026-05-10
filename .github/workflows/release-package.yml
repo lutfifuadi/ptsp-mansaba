@@ -28,9 +28,18 @@ jobs:
       - name: Create .env file for build
         run: |
           cp .env.example .env
-          # Use SQLite in-memory for CI build so Laravel can boot without a real DB
+          # Ensure Laravel can boot without a database server/file
           sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
-          sed -i 's/DB_DATABASE=.*/DB_DATABASE=:memory:/' .env
+          # Replace or append DB_DATABASE
+          if grep -q "DB_DATABASE=" .env; then
+            sed -i 's/.*DB_DATABASE=.*/DB_DATABASE=:memory:/' .env
+          else
+            echo "DB_DATABASE=:memory:" >> .env
+          fi
+          # Disable other database-dependent drivers for build phase
+          sed -i 's/SESSION_DRIVER=.*/SESSION_DRIVER=array/' .env
+          sed -i 's/CACHE_STORE=.*/CACHE_STORE=array/' .env
+          sed -i 's/QUEUE_CONNECTION=.*/QUEUE_CONNECTION=sync/' .env
 
       - name: Install NPM dependencies & Build
         run: |
