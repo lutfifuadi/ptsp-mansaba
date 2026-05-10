@@ -5,215 +5,200 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pengajuan Surat — PTSP MAN 1 Kota Bandung</title>
   <meta name="description" content="Ajukan surat keterangan siswa secara online menggunakan NISN. Layanan PTSP MAN 1 Kota Bandung.">
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="icon" type="image/png" href="{{ \App\Models\Pengaturan::get('logo_kanan') ?: asset('assets/img/favicon/favicon.ico') }}" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --primary: #2ecc71;
-      --primary-dark: #27ae60;
-      --primary-glow: rgba(46, 204, 113, 0.35);
-      --bg-dark: #061410;
-      --card-bg: rgba(13, 43, 24, 0.50);
-      --card-border: rgba(46, 204, 113, 0.18);
-      --text-main: #ffffff;
-      --text-muted: rgba(255, 255, 255, 0.55);
-      --gold: #c9a84c;
-      --input-bg: rgba(255, 255, 255, 0.05);
-      --input-border: rgba(255, 255, 255, 0.12);
-      --input-focus: rgba(46, 204, 113, 0.4);
-      --error: #e74c3c;
+      --primary: #059669;
+      --primary-glow: rgba(5, 150, 105, 0.5);
+      --primary-light: #34d399;
+      --gold: #d4af37;
+      --gold-glow: rgba(212, 175, 55, 0.4);
+      --bg-dark: #0f172a;
+      --bg-darker: #020617;
+      --glass-bg: rgba(15, 23, 42, 0.6);
+      --glass-border: rgba(52, 211, 153, 0.2);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --error: #ef4444;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     html, body { height: 100%; overflow-x: hidden; }
 
     body {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: var(--bg-dark);
+      background-color: var(--bg-darker);
+      color: var(--text-main);
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 100vh;
+      padding: 20px;
       position: relative;
     }
 
-    .bg-layer {
+    .grid-bg {
       position: fixed; inset: 0;
-      background:
-        radial-gradient(ellipse at 20% 30%, #0f3d20 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 70%, #0b2e18 0%, transparent 55%),
-        linear-gradient(160deg, #061410 0%, #0d2b18 50%, #061410 100%);
-      animation: bgPulse 8s ease-in-out infinite alternate;
-      z-index: 0;
-    }
-    @keyframes bgPulse {
-      0% { filter: brightness(1); }
-      100% { filter: brightness(1.1); }
+      background-size: 50px 50px;
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      z-index: -2;
+      transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+      animation: gridMove 20s linear infinite;
     }
 
-    .bg-pattern {
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='rgba(46,204,113,0.08)' stroke-width='0.6'%3E%3Cpolygon points='40,4 44.6,18 59,12 50,26 65,32 50,36 59,50 44.6,44 40,58 35.4,44 21,50 30,36 15,32 30,26 21,12 35.4,18'/%3E%3Crect x='28' y='28' width='24' height='24' transform='rotate(45 40 40)'/%3E%3Ccircle cx='40' cy='40' r='10'/%3E%3C/g%3E%3C/svg%3E");
-      background-size: 80px 80px;
-      z-index: 1; pointer-events: none;
+    @keyframes gridMove {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 50px; }
     }
 
-    .orb { position: fixed; border-radius: 4px; filter: blur(60px); z-index: 1; pointer-events: none; }
-    .orb-1 {
-      width: 340px; height: 340px;
-      background: radial-gradient(circle, rgba(30,132,73,0.18) 0%, transparent 70%);
-      top: -80px; left: -80px;
-      animation: orbFloat 12s ease-in-out infinite;
-    }
-    .orb-2 {
-      width: 280px; height: 280px;
-      background: radial-gradient(circle, rgba(201,168,76,0.10) 0%, transparent 70%);
-      bottom: -60px; right: -60px;
-      animation: orbFloat 14s ease-in-out infinite reverse;
-    }
-    @keyframes orbFloat {
-      0%, 100% { transform: translate(0, 0); }
-      50% { transform: translate(40px, 30px); }
+    .glow-orb {
+      position: fixed; border-radius: 50%; filter: blur(100px);
+      z-index: -1; opacity: 0.4;
+      animation: float 10s ease-in-out infinite alternate;
     }
 
-    .page-wrapper {
-      position: relative; z-index: 10;
-      width: 100%; max-width: 520px;
-      padding: 32px 20px;
+    .glow-emerald {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+      top: -100px; left: -100px;
     }
 
-    @media (min-width: 768px) {
-      .page-wrapper { max-width: 950px; }
-      .card { padding: 64px 60px; }
-      .page-header h1 { font-size: 2.8rem; }
-      .form-input { padding: 20px 28px; font-size: 1.3rem; }
-      .btn-submit { padding: 22px; font-size: 1.2rem; }
+    .glow-gold {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+      bottom: -150px; right: -100px;
+      animation-delay: -5s;
     }
 
-    @media (min-width: 1024px) {
-      .page-wrapper { max-width: 1150px; }
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, 50px) scale(1.1); }
     }
 
-    .back-link {
-      display: inline-flex; align-items: center; gap: 8px;
-      color: var(--text-muted); text-decoration: none;
-      font-size: 0.85rem; font-weight: 500;
-      margin-bottom: 28px;
-      transition: color 0.2s;
+    .islamic-pattern {
+      position: fixed; inset: 0; opacity: 0.03; z-index: -1;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M30 30L15 15H0v15l15 15-15 15v15h15L30 45l15 15h15V45L45 30l15-15V0H45L30 15zM15 45L0 60v-15l15-15v15zM45 45l15 15V45L45 30v15zM15 15L0 0v15l15 15V15zM45 15l15-15v15L45 30V15z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     }
-    .back-link:hover { color: var(--primary); }
 
-    .page-header {
+    .form-container {
+      width: 100%; max-width: 900px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 4px;
+      padding: 40px 36px;
+      position: relative;
+      overflow-y: auto;
+      overflow-x: hidden;
+      animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      max-height: 95vh;
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary-light) transparent;
+    }
+
+    .form-container::-webkit-scrollbar { width: 4px; }
+    .form-container::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 10px; }
+
+    .form-container::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary-light), var(--gold), transparent);
+      opacity: 0.7;
+    }
+
+    .form-header {
       text-align: center;
-      margin-bottom: 36px;
-      animation: fadeInDown 0.7s ease both;
-    }
-    .school-logo {
-      width: 70px; height: 70px; object-fit: contain;
-      margin-bottom: 16px;
-      filter: drop-shadow(0 0 16px var(--primary-glow));
-    }
-    .page-header h1 {
-      font-size: 1.8rem; font-weight: 800;
-      background: linear-gradient(135deg, #fff 40%, var(--primary) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      margin-bottom: 8px;
-    }
-    .page-header p {
-      color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;
+      margin-bottom: 30px;
     }
 
-    /* Progress Steps */
+    .form-header h1 {
+      font-size: 1.8rem; font-weight: 700;
+      margin-bottom: 8px; color: var(--text-main);
+    }
+
+    .form-header p {
+      font-size: 0.9rem; color: var(--text-muted);
+      margin-bottom: 28px; line-height: 1.5;
+    }
+
+    /* Steps */
     .steps {
       display: flex; align-items: center; justify-content: center;
       gap: 0; margin-bottom: 32px;
-      animation: fadeIn 0.7s 0.1s ease both;
     }
-    .step {
-      display: flex; flex-direction: column; align-items: center; gap: 6px;
-      position: relative;
-    }
+    .step { display: flex; flex-direction: column; align-items: center; gap: 6px; }
     .step-circle {
       width: 36px; height: 36px; border-radius: 4px;
       display: flex; align-items: center; justify-content: center;
       font-weight: 700; font-size: 0.85rem;
-      border: 2px solid var(--card-border);
-      color: var(--text-muted);
-      background: var(--card-bg);
-      transition: all 0.3s;
+      border: 2px solid var(--glass-border);
+      color: var(--text-muted); background: transparent;
+      transition: var(--transition);
     }
     .step.active .step-circle {
       background: var(--primary); border-color: var(--primary);
-      color: #000; box-shadow: 0 0 16px var(--primary-glow);
+      color: #fff; box-shadow: 0 0 16px var(--primary-glow);
     }
     .step.done .step-circle {
-      background: var(--primary-dark); border-color: var(--primary-dark);
+      background: var(--primary); border-color: var(--primary);
       color: #fff;
     }
-    .step-label {
-      font-size: 0.7rem; color: var(--text-muted);
-      white-space: nowrap; font-weight: 500;
-    }
-    .step.active .step-label { color: var(--primary); }
-    .step-line {
-      flex: 1; height: 2px; min-width: 40px;
-      background: var(--card-border);
-      margin-bottom: 22px;
-    }
+    .step-label { font-size: 0.7rem; color: var(--text-muted); white-space: nowrap; font-weight: 500; }
+    .step.active .step-label { color: var(--primary-light); }
+    .step.done .step-label { color: var(--primary-light); }
+    .step-line { flex: 1; height: 2px; min-width: 40px; background: var(--glass-border); margin-bottom: 22px; }
+    .step-line.done { background: var(--primary); }
 
-    /* Card */
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 4px;
-      padding: 36px 32px;
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      box-shadow: 0 24px 80px rgba(0,0,0,0.5);
-      animation: fadeInUp 0.7s 0.2s ease both;
-    }
-
-    .card-icon {
-      width: 56px; height: 56px;
-      background: linear-gradient(135deg, rgba(46,204,113,0.15), rgba(46,204,113,0.05));
-      border: 1px solid var(--card-border);
-      border-radius: 4px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 24px;
-    }
-    .card-icon svg { width: 28px; height: 28px; color: var(--primary); }
-
-    .card h2 { font-size: 1.25rem; font-weight: 700; margin-bottom: 6px; }
-    .card > p { color: var(--text-muted); font-size: 0.875rem; margin-bottom: 28px; line-height: 1.6; }
-
-    /* Form */
     .form-group { margin-bottom: 20px; }
+
     .form-label {
-      display: block; font-size: 0.8rem; font-weight: 600;
-      color: var(--text-muted); text-transform: uppercase;
-      letter-spacing: 1px; margin-bottom: 8px;
+      display: block; font-size: 0.85rem; font-weight: 600;
+      color: var(--text-muted); margin-bottom: 8px;
+      text-transform: uppercase; letter-spacing: 1px;
     }
-    .form-input {
-      width: 100%; padding: 14px 18px;
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
+
+    .input-wrapper { position: relative; }
+
+    .input-icon {
+      position: absolute; left: 14px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary-light); font-size: 20px;
+      pointer-events: none; z-index: 2;
+    }
+
+    .form-control {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--glass-border);
       border-radius: 4px;
+      padding: 14px 16px 14px 46px;
       color: var(--text-main); font-size: 1rem;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      transition: all 0.2s;
-      letter-spacing: 2px;
+      transition: var(--transition); outline: none;
     }
-    .form-input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--input-focus);
-      background: rgba(46, 204, 113, 0.05);
+
+    .form-control::placeholder { color: rgba(148, 163, 184, 0.5); }
+
+    .form-control:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.15);
+      background: rgba(15, 23, 42, 0.95);
     }
-    .form-input::placeholder { color: rgba(255,255,255,0.2); letter-spacing: 0; }
-    .form-input.is-invalid { border-color: var(--error); }
+
+    .form-control.no-icon { padding-left: 16px; }
+    .form-control.is-invalid { border-color: var(--error) !important; }
 
     .error-msg {
       display: flex; align-items: center; gap: 6px;
@@ -221,75 +206,97 @@
     }
 
     .nisn-hint {
-      font-size: 0.78rem; color: var(--text-muted);
+      font-size: 0.8rem; color: var(--text-muted);
       margin-top: 8px; display: flex; align-items: center; gap: 6px;
     }
 
     .btn-submit {
-      width: 100%; padding: 15px;
-      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #000; font-weight: 800; font-size: 0.95rem;
-      border: none; border-radius: 4px; cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-      margin-top: 8px;
-      box-shadow: 0 8px 24px var(--primary-glow);
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary), #047857);
+      border: 1px solid var(--primary-light);
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 4px;
+      font-weight: 700; font-size: 1rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px;
+      transition: var(--transition);
+      box-shadow: 0 0 20px rgba(5, 150, 105, 0.2);
+      letter-spacing: 0.5px;
+      margin-top: 20px;
     }
+
     .btn-submit:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 32px var(--primary-glow);
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px rgba(5, 150, 105, 0.5);
+      background: linear-gradient(135deg, #10b981, var(--primary));
     }
+
     .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
     .divider {
-      height: 1px; background: var(--card-border);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
       margin: 24px 0;
+    }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--gold); text-decoration: none;
+      font-size: 0.9rem; font-weight: 500;
+      margin-bottom: 24px;
+      transition: var(--transition);
+    }
+
+    .back-link:hover {
+      color: var(--primary-light);
     }
 
     .info-note {
       display: flex; gap: 12px; align-items: flex-start;
-      background: rgba(201, 168, 76, 0.06);
-      border: 1px solid rgba(201, 168, 76, 0.2);
+      background: rgba(212, 175, 55, 0.05);
+      border: 1px solid rgba(212, 175, 55, 0.15);
       border-radius: 4px; padding: 14px 16px;
-    }
-    .info-note svg { width: 18px; height: 18px; color: var(--gold); flex-shrink: 0; margin-top: 1px; }
-    .info-note p { font-size: 0.82rem; color: rgba(255,255,255,0.6); line-height: 1.6; }
-
-    .footer {
-      margin-top: 32px; text-align: center;
-      color: rgba(255,255,255,0.18); font-size: 0.75rem;
-      animation: fadeIn 1s 0.5s ease both;
+      margin-top: 24px;
     }
 
-    @keyframes fadeInDown { from { opacity: 0; transform: translateY(-24px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .info-note i { font-size: 20px; color: var(--gold); flex-shrink: 0; margin-top: 1px; }
+    .info-note p { font-size: 0.82rem; color: var(--text-muted); line-height: 1.6; }
+    .info-note strong { color: var(--text-main); }
 
-    @media (max-width: 576px) {
-      .card { padding: 28px 20px; }
-      .page-header h1 { font-size: 1.5rem; }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .form-container { padding: 30px 20px; }
+      .form-header h1 { font-size: 1.6rem; }
+      body { overflow: auto; height: auto; }
+      html { overflow: auto; }
       .step-line { min-width: 24px; }
       .step-label { font-size: 0.62rem; }
     }
   </style>
 </head>
 <body>
-  <div class="bg-layer"></div>
-  <div class="bg-pattern"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
+  <div class="grid-bg"></div>
+  <div class="islamic-pattern"></div>
+  <div class="glow-orb glow-emerald"></div>
+  <div class="glow-orb glow-gold"></div>
 
-  <div class="page-wrapper">
+  <div class="form-container">
     <a href="{{ route('ptsp.index') }}" class="back-link">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
-      </svg>
-      Kembali ke Portal
+      <i class="ti ti-arrow-left"></i> Kembali ke Portal
     </a>
 
-    <header class="page-header">
+    <div class="form-header">
       <h1>Pengajuan Surat</h1>
       <p>Layanan Pembuatan Surat & Legalisir — PTSP MAN 1 Kota Bandung</p>
-    </header>
+    </div>
 
     <!-- Progress Steps -->
     <div class="steps">
@@ -314,16 +321,17 @@
       </div>
     </div>
 
-    <div class="card">
-      <form id="form-nisn" method="POST" action="{{ route('ptsp.surat.cek') }}">
-        @csrf
-        <div class="form-group">
-          <label for="nisn" class="form-label">Nomor Induk Siswa Nasional (NISN)</label>
+    <form id="form-nisn" method="POST" action="{{ route('ptsp.surat.cek') }}">
+      @csrf
+      <div class="form-group">
+        <label for="nisn" class="form-label">Nomor Induk Siswa Nasional (NISN)</label>
+        <div class="input-wrapper">
+          <i class="ti ti-id input-icon"></i>
           <input
             type="text"
             id="nisn"
             name="nisn"
-            class="form-input {{ $errors->has('nisn') ? 'is-invalid' : '' }}"
+            class="form-control {{ $errors->has('nisn') ? 'is-invalid' : '' }}"
             placeholder="Contoh: 1234567890"
             value="{{ old('nisn') }}"
             inputmode="numeric"
@@ -331,54 +339,45 @@
             autocomplete="off"
             autofocus
           >
-          @if ($errors->has('nisn'))
-            <div class="error-msg">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
-              </svg>
-              {{ $errors->first('nisn') }}
-            </div>
-          @else
-            <div class="nisn-hint">
-              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"/>
-              </svg>
-              NISN terdiri dari 10 digit angka
-            </div>
-          @endif
         </div>
-
-        <button type="submit" class="btn-submit" id="btn-cek">
-          Verifikasi NISN
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5" style="display:inline;margin-left:6px;vertical-align:-2px;">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/>
-          </svg>
-        </button>
-      </form>
-
-      <div class="divider"></div>
-
-      <div class="info-note">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
-        </svg>
-        <p>Layanan ini hanya untuk <strong style="color:#fff">siswa aktif MAN 1 Kota Bandung</strong>. Data Anda hanya digunakan untuk keperluan pembuatan surat dan tidak dibagikan kepada pihak lain.</p>
+        @if ($errors->has('nisn'))
+          <div class="error-msg">
+            <i class="ti ti-alert-circle"></i>
+            {{ $errors->first('nisn') }}
+          </div>
+        @else
+          <div class="nisn-hint">
+            <i class="ti ti-info-circle"></i>
+            NISN terdiri dari 10 digit angka
+          </div>
+        @endif
       </div>
-    </div>
 
+      <button type="submit" class="btn-submit" id="btn-cek">
+        <i class="ti ti-arrow-right"></i> Verifikasi NISN
+      </button>
+    </form>
+
+    <div class="divider"></div>
+
+    <div class="info-note">
+      <i class="ti ti-alert-triangle"></i>
+      <p>Layanan ini hanya untuk <strong>siswa aktif MAN 1 Kota Bandung</strong>. Data Anda hanya digunakan untuk keperluan pembuatan surat dan tidak dibagikan kepada pihak lain.</p>
+    </div>
   </div>
 
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-    // Hanya izinkan angka
     document.getElementById('nisn').addEventListener('input', function() {
       this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
     });
 
-    // Loading state saat submit
     document.getElementById('form-nisn').addEventListener('submit', function() {
       const btn = document.getElementById('btn-cek');
       btn.disabled = true;
-      btn.textContent = 'Memverifikasi...';
+      btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Memverifikasi...';
     });
   </script>
 </body>

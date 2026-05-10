@@ -13,68 +13,83 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
   <link rel="icon" type="image/png" href="{{ \App\Models\Pengaturan::get('logo_kanan') ?: asset('assets/img/favicon/favicon.ico') }}" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preload" as="style"
-        href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
-        onload="this.onload=null;this.rel='stylesheet'">
-  <noscript><link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --green-deepest: #061410;
-      --green-mid:     #155c30;
-      --green-accent:  #1e8449;
-      --green-bright:  #27ae60;
-      --green-glow:    #2ecc71;
-      --gold:          #c9a84c;
-      --gold-light:    #f0d080;
-      --white:         #ffffff;
-      --text-muted:    rgba(255,255,255,0.55);
+      --primary: #059669;
+      --primary-glow: rgba(5, 150, 105, 0.5);
+      --primary-light: #34d399;
+      --gold: #d4af37;
+      --gold-glow: rgba(212, 175, 55, 0.4);
+      --bg-dark: #0f172a;
+      --bg-darker: #020617;
+      --glass-bg: rgba(15, 23, 42, 0.6);
+      --glass-border: rgba(52, 211, 153, 0.2);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --error: #ef4444;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     html, body { height: 100%; overflow: hidden; }
 
     body {
-      font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background-color: var(--green-deepest);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-darker);
       height: 100vh; overflow: hidden;
       display: flex; flex-direction: column;
     }
 
-    /* ── Background ──────────────────────────────────────── */
-    .bg-layer {
+    /* Background */
+    .grid-bg {
       position: fixed; inset: 0;
-      background: radial-gradient(ellipse at 20% 30%, #0f3d20 0%, transparent 55%),
-                  radial-gradient(ellipse at 80% 70%, #0b2e18 0%, transparent 55%),
-                  linear-gradient(160deg, #061410 0%, #0d2b18 50%, #061410 100%);
-      animation: bgPulse 8s ease-in-out infinite alternate;
-      z-index: 0;
+      background-size: 50px 50px;
+      background-image:
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      z-index: -2;
+      transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+      animation: gridMove 20s linear infinite;
     }
-    @keyframes bgPulse { 0% { filter:brightness(1); } 100% { filter:brightness(1.12); } }
 
-    .bg-pattern {
-      position: fixed; inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg fill='none' stroke='rgba(46,204,113,0.10)' stroke-width='0.6'%3E%3Cpolygon points='40,4 44.6,18 59,12 50,26 65,32 50,36 59,50 44.6,44 40,58 35.4,44 21,50 30,36 15,32 30,26 21,12 35.4,18'/%3E%3Crect x='28' y='28' width='24' height='24' transform='rotate(45 40 40)'/%3E%3Ccircle cx='40' cy='40' r='10'/%3E%3C/g%3E%3C/svg%3E");
-      background-size: 80px 80px;
-      z-index: 1; pointer-events: none;
+    @keyframes gridMove {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 50px; }
     }
-    .orb { position: fixed; border-radius: 50%; filter: blur(60px); z-index: 1; pointer-events: none; }
-    .orb-1 {
-      width: 380px; height: 380px;
-      background: radial-gradient(circle, rgba(30,132,73,0.2) 0%, transparent 70%);
-      top: -80px; left: -80px;
-      animation: orbFloat1 12s ease-in-out infinite;
-    }
-    .orb-2 {
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
-      bottom: -60px; right: -60px;
-      animation: orbFloat2 14s ease-in-out infinite;
-    }
-    @keyframes orbFloat1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(40px,30px)} }
-    @keyframes orbFloat2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-30px,-40px)} }
 
-    /* ── Split layout ────────────────────────────────────── */
+    .glow-orb {
+      position: fixed; border-radius: 50%; filter: blur(100px);
+      z-index: -1; opacity: 0.4;
+      animation: float 10s ease-in-out infinite alternate;
+    }
+
+    .glow-emerald {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+      top: -100px; left: -100px;
+    }
+
+    .glow-gold {
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, var(--gold) 0%, transparent 70%);
+      bottom: -150px; right: -100px;
+      animation-delay: -5s;
+    }
+
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(30px, 50px) scale(1.1); }
+    }
+
+    .islamic-pattern {
+      position: fixed; inset: 0; opacity: 0.03; z-index: -1;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Cpath d='M30 30L15 15H0v15l15 15-15 15v15h15L30 45l15 15h15V45L45 30l15-15V0H45L30 15zM15 45L0 60v-15l15-15v15zM45 45l15 15V45L45 30v15zM15 15L0 0v15l15 15V15zM45 15l15-15v15L45 30V15z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    /* Split layout */
     .split-wrap {
       position: relative; z-index: 10;
       display: flex; flex: 1;
@@ -92,13 +107,13 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
       content: '';
       position: absolute; top: 0; right: 0;
       width: 1px; height: 100%;
-      background: linear-gradient(to bottom, transparent, rgba(46,204,113,0.2), transparent);
+      background: linear-gradient(to bottom, transparent, var(--glass-border), transparent);
     }
 
     .hero-bismillah {
-      font-family: 'Amiri', Georgia, Cambria, "Times New Roman", Times, serif; font-size: 1.8rem;
+      font-family: 'Amiri', serif; font-size: 1.8rem;
       color: var(--gold); margin-bottom: 12px;
-      text-shadow: 0 0 24px rgba(201,168,76,0.45);
+      text-shadow: 0 0 24px var(--gold-glow);
       animation: fadeSlideDown 0.6s 0.1s ease both;
     }
     .hero-divider {
@@ -106,27 +121,27 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
       margin-bottom: 32px;
       animation: fadeSlideDown 0.6s 0.15s ease both;
     }
-    .hero-divider::before { content:''; flex:0 0 60px; height:1px; background:linear-gradient(to right, transparent, rgba(201,168,76,0.4)); }
-    .hero-divider::after  { content:''; flex:0 0 60px; height:1px; background:linear-gradient(to left,  transparent, rgba(201,168,76,0.4)); }
+    .hero-divider::before { content:''; flex:0 0 60px; height:1px; background:linear-gradient(to right, transparent, rgba(212,175,55,0.4)); }
+    .hero-divider::after  { content:''; flex:0 0 60px; height:1px; background:linear-gradient(to left,  transparent, rgba(212,175,55,0.4)); }
     .hero-divider span { color: var(--gold); font-size: 1rem; }
 
     .hero-school-icon {
       width: 72px; height: 72px;
-      background: linear-gradient(135deg, var(--green-mid), var(--green-accent));
+      background: linear-gradient(135deg, var(--primary), #047857);
       border-radius: 18px;
       display: inline-flex; align-items: center; justify-content: center;
       margin-bottom: 20px;
-      box-shadow: 0 8px 28px rgba(30,132,73,0.4), 0 0 0 1px rgba(46,204,113,0.2);
+      box-shadow: 0 8px 28px var(--primary-glow), 0 0 0 1px var(--glass-border);
       animation: fadeSlideDown 0.6s 0.2s ease both;
     }
-    .hero-school-icon svg { width: 36px; height: 36px; fill: var(--white); }
+    .hero-school-icon svg { width: 36px; height: 36px; fill: #fff; }
 
     .hero-title {
-      font-family: 'Amiri', Georgia, Cambria, "Times New Roman", Times, serif;
+      font-family: 'Amiri', serif;
       font-size: clamp(2rem, 2.8vw, 2.8rem);
       font-weight: 700; line-height: 1.1;
       letter-spacing: 2px; text-transform: uppercase;
-      background: linear-gradient(135deg, #ffffff 30%, var(--green-glow) 100%);
+      background: linear-gradient(135deg, #ffffff 30%, var(--primary-light) 100%);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
       margin-bottom: 6px;
       animation: fadeSlideDown 0.6s 0.25s ease both;
@@ -134,20 +149,20 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
     .hero-school-name {
       font-size: 0.92rem; font-weight: 600;
       text-transform: uppercase; letter-spacing: 0.15em;
-      color: var(--green-glow); margin-bottom: 8px;
+      color: var(--primary-light); margin-bottom: 8px;
       animation: fadeSlideDown 0.6s 0.3s ease both;
     }
     .hero-badge {
       display: inline-block;
-      background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.25);
+      background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.25);
       border-radius: 20px; padding: 3px 14px;
-      font-size: 0.74rem; color: var(--green-glow);
+      font-size: 0.74rem; color: var(--primary-light);
       letter-spacing: 0.08em; margin-bottom: 28px;
       animation: fadeSlideDown 0.6s 0.32s ease both;
     }
     .hero-section-divider {
       height: 1px;
-      background: linear-gradient(to right, rgba(46,204,113,0.25), transparent);
+      background: linear-gradient(to right, rgba(52, 211, 153, 0.25), transparent);
       margin-bottom: 28px;
       animation: fadeSlideDown 0.6s 0.35s ease both;
     }
@@ -156,19 +171,19 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
     .hero-features li {
       display: flex; align-items: center; gap: 12px;
       margin-bottom: 14px;
-      color: rgba(255,255,255,0.82); font-size: 0.9rem; font-weight: 500;
+      color: rgba(248, 250, 252, 0.82); font-size: 0.9rem; font-weight: 500;
     }
     .feat-icon {
       width: 32px; height: 32px; flex-shrink: 0;
-      background: rgba(46,204,113,0.12); border: 1px solid rgba(46,204,113,0.25);
+      background: rgba(52, 211, 153, 0.12); border: 1px solid rgba(52, 211, 153, 0.25);
       border-radius: 8px;
       display: inline-flex; align-items: center; justify-content: center;
     }
-    .feat-icon svg { width: 15px; height: 15px; color: var(--green-glow); }
+    .feat-icon svg { width: 15px; height: 15px; color: var(--primary-light); }
 
     .hero-footer {
       margin-top: 32px; font-size: 0.72rem;
-      color: rgba(255,255,255,0.2);
+      color: rgba(148, 163, 184, 0.3);
       animation: fadeIn 1s 1.2s ease both;
     }
 
@@ -177,8 +192,9 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
       flex: 0 0 42%;
       display: flex; flex-direction: column; justify-content: center;
       padding: 3rem 3.5rem;
-      background: rgba(6, 20, 16, 0.55);
-      backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-left: 1px solid var(--glass-border);
       overflow-y: auto; overflow-x: hidden;
     }
     .form-panel-inner {
@@ -191,8 +207,8 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
     }
 
     .form-heading {
-      font-family: 'Amiri', Georgia, Cambria, "Times New Roman", Times, serif; font-size: 1.7rem; font-weight: 700;
-      color: var(--white); margin-bottom: 4px;
+      font-family: 'Amiri', serif; font-size: 1.7rem; font-weight: 700;
+      color: var(--text-main); margin-bottom: 4px;
     }
     .form-sub {
       font-size: 0.875rem; color: var(--text-muted);
@@ -201,45 +217,63 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
 
     /* Alerts */
     .alert-error {
-      background: rgba(231,76,60,0.12); border: 1px solid rgba(231,76,60,0.3);
+      background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3);
       border-radius: 4px; padding: 11px 14px;
       display: flex; align-items: flex-start; gap: 10px; margin-bottom: 18px;
     }
-    .alert-error svg { flex-shrink:0; color:#e74c3c; margin-top:1px; }
+    .alert-error i { flex-shrink:0; color:var(--error); margin-top:1px; font-size:18px; }
     .alert-error span { font-size:0.84rem; color:#ff8a80; line-height:1.4; }
     .alert-success {
-      background: rgba(39,174,96,0.12); border: 1px solid rgba(39,174,96,0.3);
+      background: rgba(5,150,105,0.12); border: 1px solid rgba(5,150,105,0.3);
       border-radius: 4px; padding: 11px 14px;
-      margin-bottom: 18px; font-size: 0.84rem; color: var(--green-glow);
+      margin-bottom: 18px; font-size: 0.84rem; color: var(--primary-light);
     }
 
     /* Form fields */
     .form-group { margin-bottom: 18px; }
+
     .form-label {
-      display: block; font-size: 0.8rem; font-weight: 600;
-      color: rgba(255,255,255,0.75); margin-bottom: 7px;
-      letter-spacing: 0.4px; text-transform: uppercase;
+      display: block; font-size: 0.85rem; font-weight: 600;
+      color: var(--text-muted); margin-bottom: 8px;
+      text-transform: uppercase; letter-spacing: 1px;
     }
+
+    .input-wrapper { position: relative; }
+
+    .input-icon {
+      position: absolute; left: 14px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary-light); font-size: 20px;
+      pointer-events: none; z-index: 2;
+    }
+
     .form-input {
       width: 100%;
-      background: rgba(6,20,16,0.75); border: 1.5px solid rgba(46,204,113,0.18);
-      border-radius: 4px; padding: 13px 16px;
-      font-size: 0.95rem; font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--white);
-      transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
-      outline: none; -webkit-appearance: none;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--glass-border);
+      border-radius: 4px;
+      padding: 14px 16px 14px 46px;
+      color: var(--text-main); font-size: 1rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      transition: var(--transition); outline: none;
     }
-    .form-input::placeholder { color: rgba(255,255,255,0.22); font-size: 0.88rem; }
+
+    .form-input::placeholder { color: rgba(148, 163, 184, 0.5); }
+
     .form-input:focus {
-      border-color: var(--green-bright);
-      background: rgba(6,20,16,0.92);
-      box-shadow: 0 0 0 3px rgba(39,174,96,0.15), 0 0 18px rgba(39,174,96,0.07);
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.15);
+      background: rgba(15, 23, 42, 0.95);
     }
-    .form-input.is-invalid { border-color: rgba(231,76,60,0.55); }
-    .form-error { font-size: 0.77rem; color: #ff8a80; margin-top: 5px; }
+
+    .form-input.is-invalid { border-color: var(--error) !important; }
+
+    .form-error {
+      display: flex; align-items: center; gap: 6px;
+      margin-top: 6px; font-size: 0.8rem; color: var(--error);
+    }
 
     /* Password toggle */
-    .pw-wrap { position: relative; }
     .pw-wrap .form-input { padding-right: 48px; }
     .btn-toggle-pw {
       position: absolute; top: 50%; right: 13px;
@@ -247,8 +281,9 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
       background: none; border: none; cursor: pointer;
       color: var(--text-muted); padding: 4px;
       display: flex; align-items: center; transition: color 0.2s;
+      z-index: 3;
     }
-    .btn-toggle-pw:hover { color: var(--green-glow); }
+    .btn-toggle-pw:hover { color: var(--primary-light); }
     .btn-toggle-pw svg { width: 17px; height: 17px; }
 
     /* Meta row */
@@ -258,46 +293,48 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
     }
     .check-wrap { display: flex; align-items: center; gap: 7px; cursor: pointer; }
     .check-wrap input[type="checkbox"] {
-      width: 15px; height: 15px; accent-color: var(--green-bright); cursor: pointer;
+      width: 15px; height: 15px; accent-color: var(--primary); cursor: pointer;
     }
-    .check-wrap label { font-size: 0.83rem; color: rgba(255,255,255,0.6); cursor: pointer; }
+    .check-wrap label { font-size: 0.83rem; color: var(--text-muted); cursor: pointer; }
     .link-forgot {
-      font-size: 0.83rem; color: var(--green-glow);
+      font-size: 0.83rem; color: var(--primary-light);
       text-decoration: none; transition: color 0.2s;
     }
-    .link-forgot:hover { color: var(--gold-light); text-decoration: underline; }
+    .link-forgot:hover { color: var(--gold); text-decoration: underline; }
 
     /* Submit button */
     .btn-submit {
-      width: 100%; padding: 14px 24px;
-      background: linear-gradient(135deg, var(--green-accent) 0%, var(--green-bright) 100%);
-      border: none; border-radius: 4px;
-      color: var(--white); font-size: 0.93rem; font-weight: 600;
-      font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; cursor: pointer;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-      transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
-      box-shadow: 0 6px 20px rgba(39,174,96,0.35);
-      position: relative; overflow: hidden;
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary), #047857);
+      border: 1px solid var(--primary-light);
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 4px;
+      font-weight: 700; font-size: 1rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px;
+      transition: var(--transition);
+      box-shadow: 0 0 20px rgba(5, 150, 105, 0.2);
+      letter-spacing: 0.5px;
     }
-    .btn-submit::after {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
-      border-radius: inherit; pointer-events: none;
-    }
-    .btn-submit:hover:not(:disabled) {
+
+    .btn-submit:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 32px rgba(39,174,96,0.5); filter: brightness(1.08);
+      box-shadow: 0 0 30px rgba(5, 150, 105, 0.5);
+      background: linear-gradient(135deg, #10b981, var(--primary));
     }
-    .btn-submit:active:not(:disabled) { transform:translateY(0); box-shadow:0 4px 12px rgba(39,174,96,0.3); }
-    .btn-submit:disabled { opacity:0.7; cursor:not-allowed; }
-    .btn-submit svg { width:17px; height:17px; flex-shrink:0; }
+
+    .btn-submit:active { transform: translateY(0); }
+    .btn-submit:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
 
     .form-footer-note {
       text-align: center; margin-top: 16px;
       font-size: 0.83rem; color: var(--text-muted);
     }
-    .form-footer-note a { color: var(--green-glow); text-decoration: none; font-weight: 600; }
-    .form-footer-note a:hover { color: var(--gold-light); text-decoration: underline; }
+    .form-footer-note a { color: var(--primary-light); text-decoration: none; font-weight: 600; }
+    .form-footer-note a:hover { color: var(--gold); text-decoration: underline; }
 
     /* Spinner */
     .spinner {
@@ -318,7 +355,7 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
     }
     @media (max-width: 860px) {
       .hero-panel { display: none; }
-      .form-panel  { flex:1; padding:2rem 1.5rem; background:transparent; overflow-y: auto; }
+      .form-panel  { flex:1; padding:2rem 1.5rem; background:transparent; backdrop-filter:none; border-left:none; }
       .form-panel-inner { max-width:440px; }
     }
     @media (max-width: 480px) {
@@ -327,17 +364,16 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
   </style>
 </head>
 <body>
-  <div class="bg-layer"></div>
-  <div class="bg-pattern"></div>
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
+  <div class="grid-bg"></div>
+  <div class="islamic-pattern"></div>
+  <div class="glow-orb glow-emerald"></div>
+  <div class="glow-orb glow-gold"></div>
 
   <div class="split-wrap">
 
-    {{-- ═══ KIRI: HERO PANEL ═══ --}}
+    {{-- KIRI: HERO PANEL --}}
     <div class="hero-panel">
-      <div class="hero-bismillah">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
-      <div class="hero-divider"><span>✦</span></div>
+      <div class="hero-divider" style="margin-bottom:12px"><span>✦</span></div>
 
       <div class="hero-school-icon">
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -389,7 +425,7 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
       <div class="hero-footer">&copy; {{ date('Y') }} {{ $namaSekolah }} &mdash; Sistem Pelayanan Terpadu Satu Pintu</div>
     </div>
 
-    {{-- ═══ KANAN: FORM PANEL ═══ --}}
+    {{-- KANAN: FORM PANEL --}}
     <div class="form-panel">
       <div class="form-panel-inner">
 
@@ -397,14 +433,14 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
         <p class="form-sub">Masuk ke panel administrasi untuk mengelola layanan dan permohonan PTSP.</p>
 
         @if(session('status'))
-          <div class="alert-success">{{ session('status') }}</div>
+          <div class="alert-success">
+            <i class="ti ti-circle-check"></i> {{ session('status') }}
+          </div>
         @endif
 
         @if($errors->any())
           <div class="alert-error">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
-            </svg>
+            <i class="ti ti-alert-circle"></i>
             <span>{{ $errors->first() }}</span>
           </div>
         @endif
@@ -414,31 +450,35 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
 
           <div class="form-group">
             <label class="form-label" for="login-username">Username</label>
-            <input
-              type="text"
-              id="login-username"
-              name="username"
-              class="form-input{{ $errors->has('username') ? ' is-invalid' : '' }}"
-              placeholder="Masukkan username"
-              value="{{ old('username') }}"
-              autofocus
-              autocomplete="username"
-              required
-            />
+            <div class="input-wrapper">
+              <i class="ti ti-user input-icon"></i>
+              <input
+                type="text"
+                id="login-username"
+                name="username"
+                class="form-input{{ $errors->has('username') ? ' is-invalid' : '' }}"
+                placeholder="Masukkan username"
+                value="{{ old('username') }}"
+                autofocus
+                autocomplete="username"
+                required
+              />
+            </div>
             @error('username')
-              <div class="form-error">{{ $message }}</div>
+              <div class="form-error"><i class="ti ti-alert-circle"></i> {{ $message }}</div>
             @enderror
           </div>
 
           <div class="form-group">
             <label class="form-label" for="login-password">Password</label>
-            <div class="pw-wrap">
+            <div class="input-wrapper pw-wrap">
+              <i class="ti ti-lock input-icon"></i>
               <input
                 type="password"
                 id="login-password"
                 name="password"
                 class="form-input{{ $errors->has('password') ? ' is-invalid' : '' }}"
-                placeholder="••••••••••••"
+                placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;"
                 autocomplete="current-password"
                 required
               />
@@ -452,7 +492,7 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
               </button>
             </div>
             @error('password')
-              <div class="form-error">{{ $message }}</div>
+              <div class="form-error"><i class="ti ti-alert-circle"></i> {{ $message }}</div>
             @enderror
           </div>
 
@@ -467,10 +507,7 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
           </div>
 
           <button type="submit" class="btn-submit" id="btnLogin">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/>
-            </svg>
-            Masuk
+            <i class="ti ti-login"></i> Masuk
           </button>
         </form>
 
