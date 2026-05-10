@@ -6,23 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::table('siswa', function (Blueprint $table) {
-            $table->string('tipe_kelulusan')->default('XII')->after('status_kelulusan');
+            $table->dropColumn('validation_token');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('siswa', function (Blueprint $table) {
-            $table->dropColumn('tipe_kelulusan');
+            $table->string('validation_token', 64)->unique()->nullable();
         });
     }
 };

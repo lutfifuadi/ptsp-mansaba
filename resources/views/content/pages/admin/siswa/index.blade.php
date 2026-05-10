@@ -76,7 +76,7 @@ $configData = Helper::appClasses();
   <div class="header-gradient d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
     <div>
       <h3 class="fw-bold mb-1 text-primary">Data Siswa</h3>
-      <p class="text-muted mb-0">Kelola informasi siswa, status kelulusan, dan import data massal.</p>
+      <p class="text-muted mb-0">Kelola informasi siswa dan import data massal.</p>
       <nav aria-label="breadcrumb" class="mt-2">
         <ol class="breadcrumb mb-0">
           <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>

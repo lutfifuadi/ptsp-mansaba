@@ -7,9 +7,7 @@ use App\Http\Controllers\pages\Page2;
 use App\Http\Controllers\pages\MiscError;
 use App\Http\Controllers\authentications\LoginBasic;
 use App\Http\Controllers\authentications\RegisterBasic;
-use App\Http\Controllers\KelulusanController;
 use App\Http\Controllers\Admin\SiswaController;
-use App\Http\Controllers\Admin\PengaturanKelulusanController;
 use App\Http\Controllers\Admin\LembagaSettingController;
 use App\Http\Controllers\Admin\GeneralSettingController;
 use App\Http\Controllers\PermohonanController;
@@ -64,7 +62,6 @@ Route::middleware([
 ])->group(function () {
   Route::get('/dashboard', [HomePage::class, 'index'])->name('dashboard');
 
-  // ─── Admin Kelulusan ──────────────────────────────────────────────────────
   Route::prefix('admin')->name('admin.')->group(function () {
 
     // Data Siswa
@@ -91,7 +88,7 @@ Route::middleware([
       Route::get('/umum', [GeneralSettingController::class, 'index'])->name('umum');
       Route::put('/umum', [GeneralSettingController::class, 'update'])->name('umum.update');
 
-      // (Kelulusan & PMBM settings dihapus — fokus PTSP)
+
     });
   });
 });
