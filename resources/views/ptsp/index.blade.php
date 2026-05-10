@@ -461,7 +461,6 @@
   <div class="container">
     <header class="header">
 
-      <h2>بسم الله الرحمن الرحيم</h2>
       <h1>Portal Layanan Terpadu</h1>
       <p>Pelayanan Terpadu Satu Pintu (PTSP) MAN 1 Kota Bandung. Cepat.</p>
 
