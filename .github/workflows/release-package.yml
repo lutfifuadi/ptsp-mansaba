@@ -28,9 +28,8 @@ jobs:
       - name: Create .env file for build
         run: |
           cp .env.example .env
-          # Use sqlite driver with a clean in-memory/file approach for CI
-          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
-          sed -i '/^DB_HOST/d; /^DB_PORT/d; /^DB_DATABASE/d; /^DB_USERNAME/d; /^DB_PASSWORD/d' .env
+          # Use Laravel's in-memory array driver — no DB server or file needed
+          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=array/' .env
 
       - name: Install NPM dependencies & Build
         run: |
@@ -48,13 +47,12 @@ jobs:
         run: |
           mkdir -p bootstrap/cache storage/framework/{sessions,views,cache/data} storage/logs
           chmod -R 775 bootstrap/cache storage
-          # Create the SQLite DB file so artisan commands don't fail
-          touch database/database.sqlite
           # Generate app key so artisan can boot
           php artisan key:generate --force
-          # Install without running scripts (avoids package:discover failing on missing DB)
+          # Install without running post-autoload scripts
           composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
-          # Run post-autoload scripts manually now that env is ready
+          # Rebuild autoload map and run package:discover manually
+          # DB_CONNECTION=array means Laravel boots without needing any DB server/file
           composer dump-autoload --optimize --no-interaction
           php artisan package:discover --ansi
 
