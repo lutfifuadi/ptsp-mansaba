@@ -28,7 +28,7 @@
       --cream:         #f5f0e8;
       --white:         #ffffff;
       --text-muted:    rgba(255,255,255,0.55);
-      --card-bg:       rgba(13, 43, 24, 0.82);
+      --card-bg:       rgba(13, 43, 24, 0.42);
       --card-border:   rgba(46, 204, 113, 0.18);
       --shadow:        0 24px 80px rgba(0,0,0,0.55);
       --radius:        4px;
@@ -229,7 +229,7 @@
     }
     .form-input {
       width: 100%;
-      background: rgba(6, 20, 16, 0.7);
+      background: rgba(6, 20, 16, 0.4);
       border: 1.5px solid rgba(46,204,113,0.2);
       border-radius: 12px;
       padding: 14px 18px;

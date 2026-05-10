@@ -65,7 +65,7 @@
 
     /* ... REST OF CSS ... */
     :root {
-      --bg: #07130e; --bg-card: #0c1f16; --bg-item: #0f2619; --bg-hover: #122d1e;
+      --bg: #07130e; --bg-card: rgba(12, 31, 22, 0.42); --bg-item: rgba(15, 38, 25, 0.4); --bg-hover: rgba(18, 45, 30, 0.5);
       --border: rgba(255,255,255,0.06); --border-g: rgba(46,204,113,0.18);
       --green: #2ecc71; --green-dk: #1e8449; --muted: rgba(255,255,255,0.38); --subtle: rgba(255,255,255,0.65);
     }
@@ -73,7 +73,7 @@
     body::before { content: ''; position: fixed; inset: 0; z-index: 0; background: radial-gradient(ellipse 55% 45% at 12% 18%, rgba(21,92,48,0.22) 0%, transparent 100%), radial-gradient(ellipse 45% 40% at 88% 82%, rgba(10,50,28,0.18) 0%, transparent 100%); pointer-events: none; }
 
     .shell { position: relative; z-index: 1; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-    .card { width: 100%; max-width: 720px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; animation: rise 0.6s cubic-bezier(0.22,1,0.36,1) both; }
+    .card { width: 100%; max-width: 720px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; overflow: hidden; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); animation: rise 0.6s cubic-bezier(0.22,1,0.36,1) both; }
     @keyframes rise { from { opacity:0; transform:translateY(20px) scale(0.98); } to { opacity:1; transform:translateY(0) scale(1); } }
 
     .c-head { display: flex; align-items: center; justify-content: space-between; padding: 16px 28px; border-bottom: 1px solid var(--border); }

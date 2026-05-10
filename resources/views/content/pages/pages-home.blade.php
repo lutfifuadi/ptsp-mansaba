@@ -90,16 +90,74 @@ $configData = Helper::appClasses();
     background: rgba(105, 108, 255, 0.08);
     border-style: solid;
   }
+
+  /* Responsive Adjustments */
+  @media (max-width: 767.98px) {
+    .premium-banner {
+      padding: 1.25rem !important;
+    }
+    .premium-banner h4 {
+      font-size: 1.1rem !important;
+    }
+    .premium-banner p {
+      font-size: 0.9rem !important;
+    }
+    .stat-card .card-body {
+      padding: 1rem !important;
+    }
+    .stat-card h3 {
+      font-size: 1.25rem !important;
+    }
+    .stat-icon-wrapper {
+      width: 42px;
+      height: 42px;
+      font-size: 20px;
+    }
+    .card-header {
+      padding-top: 1rem !important;
+      padding-bottom: 0.75rem !important;
+    }
+    .table-premium th, .table-premium td {
+      padding: 0.75rem 0.5rem !important;
+    }
+    .ps-4 {
+      padding-left: 1rem !important;
+    }
+    .pe-4 {
+      padding-right: 1rem !important;
+    }
+    .gap-mobile {
+      gap: 0.5rem !important;
+    }
+    .banner-icon-box {
+      width: 48px !important;
+      height: 48px !important;
+      margin-right: 1rem !important;
+    }
+    .banner-icon-box i {
+      font-size: 1.25rem !important;
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 991.98px) {
+    .stat-card h3 {
+      font-size: 1.5rem !important;
+    }
+    .stat-icon-wrapper {
+      width: 48px;
+      height: 48px;
+    }
+  }
 </style>
 @endsection
 
 @section('content')
-<div class="row g-3">
+<div class="row g-2 g-md-3">
   <!-- Status Pengumuman Banner -->
   <div class="col-12">
     <div class="premium-banner p-4 text-white d-flex flex-column flex-md-row justify-content-between align-items-md-center">
       <div class="d-flex align-items-center mb-3 mb-md-0 z-1">
-        <div class="bg-white p-3 rounded me-4 text-primary shadow-sm" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 4px !important;">
+        <div class="bg-white p-3 rounded me-4 text-primary shadow-sm banner-icon-box" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; border-radius: 4px !important;">
           <i class="icon-base ti tabler-antenna fs-2"></i>
         </div>
         <div>

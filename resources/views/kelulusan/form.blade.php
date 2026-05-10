@@ -28,7 +28,7 @@
       --cream:         #f5f0e8;
       --white:         #ffffff;
       --text-muted:    rgba(255,255,255,0.55);
-      --card-bg:       rgba(13, 43, 24, 0.82);
+      --card-bg:       rgba(13, 43, 24, 0.42);
       --card-border:   rgba(46, 204, 113, 0.18);
       --shadow:        0 24px 80px rgba(0,0,0,0.55);
       --radius:        4px;
@@ -271,7 +271,7 @@
     }
     .form-input {
       width: 100%;
-      background: rgba(6, 20, 16, 0.7);
+      background: rgba(6, 20, 16, 0.4);
       border: 1.5px solid rgba(46,204,113,0.2);
       border-radius: 12px;
       padding: 14px 18px;
@@ -416,7 +416,7 @@
       margin-bottom: 16px;
     }
     .cd-box {
-      background: rgba(6, 20, 16, 0.7);
+      background: rgba(6, 20, 16, 0.4);
       border: 1px solid rgba(46,204,113,0.2);
       border-radius: 12px;
       padding: 14px 8px 10px;
@@ -469,6 +469,29 @@
       color: rgba(255,255,255,0.2);
       font-size: 0.7rem;
       animation: fadeIn 1s 1s ease both;
+    }
+
+    .btn-back-home {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 24px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      opacity: 0.7;
+    }
+    .btn-back-home:hover {
+      color: var(--green-glow);
+      opacity: 1;
+      transform: translateY(-1px);
+    }
+    .btn-back-home svg {
+      width: 16px;
+      height: 16px;
     }
 
     /* ── Spinner ─────────────────────────────────────────────── */
@@ -589,6 +612,13 @@
               </svg>
               Cek Kelulusan
             </button>
+
+            <a href="{{ url('/') }}" class="btn-back-home">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+              Kembali ke Beranda
+            </a>
           </form>
         </div>
 

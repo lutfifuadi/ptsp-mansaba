@@ -162,11 +162,11 @@
 
     :root {
       --bg:         #07130e;
-      --bg-card:    #0c1f16;
-      --bg-item:    #0f2619;
-      --bg-hover:   #122d1e;
+      --bg-card:    rgba(12, 31, 22, 0.42);
+      --bg-item:    rgba(15, 38, 25, 0.4);
+      --bg-hover:   rgba(18, 45, 30, 0.5);
       --border:     rgba(255,255,255,0.06);
-      --border-g:   rgba(46,204,113,0.18);
+      --border-g:   rgba(46, 204, 113, 0.18);
       --green:      #2ecc71;
       --green-dk:   #1e8449;
       --muted:      rgba(255,255,255,0.38);
@@ -214,6 +214,8 @@
       border: 1px solid var(--border);
       border-radius: 4px;
       overflow: hidden;
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
       animation: rise 0.6s cubic-bezier(0.22,1,0.36,1) both;
     }
     @keyframes rise {
