@@ -26,7 +26,11 @@ jobs:
           cache: 'npm'
 
       - name: Create .env file for build
-        run: cp .env.example .env
+        run: |
+          cp .env.example .env
+          # Use sqlite driver with a clean in-memory/file approach for CI
+          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
+          sed -i '/^DB_HOST/d; /^DB_PORT/d; /^DB_DATABASE/d; /^DB_USERNAME/d; /^DB_PASSWORD/d' .env
 
       - name: Install NPM dependencies & Build
         run: |
@@ -44,7 +48,15 @@ jobs:
         run: |
           mkdir -p bootstrap/cache storage/framework/{sessions,views,cache/data} storage/logs
           chmod -R 775 bootstrap/cache storage
-          composer install --no-dev --optimize-autoloader --no-interaction
+          # Create the SQLite DB file so artisan commands don't fail
+          touch database/database.sqlite
+          # Generate app key so artisan can boot
+          php artisan key:generate --force
+          # Install without running scripts (avoids package:discover failing on missing DB)
+          composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+          # Run post-autoload scripts manually now that env is ready
+          composer dump-autoload --optimize --no-interaction
+          php artisan package:discover --ansi
 
       - name: Create Ready-to-Use ZIP
         run: |
