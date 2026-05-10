@@ -26,20 +26,7 @@ jobs:
           cache: 'npm'
 
       - name: Create .env file for build
-        run: |
-          cp .env.example .env
-          # Ensure Laravel can boot without a database server/file
-          sed -i 's/DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
-          # Replace or append DB_DATABASE
-          if grep -q "DB_DATABASE=" .env; then
-            sed -i 's/.*DB_DATABASE=.*/DB_DATABASE=:memory:/' .env
-          else
-            echo "DB_DATABASE=:memory:" >> .env
-          fi
-          # Disable other database-dependent drivers for build phase
-          sed -i 's/SESSION_DRIVER=.*/SESSION_DRIVER=array/' .env
-          sed -i 's/CACHE_STORE=.*/CACHE_STORE=array/' .env
-          sed -i 's/QUEUE_CONNECTION=.*/QUEUE_CONNECTION=sync/' .env
+        run: cp .env.example .env
 
       - name: Install NPM dependencies & Build
         run: |
@@ -49,7 +36,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.3'
+          php-version: '8.2'
           extensions: mbstring, dom, fileinfo, gd, zip
           coverage: none
 
@@ -57,13 +44,7 @@ jobs:
         run: |
           mkdir -p bootstrap/cache storage/framework/{sessions,views,cache/data} storage/logs
           chmod -R 775 bootstrap/cache storage
-          # 1. Install dulu — vendor/autoload.php harus ada sebelum artisan bisa jalan
-          composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
-          # 2. Sekarang vendor/ sudah ada, generate app key
-          php artisan key:generate --force
-          # 3. Rebuild autoload & discover packages (Using sqlite :memory:)
-          composer dump-autoload --optimize --no-interaction
-          php artisan package:discover --ansi
+          composer install --no-dev --optimize-autoloader --no-interaction
 
       - name: Create Ready-to-Use ZIP
         run: |
