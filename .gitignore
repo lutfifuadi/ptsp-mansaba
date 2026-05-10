@@ -9,7 +9,8 @@ public/vendor/
 /storage/*.key
 /storage/pail
 /vendor
-/bootstrap/cache/*.php
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
 
 # .env
 .env
