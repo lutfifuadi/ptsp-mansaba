@@ -9,6 +9,8 @@ use App\Http\Controllers\authentications\LoginBasic;
 use App\Http\Controllers\authentications\RegisterBasic;
 use App\Http\Controllers\KelulusanController;
 use App\Http\Controllers\Admin\SiswaController;
+use App\Http\Controllers\Admin\CalonMuridController;
+use App\Http\Controllers\Admin\PmbmSettingController;
 use App\Http\Controllers\Admin\PengaturanKelulusanController;
 use App\Http\Controllers\Admin\LembagaSettingController;
 use App\Http\Controllers\Admin\GeneralSettingController;
@@ -37,6 +39,16 @@ Route::prefix('ptsp')->name('ptsp.')->group(function () {
 
 // Main Page Route (Refocused to PTSP)
 Route::get('/', [PermohonanController::class, 'index'])->name('home');
+Route::get('/xii-check', [KelulusanController::class, 'showForm'])->name('kelulusan.form');
+Route::post('/cek', [KelulusanController::class, 'cek'])->name('kelulusan.cek');
+Route::get('/download/{nisn}', [KelulusanController::class, 'downloadPdf'])->name('kelulusan.pdf');
+Route::get('/validasi/{token}', [KelulusanController::class, 'validasi'])->middleware('throttle:60,1')->name('kelulusan.validasi');
+
+// PMBM Public Routes
+use App\Http\Controllers\PmbmController;
+Route::get('/pmbm-check', [PmbmController::class, 'index'])->name('pmbm.index');
+Route::post('/pmbm-check/cek', [PmbmController::class, 'cek'])->name('pmbm.cek');
+Route::get('/pmbm-check/download/{no_pendaftaran}', [PmbmController::class, 'downloadPdf'])->name('pmbm.pdf');
 
 // Guest Book Routes
 use App\Http\Controllers\GuestBookController;
@@ -75,9 +87,13 @@ Route::middleware([
     Route::put('/siswa/{siswa}', [SiswaController::class, 'update'])->name('siswa.update');
     Route::delete('/siswa/{siswa}', [SiswaController::class, 'destroy'])->name('siswa.destroy');
     Route::post('/siswa/import', [SiswaController::class, 'import'])->name('siswa.import');
+    Route::post('/siswa/bulk-status', [SiswaController::class, 'bulkStatus'])->name('siswa.bulk-status');
 
+    // Data PMBM
+    Route::resource('pmbm', CalonMuridController::class)->names('pmbm');
+    Route::post('/pmbm/import', [CalonMuridController::class, 'import'])->name('pmbm.import');
 
-      // Data PTSP
+    // Data PTSP
     Route::get('/ptsp', [PermohonanController::class, 'adminIndex'])->name('ptsp.index');
     Route::get('/ptsp/{permohonan}', [PermohonanController::class, 'adminShow'])->name('ptsp.show');
     Route::put('/ptsp/{permohonan}/status', [PermohonanController::class, 'updateStatus'])->name('ptsp.status');
@@ -91,7 +107,16 @@ Route::middleware([
       Route::get('/umum', [GeneralSettingController::class, 'index'])->name('umum');
       Route::put('/umum', [GeneralSettingController::class, 'update'])->name('umum.update');
 
-      // (Kelulusan & PMBM settings dihapus — fokus PTSP)
+      // Kelulusan (XII)
+      Route::get('/kelulusan', [PengaturanKelulusanController::class, 'index'])->name('kelulusan');
+      Route::put('/kelulusan', [PengaturanKelulusanController::class, 'update'])->name('kelulusan.update');
+      Route::get('/kelulusan/preview', [PengaturanKelulusanController::class, 'preview'])->name('kelulusan.preview');
+      Route::post('/kelulusan/redaksi', [PengaturanKelulusanController::class, 'updateRedaksi'])->name('kelulusan.update-redaksi');
+
+      // PMBM
+      Route::get('/pmbm', [PmbmSettingController::class, 'index'])->name('pmbm');
+      Route::put('/pmbm', [PmbmSettingController::class, 'update'])->name('pmbm.update');
+      Route::get('/pmbm/preview', [PmbmSettingController::class, 'preview'])->name('pmbm.preview');
     });
   });
 });

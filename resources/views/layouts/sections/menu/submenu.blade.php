@@ -10,13 +10,13 @@ use Illuminate\Support\Facades\Route;
     @php
       $activeClass = null;
       $active = $configData["layout"] === 'vertical' ? 'active open':'active';
-      $currentRouteName =  Route::currentRouteName();
+      $currentRouteName = Route::currentRouteName() ?? '';
 
-      if ($currentRouteName === $submenu->slug) {
+      if (isset($submenu->slug) && $currentRouteName === $submenu->slug) {
           $activeClass = 'active';
       }
       elseif (isset($submenu->submenu)) {
-        if (gettype($submenu->slug) === 'array') {
+        if (isset($submenu->slug) && gettype($submenu->slug) === 'array') {
           foreach($submenu->slug as $slug){
             if (str_contains($currentRouteName,$slug) and strpos($currentRouteName,$slug) === 0) {
                 $activeClass = $active;
@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\Route;
           }
         }
         else{
-          if (str_contains($currentRouteName,$submenu->slug) and strpos($currentRouteName,$submenu->slug) === 0) {
+          if (isset($submenu->slug) && str_contains($currentRouteName,$submenu->slug) and strpos($currentRouteName,$submenu->slug) === 0) {
             $activeClass = $active;
           }
         }

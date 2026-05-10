@@ -32,24 +32,20 @@ class SiswaController extends Controller
             $query->where('jurusan', $request->jurusan);
         }
 
-        if ($request->filled('status')) {
-            $query->where('status_kelulusan', $request->status);
-        }
-
-        if ($request->filled('tipe')) {
-            $query->where('tipe_kelulusan', $request->tipe);
+        if ($request->filled('jenis_kelamin')) {
+            $query->where('jenis_kelamin', $request->jenis_kelamin);
         }
 
         $siswa  = $query->orderBy('nama_lengkap')->paginate(20)->withQueryString();
         $kelasList  = Siswa::distinct()->orderBy('kelas')->pluck('kelas');
         $jurusanList = Siswa::distinct()->orderBy('jurusan')->pluck('jurusan');
-        $tipeList = ['XII', 'PMBM'];
+        $jenisKelaminList = Siswa::distinct()->orderBy('jenis_kelamin')->pluck('jenis_kelamin');
 
         if ($request->ajax()) {
             return view('content.pages.admin.siswa._table', compact('siswa'))->render();
         }
 
-        return view('content.pages.admin.siswa.index', compact('siswa', 'kelasList', 'jurusanList', 'tipeList'));
+        return view('content.pages.admin.siswa.index', compact('siswa', 'kelasList', 'jurusanList', 'jenisKelaminList'));
     }
 
     public function create()
@@ -68,12 +64,8 @@ class SiswaController extends Controller
             'tanggal_lahir'    => ['nullable', 'date'],
             'jenis_kelamin'    => ['nullable', 'in:laki-laki,perempuan'],
             'nama_orang_tua'   => ['nullable', 'string', 'max:255'],
-            'no_peserta_ujian' => ['nullable', 'string', 'max:50'],
             'kelas'            => ['required', 'string', 'max:50'],
             'jurusan'          => ['required', 'string', 'max:100'],
-            'madrasah_asal'    => ['nullable', 'string', 'max:255'],
-            'status_kelulusan' => ['required', 'in:lulus,tidak_lulus,pending'],
-            'tipe_kelulusan'   => ['required', 'in:XII,PMBM'],
         ], [
             'nisn.unique' => 'NISN sudah terdaftar.',
             'nisn.digits' => 'NISN harus 10 digit angka.',
@@ -100,12 +92,8 @@ class SiswaController extends Controller
             'tanggal_lahir'    => ['nullable', 'date'],
             'jenis_kelamin'    => ['nullable', 'in:laki-laki,perempuan'],
             'nama_orang_tua'   => ['nullable', 'string', 'max:255'],
-            'no_peserta_ujian' => ['nullable', 'string', 'max:50'],
             'kelas'            => ['required', 'string', 'max:50'],
             'jurusan'          => ['required', 'string', 'max:100'],
-            'madrasah_asal'    => ['nullable', 'string', 'max:255'],
-            'status_kelulusan' => ['required', 'in:lulus,tidak_lulus,pending'],
-            'tipe_kelulusan'   => ['required', 'in:XII,PMBM'],
         ]);
 
         $siswa->update($data);
@@ -140,16 +128,5 @@ class SiswaController extends Controller
         }
     }
 
-    public function bulkStatus(Request $request)
-    {
-        $request->validate([
-            'ids'    => ['required', 'array'],
-            'ids.*'  => ['integer', 'exists:siswa,id'],
-            'status' => ['required', 'in:lulus,tidak_lulus,pending'],
-        ]);
 
-        Siswa::whereIn('id', $request->ids)->update(['status_kelulusan' => $request->status]);
-
-        return response()->json(['message' => 'Status berhasil diperbarui.']);
-    }
 }

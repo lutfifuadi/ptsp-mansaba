@@ -25,7 +25,7 @@ $configData = Helper::appClasses();
         @endif
       </span>
       <span class="app-brand-text demo menu-text fw-bold ms-3" style="font-size: 1.2rem; letter-spacing: 1px;">
-        E-SKL
+        PTSP MAN 1
       </span>
     </a>
 
@@ -51,12 +51,12 @@ $configData = Helper::appClasses();
     {{-- active menu method --}}
     @php
     $activeClass = null;
-    $currentRouteName = Route::currentRouteName();
+    $currentRouteName = Route::currentRouteName() ?? '';
 
-    if ($currentRouteName === $menu->slug) {
+    if (isset($menu->slug) && $currentRouteName === $menu->slug) {
     $activeClass = 'active';
     } elseif (isset($menu->submenu)) {
-    if (gettype($menu->slug) === 'array') {
+    if (isset($menu->slug) && gettype($menu->slug) === 'array') {
     foreach ($menu->slug as $slug) {
     if (str_contains($currentRouteName, $slug) and strpos($currentRouteName, $slug) === 0) {
     $activeClass = 'active open';
@@ -64,7 +64,7 @@ $configData = Helper::appClasses();
     }
     } else {
     if (
-    str_contains($currentRouteName, $menu->slug) and
+    isset($menu->slug) && str_contains($currentRouteName, $menu->slug) and
     strpos($currentRouteName, $menu->slug) === 0
     ) {
     $activeClass = 'active open';

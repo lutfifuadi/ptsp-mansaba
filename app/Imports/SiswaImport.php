@@ -23,11 +23,6 @@ class SiswaImport implements ToModel, WithHeadingRow, SkipsOnError, WithBatchIns
             return null;
         }
 
-        $status = strtolower(trim($row['status_kelulusan'] ?? 'pending'));
-        if (!in_array($status, ['lulus', 'tidak_lulus', 'pending'])) {
-            $status = 'pending';
-        }
-
         return new Siswa([
             'nisn'             => $nisn,
             'nis'              => trim($row['nis'] ?? ''),
@@ -37,12 +32,8 @@ class SiswaImport implements ToModel, WithHeadingRow, SkipsOnError, WithBatchIns
             'tanggal_lahir'    => $this->parseIndonesianDate($row['tanggal_lahir'] ?? null),
             'jenis_kelamin'    => $this->normalizeGender(trim($row['jenis_kelamin'] ?? '')),
             'nama_orang_tua'   => trim($row['nama_orang_tua'] ?? ''),
-            'no_peserta_ujian' => trim($row['no_peserta_ujian'] ?? ''),
             'kelas'            => trim($row['kelas'] ?? ''),
             'jurusan'          => trim($row['jurusan'] ?? ''),
-            'madrasah_asal'    => trim($row['madrasah_asal'] ?? ''),
-            'status_kelulusan' => $status,
-            'tipe_kelulusan'   => strtoupper(trim($row['tipe_kelulusan'] ?? 'XII')),
         ]);
     }
 

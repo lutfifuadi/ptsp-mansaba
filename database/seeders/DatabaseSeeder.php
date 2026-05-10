@@ -17,6 +17,9 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        $this->call(PengaturanSeeder::class);
+        $this->call([
+            PengaturanSeeder::class,
+            AdminUserSeeder::class,
+        ]);
     }
 }

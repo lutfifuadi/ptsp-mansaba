@@ -345,9 +345,9 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
         </svg>
       </div>
 
-      <div class="hero-title">Pengumuman Kelulusan</div>
+      <div class="hero-title">Portal Layanan PTSP</div>
       <div class="hero-school-name">{{ $namaSekolah }}</div>
-      <div class="hero-badge">Tahun Ajaran {{ $tahunAjaran }}</div>
+      <div class="hero-badge">Sistem Informasi Pelayanan</div>
 
       <div class="hero-section-divider"></div>
 
@@ -366,7 +366,7 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
               <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/>
             </svg>
           </span>
-          Manajemen data siswa dan pengaturan kelulusan
+          Manajemen permohonan dan layanan siswa
         </li>
         <li>
           <span class="feat-icon">
@@ -374,7 +374,7 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
               <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
             </svg>
           </span>
-          Pantau status kelulusan secara real-time
+          Pantau status permohonan secara real-time
         </li>
         <li>
           <span class="feat-icon">
@@ -382,11 +382,11 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
               <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
             </svg>
           </span>
-          Export sertifikat dan laporan PDF
+          Export laporan dan administrasi layanan
         </li>
       </ul>
 
-      <div class="hero-footer">&copy; {{ date('Y') }} {{ $namaSekolah }} &mdash; Sistem Pengumuman Kelulusan</div>
+      <div class="hero-footer">&copy; {{ date('Y') }} {{ $namaSekolah }} &mdash; Sistem Pelayanan Terpadu Satu Pintu</div>
     </div>
 
     {{-- ═══ KANAN: FORM PANEL ═══ --}}
@@ -394,7 +394,7 @@ $tahunAjaran = \App\Models\Pengaturan::get('tahun_ajaran', '2025/2026');
       <div class="form-panel-inner">
 
         <div class="form-heading">Selamat datang</div>
-        <p class="form-sub">Masuk ke panel administrasi untuk mengelola data kelulusan siswa.</p>
+        <p class="form-sub">Masuk ke panel administrasi untuk mengelola layanan dan permohonan PTSP.</p>
 
         @if(session('status'))
           <div class="alert-success">{{ session('status') }}</div>

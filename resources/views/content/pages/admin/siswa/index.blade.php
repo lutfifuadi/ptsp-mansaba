@@ -119,11 +119,12 @@ $configData = Helper::appClasses();
           </div>
           <div class="col-6 col-md-2">
             <div class="filter-input-group">
-              <label class="filter-label"><i class="icon-base ti tabler-category"></i> Tipe</label>
-              <select name="tipe" class="filter-control" id="filterTipe">
-                <option value="">Semua Tipe</option>
-                <option value="XII" @selected(request('tipe') == 'XII')>Kelas XII</option>
-                <option value="PMBM" @selected(request('tipe') == 'PMBM')>PMBM</option>
+              <label class="filter-label"><i class="icon-base ti tabler-gender-male"></i> Jenis Kelamin</label>
+              <select name="jenis_kelamin" class="filter-control" id="filterJenisKelamin">
+                <option value="">Semua JK</option>
+                @foreach($jenisKelaminList as $jk)
+                  <option value="{{ $jk }}" @selected(request('jenis_kelamin') == $jk)>{{ ucfirst($jk) }}</option>
+                @endforeach
               </select>
             </div>
           </div>
@@ -146,17 +147,6 @@ $configData = Helper::appClasses();
                 @foreach($jurusanList as $j)
                   <option value="{{ $j }}" @selected(request('jurusan') == $j)>{{ $j }}</option>
                 @endforeach
-              </select>
-            </div>
-          </div>
-          <div class="col-6 col-md-2">
-            <div class="filter-input-group">
-              <label class="filter-label"><i class="icon-base ti tabler-info-circle"></i> Status</label>
-              <select name="status" class="filter-control" id="filterStatus">
-                <option value="">Semua Status</option>
-                <option value="lulus" @selected(request('status') == 'lulus')>Lulus</option>
-                <option value="tidak_lulus" @selected(request('status') == 'tidak_lulus')>Tidak Lulus</option>
-                <option value="pending" @selected(request('status') == 'pending')>Pending</option>
               </select>
             </div>
           </div>
@@ -189,10 +179,8 @@ $configData = Helper::appClasses();
           <div class="alert alert-label-primary d-flex mb-4" role="alert" style="border-radius: 4px;">
           <i class="icon-base ti tabler-info-circle me-2 fs-4"></i>
           <div class="small">
-            Format kolom: <strong>nisn, nis, no_peserta, nama_lengkap, tempat_lahir, tanggal_lahir, jenis_kelamin, nama_orang_tua, no_peserta_ujian, kelas, jurusan, madrasah_asal, status_kelulusan, tipe_kelulusan</strong><br>
-            Status: <code>lulus</code>, <code>tidak_lulus</code>, atau <code>pending</code><br>
-            Jenis kelamin: <code>laki-laki</code> atau <code>perempuan</code><br>
-            Tipe: <code>XII</code> atau <code>PMBM</code> (Default: XII)
+            Format kolom: <strong>nisn, nis, no_peserta, nama_lengkap, tempat_lahir, tanggal_lahir, jenis_kelamin, nama_orang_tua, kelas, jurusan</strong><br>
+            Jenis kelamin: <code>laki-laki</code> atau <code>perempuan</code>
           </div>
         </div>
         <form method="POST" action="{{ route('admin.siswa.import') }}" enctype="multipart/form-data">
@@ -231,7 +219,6 @@ function fetchStudents(url) {
   .then(response => response.text())
   .then(html => {
     document.getElementById('tableContainer').innerHTML = html;
-    updateBulkUI();
   });
 }
 
@@ -247,66 +234,25 @@ inputs.forEach(input => {
       const formData = new FormData(filterForm);
       const params = new URLSearchParams(formData);
       fetchStudents(`${filterForm.action}?${params.toString()}`);
-    }, 400); // 400ms debounce
+    }, 400);
   });
 });
 
 // Event Delegation for Table elements
 document.addEventListener('click', function(e) {
-  // Pagination AJAX
   const pageLink = e.target.closest('.pagination a');
   if (pageLink) {
     e.preventDefault();
     fetchStudents(pageLink.href);
   }
 
-  // Delete Confirmation
   const formHapus = e.target.closest('.form-hapus');
   if (formHapus && e.target.closest('button[type="submit"]')) {
     if (!confirm('Yakin ingin menghapus data siswa ini?')) {
       e.preventDefault();
     }
   }
-  
-  // Bulk Status Apply
-  if (e.target && e.target.id === 'btnBulkApply') {
-    const ids = Array.from(document.querySelectorAll('.row-check:checked')).map(cb => cb.value);
-    const status = document.getElementById('bulkStatus').value;
-    if (!status) { alert('Pilih status terlebih dahulu.'); return; }
-    if (!confirm('Ubah status ' + ids.length + ' siswa menjadi "' + status + '"?')) return;
-
-    fetch('{{ route("admin.siswa.bulk-status") }}', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-      },
-      body: JSON.stringify({ ids, status })
-    }).then(r => r.json()).then(() => window.location.reload());
-  }
 });
-
-// Event Delegation for Checkboxes
-document.addEventListener('change', function(e) {
-  if (e.target && e.target.id === 'checkAll') {
-    document.querySelectorAll('.row-check').forEach(cb => cb.checked = e.target.checked);
-    updateBulkUI();
-  }
-  
-  if (e.target && e.target.classList.contains('row-check')) {
-    updateBulkUI();
-  }
-});
-
-function updateBulkUI() {
-  const checked = document.querySelectorAll('.row-check:checked');
-  const bulkDiv = document.getElementById('bulkActions');
-  if(bulkDiv) {
-      document.getElementById('selectedCount').textContent = checked.length + ' dipilih';
-      bulkDiv.classList.toggle('d-none', checked.length === 0);
-      bulkDiv.classList.toggle('d-flex', checked.length > 0);
-  }
-}
 
 @if(session('error_import'))
   var modal = new bootstrap.Modal(document.getElementById('modalImport'));

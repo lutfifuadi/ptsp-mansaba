@@ -18,29 +18,12 @@ class Siswa extends Model
         'tanggal_lahir',
         'jenis_kelamin',
         'nama_orang_tua',
-        'no_peserta_ujian',
         'kelas',
         'jurusan',
-        'madrasah_asal',
-        'status_kelulusan',
-        'tipe_kelulusan',
-        'validation_token',
     ];
 
-    public function isLulus(): bool
+    public function permohonan()
     {
-        return $this->status_kelulusan === 'lulus';
-    }
-
-    /**
-     * Generate dan simpan validation_token unik jika belum ada.
-     * Hanya untuk siswa yang berstatus lulus.
-     */
-    public function generateValidationToken(): void
-    {
-        if ($this->status_kelulusan === 'lulus' && empty($this->validation_token)) {
-            $this->validation_token = Str::random(64);
-            $this->save();
-        }
+        return $this->hasMany(\App\Models\Permohonan::class, 'nisn', 'nisn');
     }
 }

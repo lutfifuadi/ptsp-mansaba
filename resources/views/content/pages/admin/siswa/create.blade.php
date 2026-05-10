@@ -132,40 +132,7 @@ $configData = Helper::appClasses();
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">No. Peserta Ujian</label>
-            <input type="text" name="no_peserta_ujian" class="form-control @error('no_peserta_ujian') is-invalid @enderror"
-              value="{{ old('no_peserta_ujian') }}" placeholder="Contoh: 24-10-19-3-0064-0001" style="border-radius: 4px;">
-            @error('no_peserta_ujian')<div class="invalid-feedback">{{ $message }}</div>@enderror
-          </div>
-          <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold">Madrasah Asal</label>
-            <input type="text" name="madrasah_asal" class="form-control @error('madrasah_asal') is-invalid @enderror"
-              value="{{ old('madrasah_asal') }}" placeholder="Nama sekolah asal" style="border-radius: 4px;">
-            @error('madrasah_asal')<div class="invalid-feedback">{{ $message }}</div>@enderror
-          </div>
-        </div>
 
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label class="form-label fw-bold text-info">Tipe Kelulusan <span class="text-danger">*</span></label>
-            <select name="tipe_kelulusan" class="form-select @error('tipe_kelulusan') is-invalid @enderror" required style="border-radius: 4px; border-left: 4px solid #00cfe8;">
-              <option value="XII" @selected(old('tipe_kelulusan', 'XII') === 'XII')>Kelas XII</option>
-              <option value="PMBM" @selected(old('tipe_kelulusan') === 'PMBM')>PMBM</option>
-            </select>
-            @error('tipe_kelulusan')<div class="invalid-feedback">{{ $message }}</div>@enderror
-          </div>
-          <div class="col-md-6 mb-4">
-            <label class="form-label fw-bold text-primary">Status Kelulusan <span class="text-danger">*</span></label>
-            <select name="status_kelulusan" class="form-select @error('status_kelulusan') is-invalid @enderror" required style="border-radius: 4px; border-left: 4px solid #696cff;">
-              <option value="pending" @selected(old('status_kelulusan', 'pending') === 'pending')>Pending</option>
-              <option value="lulus" @selected(old('status_kelulusan') === 'lulus')>Lulus</option>
-              <option value="tidak_lulus" @selected(old('status_kelulusan') === 'tidak_lulus')>Tidak Lulus</option>
-            </select>
-            @error('status_kelulusan')<div class="invalid-feedback">{{ $message }}</div>@enderror
-          </div>
-        </div>
 
         <div class="pt-3 border-top d-flex gap-2">
           <button type="submit" class="btn btn-premium-primary">

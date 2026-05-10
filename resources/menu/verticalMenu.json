@@ -7,37 +7,16 @@
       "slug": "dashboard"
     },
     {
-      "menuHeader": "Kelulusan (XII)"
+      "menuHeader": "LAYANAN"
     },
     {
-      "url": "/admin/siswa",
-      "icon": "menu-icon icon-base ti tabler-users",
-      "name": "Data Siswa",
-      "slug": "admin.siswa"
+      "url": "/admin/ptsp",
+      "icon": "menu-icon icon-base ti tabler-file-description",
+      "name": "Permohonan",
+      "slug": "admin.ptsp"
     },
     {
-      "url": "/admin/pengaturan/kelulusan",
-      "icon": "menu-icon icon-base ti tabler-settings-automation",
-      "name": "Pengaturan XII",
-      "slug": "admin.pengaturan.kelulusan"
-    },
-    {
-      "menuHeader": "PMBM"
-    },
-    {
-      "url": "/admin/pmbm",
-      "icon": "menu-icon icon-base ti tabler-users-plus",
-      "name": "Data Calon Murid",
-      "slug": "admin.pmbm"
-    },
-    {
-      "url": "/admin/pengaturan/pmbm",
-      "icon": "menu-icon icon-base ti tabler-settings-cog",
-      "name": "Pengaturan PMBM",
-      "slug": "admin.pengaturan.pmbm"
-    },
-    {
-      "menuHeader": "Pengaturan Umum"
+      "menuHeader": "Master Data"
     },
     {
       "url": "/admin/pengaturan/lembaga",
@@ -46,20 +25,19 @@
       "slug": "admin.pengaturan.lembaga"
     },
     {
+      "url": "/admin/siswa",
+      "icon": "menu-icon icon-base ti tabler-users",
+      "name": "Data Siswa",
+      "slug": "admin.siswa"
+    },
+    {
+      "menuHeader": "Pengaturan"
+    },
+    {
       "url": "/admin/pengaturan/umum",
       "icon": "menu-icon icon-base ti tabler-settings-2",
       "name": "Umum",
       "slug": "admin.pengaturan.umum"
-    },
-    {
-      "menuHeader": "Lainnya"
-    },
-    {
-      "url": "/",
-      "icon": "menu-icon icon-base ti tabler-external-link",
-      "name": "Cek Kelulusan (Frontend)",
-      "slug": "kelulusan.index",
-      "target": "_blank"
     }
   ]
 }
