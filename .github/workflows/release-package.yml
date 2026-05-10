@@ -47,12 +47,11 @@ jobs:
         run: |
           mkdir -p bootstrap/cache storage/framework/{sessions,views,cache/data} storage/logs
           chmod -R 775 bootstrap/cache storage
-          # Generate app key so artisan can boot
-          php artisan key:generate --force
-          # Install without running post-autoload scripts
+          # 1. Install dulu — vendor/autoload.php harus ada sebelum artisan bisa jalan
           composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
-          # Rebuild autoload map and run package:discover manually
-          # DB_CONNECTION=array means Laravel boots without needing any DB server/file
+          # 2. Sekarang vendor/ sudah ada, generate app key
+          php artisan key:generate --force
+          # 3. Rebuild autoload & discover packages (DB_CONNECTION=array, tidak butuh DB)
           composer dump-autoload --optimize --no-interaction
           php artisan package:discover --ansi
 
