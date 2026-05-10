@@ -75,7 +75,7 @@ jobs:
             
           # Zip the package
           cd release_package
-          zip -r ../absensi-siap-pakai.zip .
+          zip -r ../aplikasi.zip .
           cd ..
 
       - name: Get Build Date
