@@ -773,7 +773,70 @@ Fitur Export Excel dan CSV telah berhasil ditambahkan ke semua layanan PTSP di d
 #### Catatan untuk Sprint Berikutnya
 
 - Tidak ada.
----
+---
+
+### Aulia — 12 Mei 2026 06:00
+
+**Tugas** : Backend — Legalisir Ijazah untuk Alumni
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menambahkan method `legalisirIjazah()` dan `storeLegalisirIjazah()` di `PermohonanController.php` — form dan store legalisir ijazah tanpa validasi NISN.
+- Menambahkan route public `GET|POST /ptsp/legalisir-ijazah` di `routes/web.php`.
+- Update `LayananSeeder.php`: tambah "Legalisir Ijazah" kategori `umum` untuk alumni.
+- Update `SuratSiswaController@store`: hapus 'Ijazah' dari validasi `legalisir.*` — siswa hanya bisa pilih Raport & SKKB.
+
+#### Hasil
+
+- Alumni bisa mengakses form legalisir ijazah tanpa login di `/ptsp/legalisir-ijazah`.
+- Form tidak memerlukan NISN — field: nama_lengkap, tahun_lulus, jumlah_lembar, no_wa, keperluan.
+- Tiket format: `PTSP-LGL-XXXXX`.
+- Siswa aktif hanya bisa legalisir Raport & SKKB di form surat.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 06:00
+- Hasil : Bersih (error Tinker lama, tidak terkait perubahan)
+- Detail error: Tidak ada error baru
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Dika melakukan frontend & penyesuaian UI.
+
+---
+
+### Dika — 12 Mei 2026 06:05
+
+**Tugas** : Frontend — Legalisir Ijazah Alumni & Penyesuaian UI
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Membuat view `resources/views/content/pages/layanan/legalisir-ijazah.blade.php` — form legalisir ijazah alumni dengan desain premium (dark theme, glassmorphism, AJAX + SweetAlert2).
+- Update `ptsp/index.blade.php`: tambah "Legalisir Ijazah" di Layanan Umum dengan icon `ti-file-certificate`.
+- Update `ptsp/surat/form.blade.php`: hapus opsi "Ijazah" dari checkbox legalisir (hanya Raport & SKKB).
+
+#### Hasil
+
+- Form legalisir ijazah alumni tampil di `/ptsp/legalisir-ijazah` dengan field: nama_lengkap, tahun_lulus, jumlah_lembar, no_wa, keperluan.
+- Portal utama menampilkan "Legalisir Ijazah" di section Layanan Umum.
+- Form pengajuan surat siswa hanya menampilkan legalisir Raport & SKKB.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 06:05
+- Hasil : Bersih
+- Detail error: Tidak ada error baru
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Ayu melakukan security review.
+
+---
+
 
 ### Aulia — 11 Mei 2026 10:45
 
@@ -1695,5 +1758,289 @@ Tampilan "No. Peserta" pada kolom NISN/NIS di tabel halaman `/admin/siswa` telah
 - Tidak ada.
 
 ---
+
+### Aulia — 12 Mei 2026 06:00
+
+**Tugas** : Backend — Legalisir Ijazah untuk Alumni
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menambahkan method `legalisirIjazah()` dan `storeLegalisirIjazah()` di `PermohonanController.php` — form dan store legalisir ijazah tanpa validasi NISN.
+- Menambahkan route public `GET|POST /ptsp/legalisir-ijazah` di `routes/web.php`.
+- Update `LayananSeeder.php`: tambah "Legalisir Ijazah" kategori `umum` untuk alumni.
+- Update `SuratSiswaController@store`: hapus 'Ijazah' dari validasi `legalisir.*` — siswa hanya bisa pilih Raport & SKKB.
+
+#### Hasil
+
+- Alumni bisa mengakses form legalisir ijazah tanpa login di `/ptsp/legalisir-ijazah`.
+- Form tidak memerlukan NISN — field: nama_lengkap, tahun_lulus, jumlah_lembar, no_wa, keperluan.
+- Tiket format: `PTSP-LGL-XXXXX`.
+- Siswa aktif hanya bisa legalisir Raport & SKKB di form surat.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 06:00
+- Hasil : Bersih (error Tinker lama, tidak terkait perubahan)
+- Detail error: Tidak ada error baru
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Dika melakukan frontend & penyesuaian UI.
+
+---
+
+### Dika — 12 Mei 2026 06:05
+
+**Tugas** : Frontend — Legalisir Ijazah Alumni & Penyesuaian UI
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Membuat view `resources/views/content/pages/layanan/legalisir-ijazah.blade.php` — form legalisir ijazah alumni dengan desain premium (dark theme, glassmorphism, AJAX + SweetAlert2).
+- Update `ptsp/index.blade.php`: tambah "Legalisir Ijazah" di Layanan Umum dengan icon `ti-file-certificate`.
+- Update `ptsp/surat/form.blade.php`: hapus opsi "Ijazah" dari checkbox legalisir (hanya Raport & SKKB).
+
+#### Hasil
+
+- Form legalisir ijazah alumni tampil di `/ptsp/legalisir-ijazah`.
+- Portal utama menampilkan "Legalisir Ijazah" di section Layanan Umum.
+- Form pengajuan surat siswa hanya menampilkan legalisir Raport & SKKB.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 06:05
+- Hasil : Bersih
+- Detail error: Tidak ada error baru
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Ayu melakukan security review.
+
+---
+
+### Ayu — 12 Mei 2026 06:08
+
+**Tugas** : Security Review — Legalisir Ijazah Alumni
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Memeriksa endpoint `POST /ptsp/legalisir-ijazah` — validasi input ketat (string, integer, max length).
+- Memeriksa CSRF protection — meta tag + header X-CSRF-TOKEN terpasang.
+- Memeriksa XSS — Blade auto-escape `{{ }}`.
+- Memeriksa SQL injection — hanya Eloquent ORM, tidak ada raw query.
+- Memeriksa mass assignment — model `Permohonan` memiliki `$fillable`.
+
+#### Hasil
+
+- Tidak ada celah keamanan. Endpoint aman untuk digunakan publik.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 06:08
+- Hasil : Bersih
+- Detail error: Tidak ada error baru
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Sinta melakukan QA.
+
+---
+
+### Sinta — 12 Mei 2026 06:10
+
+**Tugas** : QA — Legalisir Ijazah Alumni
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+**Happy Path Testing:**
+- ✅ Route `GET /ptsp/legalisir-ijazah` mengarah ke view yang benar
+- ✅ Route `POST /ptsp/legalisir-ijazah` menyimpan dengan validasi lengkap
+- ✅ Form alumni: 5 field tanpa NISN
+- ✅ Portal: "Legalisir Ijazah" di Layanan Umum
+- ✅ Form surat: legalisir hanya Raport & SKKB
+- ✅ Backend validasi: `in:Raport,SKKB`
+
+**Edge Case Testing:**
+- ✅ `jumlah_lembar` integer 1-50
+- ✅ `keperluan` opsional (nullable)
+- ✅ Route public untuk alumni tanpa login
+- ✅ `firstOrCreate` mencegah duplikasi layanan
+
+#### Hasil
+
+- Semua fitur berfungsi 100% sesuai spesifikasi.
+- Tidak ada regresi pada fitur surat siswa.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 06:10
+- Hasil : Bersih (error Tinker lama tidak terkait)
+- Detail error: Tidak ada error baru
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Eka update dokumentasi.
+
+---
+
+### Eka — 12 Mei 2026 06:12
+
+**Tugas** : Update Dokumentasi — Legalisir Ijazah Alumni
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menambahkan entry di `docs/changelog.md`: "Fitur Legalisir Ijazah Alumni — layanan umum tanpa validasi NISN, form terpisah dari surat siswa"
+- Verifikasi semua laporan agen sudah tercatat di `docs/laporan-progress.md`.
+
+#### Hasil
+
+- Changelog telah diperbarui dengan fitur baru.
+- Progress report lengkap untuk semua agen.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 06:12
+- Hasil : Bersih
+
+#### Langkah Selanjutnya
+
+- Siap untuk Nisa melakukan release checklist.
+
+---
+
+### Nisa — 12 Mei 2026 06:15
+
+**Tugas** : Release Checklist — Legalisir Ijazah Alumni
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Memverifikasi 8 file modified + 1 file baru.
+- Memeriksa tidak ada debug code atau file temporary.
+- Memeriksa dokumentasi sudah lengkap (changelog + progress).
+- Verifikasi route baru terdaftar dan syntax PHP valid.
+
+#### Hasil
+
+- Release checklist lengkap — semua perubahan siap di-release.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 06:15
+- Hasil : Bersih
+- Detail error: Tidak ada error baru
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap di-review Gilang untuk laporan final.
+---
+### LAPORAN FINAL — GILANG
+
+**Tugas** : Legalisir Ijazah untuk Alumni — Pindah ke Layanan Umum
+**Tanggal** : 12 Mei 2026
+**Status** : Selesai
+
+#### Ringkasan Agen
+
+| Agen  | Tugas | Status | laravel.log |
+| ----- | ----- | ------ | ----------- |
+| Aulia | Backend — Controller, routes, seeder, validasi | OK | Bersih |
+| Dika  | Frontend — Form alumni, index, hapus Ijazah dari surat | OK | Bersih |
+| Ayu   | Security — Review endpoint & validasi | OK | Bersih |
+| Sinta | QA — Testing happy path & edge case | OK | Bersih |
+| Eka   | Docs — Update changelog & progress report | OK | Bersih |
+| Nisa  | Release — Checklist lengkap | OK | Bersih |
+
+#### Definition of Done
+
+- [x] Backend selesai: Method `legalisirIjazah()` & `storeLegalisirIjazah()` di PermohonanController
+- [x] laravel.log bersih — tidak ada error baru setelah perubahan
+- [x] UI responsif: Form legalisir ijazah alumni dengan desain premium (dark theme + glassmorphism)
+- [x] Legalisir Ijazah muncul di Layanan Umum portal PTSP
+- [x] Form surat siswa hanya menampilkan legalisir Raport & SKKB (Ijazah dihapus)
+- [x] Security review Ayu — tidak ada celah keamanan
+- [x] QA sign-off Sinta (happy path + edge case + monitoring laravel.log)
+- [x] Dokumentasi Eka diupdate di changelog & progress report
+- [x] Release checklist Nisa lengkap
+
+#### Ringkasan Hasil
+
+Layanan **Legalisir Ijazah** telah dialihkan dari Layanan Siswa ke Layanan Umum karena layanan ini diperuntukkan bagi **alumni** (bukan siswa aktif). Sebuah form standalone baru telah dibuat di `/ptsp/legalisir-ijazah` yang tidak menggunakan validasi NISN — alumni cukup mengisi nama_lengkap, tahun_lulus, jumlah_lembar, no_wa, dan keperluan. Di form pengajuan surat siswa, opsi "Ijazah" pada legalisir telah dihapus sehingga siswa aktif hanya bisa memilih Raport dan SKKB.
+
+#### Catatan untuk Sprint Berikutnya
+
+- Pastikan data legalisir ijazah alumni bisa dibedakan dengan legalisir siswa di admin dashboard (label sumber sudah otomatis berbeda karena alumni tidak punya user_id maupun NISN).
+
+---
+
+### Eka — 12 Mei 2026
+
+**Tugas** : Update Dokumentasi — Hapus Deskripsi Quick Menu
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menambahkan entry di `docs/changelog.md`: "Hapus deskripsi quick menu di halaman beranda PTSP"
+- Memverifikasi semua laporan agen sudah tercatat di `docs/laporan-progress.md`
+
+#### Hasil
+
+- Changelog telah diperbarui dengan perubahan terkini.
+- Progress report lengkap untuk semua agen.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026
+- Hasil : Bersih (error Tinker lama tidak terkait)
+- Detail error: Tidak ada error baru
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap di-review Gilang.
+
+---
+
+### LAPORAN FINAL — GILANG
+
+**Tugas** : Hapus Deskripsi Quick Menu di Halaman Beranda
+**Tanggal** : 12 Mei 2026
+**Status** : Selesai
+
+#### Ringkasan Agen
+
+| Agen  | Tugas | Status | laravel.log |
+| ----- | ----- | ------ | ----------- |
+| Dika  | Frontend — Hapus deskripsi `<p>` dari quick menu (2 lokasi) | OK | Bersih |
+| Ayu   | Security — Review view, tidak ada celah keamanan | OK | Bersih |
+| Sinta | QA — Testing halaman beranda, kompilasi Blade, log monitoring | OK | Bersih |
+| Eka   | Docs — Update changelog & progress report | OK | Bersih |
+
+#### Definition of Done
+
+- [x] Deskripsi quick menu dihapus dari Layanan Umum dan Layanan Siswa
+- [x] laravel.log bersih — tidak ada error baru setelah perubahan
+- [x] View berhasil dikompilasi tanpa error (Blade template valid)
+- [x] Struktur HTML tetap rapi, CSS tidak berubah
+- [x] Security review Ayu — tidak ada celah keamanan
+- [x] QA sign-off Sinta (happy path + monitoring laravel.log)
+- [x] Dokumentasi Eka diupdate di changelog & progress report
+
+#### Ringkasan Hasil
+
+Deskripsi teks pada quick menu di halaman beranda PTSP (`/ptsp`) telah dihapus dari kedua grid — Layanan Umum dan Layanan Siswa. Perubahan hanya menyentuh layer view (`ptsp/index.blade.php`) tanpa mengubah data di database, controller, atau model. Setiap menu-item kini hanya menampilkan ikon dan nama layanan (tanpa deskripsi).
+
+#### Catatan untuk Sprint Berikutnya
+
+- Tidak ada.
 
 

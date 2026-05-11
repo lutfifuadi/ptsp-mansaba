@@ -50,8 +50,7 @@
 
     @media (min-width: 1025px) {
       body {
-        height: 100vh;
-        overflow-y: hidden;
+        min-height: 100vh;
       }
 
       .container {
@@ -134,9 +133,9 @@
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 100%;
       margin: 0 auto;
-      padding: 40px 24px;
+      padding: 40px 3%;
       position: relative;
       z-index: 1;
     }
@@ -245,14 +244,18 @@
 
     /* Section Styles */
     .services-layout {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 60px;
       align-items: start;
-      overflow: hidden;
+      max-width: 100%;
+      padding: 0 20px;
+      margin: 0 auto;
     }
 
     .services-section {
+      flex: 0 1 auto;
       animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
     }
 
@@ -282,8 +285,9 @@
 
     /* Quick Menu Grid */
     .quick-menu-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
       gap: 20px;
     }
 
@@ -293,18 +297,21 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border-radius: 4px;
-      padding: 24px;
+      padding: 20px;
       text-decoration: none;
       color: var(--text-main);
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      gap: 16px;
+      gap: 12px;
       transition: var(--transition);
       position: relative;
       overflow: hidden;
-      group: hover;
+      width: 170px;
+      min-height: 160px;
+      flex-shrink: 0;
+      justify-content: center;
     }
 
     .menu-item::before {
@@ -330,15 +337,15 @@
     }
 
     .icon-wrapper {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
       border-radius: 4px;
       background: rgba(52, 211, 153, 0.1);
       display: flex;
       align-items: center;
       justify-content: center;
       color: var(--primary-light);
-      font-size: 28px;
+      font-size: 24px;
       position: relative;
       z-index: 1;
       transition: var(--transition);
@@ -409,12 +416,6 @@
     }
 
     /* Mobile Responsive */
-    @media (max-width: 1024px) {
-      .services-layout {
-        grid-template-columns: 1fr;
-      }
-    }
-
     @media (max-width: 768px) {
       .header h1 {
         font-size: 2rem;
@@ -425,28 +426,29 @@
       }
 
       .quick-menu-grid {
-        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-        gap: 16px;
+        flex-wrap: wrap;
+        gap: 10px;
       }
 
       .menu-item {
-        padding: 20px 16px;
-        gap: 12px;
+        width: 140px;
+        min-height: 140px;
+        padding: 15px;
       }
 
       .icon-wrapper {
-        width: 48px;
-        height: 48px;
-        font-size: 24px;
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
       }
 
       .menu-content h4 {
-        font-size: 1rem;
+        font-size: 0.8rem;
+        margin-bottom: 0;
       }
 
       .menu-content p {
         display: none;
-        /* Hide desc on small mobile for compact grid */
       }
     }
   </style>
@@ -485,6 +487,15 @@
                   $icon = 'ti-book';
               } elseif ($l->nama_layanan == 'Pengambilan Ijazah') {
                   $icon = 'ti-certificate';
+              } elseif (str_contains(strtolower($l->nama_layanan), 'legalisir ijazah')) {
+                  $icon = 'ti-file-certificate';
+              }
+
+              $label = $l->nama_layanan;
+              if ($l->nama_layanan == 'Buku Tamu Online') {
+                  $label = 'Buku Tamu';
+              } elseif ($l->nama_layanan == 'Pengambilan Ijazah') {
+                  $label = 'Ambil Ijazah';
               }
 
               $url = route('ptsp.create', ['layanan_id' => $l->id]);
@@ -492,6 +503,8 @@
                   $url = route('buku-tamu.index');
               } elseif ($l->nama_layanan == 'Pengambilan Ijazah') {
                   $url = route('ptsp.pengambilan-ijazah');
+              } elseif ($l->nama_layanan == 'Legalisir Ijazah') {
+                  $url = route('ptsp.legalisir-ijazah');
               } elseif ($l->external_url) {
                   $url = $l->external_url;
               }
@@ -501,7 +514,7 @@
                 <i class="ti {{ $icon }}"></i>
               </div>
               <div class="menu-content">
-                <h4>{{ $l->nama_layanan }}</h4>
+                <h4>{{ $label }}</h4>
               </div>
             </a>
           @endforeach
@@ -523,6 +536,13 @@
                   $icon = 'ti-mail';
               }
 
+              $label = $l->nama_layanan;
+              if ($l->nama_layanan == 'Surat Keterangan Siswa') {
+                  $label = 'Surat Siswa';
+              } elseif ($l->nama_layanan == 'Pembuatan Surat-Surat') {
+                  $label = 'Buat Surat';
+              }
+
               $url = route('ptsp.create', ['layanan_id' => $l->id]);
               if (
                   str_contains(strtolower($l->nama_layanan), 'surat') ||
@@ -538,7 +558,7 @@
                 <i class="ti {{ $icon }}"></i>
               </div>
               <div class="menu-content">
-                <h4>{{ $l->nama_layanan }}</h4>
+                <h4>{{ $label }}</h4>
               </div>
             </a>
           @endforeach

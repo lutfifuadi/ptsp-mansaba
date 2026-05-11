@@ -86,7 +86,7 @@ class SuratSiswaController extends Controller
             'jenis_surat' => ['required', 'string'],
             'keperluan'   => ['required', 'string', 'max:1000'],
             'legalisir'   => ['nullable', 'array'],
-            'legalisir.*' => ['string', 'in:Raport,SKKB,Ijazah'],
+            'legalisir.*' => ['string', 'in:Raport,SKKB'],
         ], [
             'jenis_surat.required' => 'Jenis surat wajib dipilih.',
             'keperluan.required'   => 'Keperluan wajib diisi.',

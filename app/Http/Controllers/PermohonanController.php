@@ -110,6 +110,52 @@ class PermohonanController extends Controller
         ]);
     }
 
+    public function legalisirIjazah()
+    {
+        return view('content.pages.layanan.legalisir-ijazah');
+    }
+
+    public function storeLegalisirIjazah(Request $request)
+    {
+        $request->validate([
+            'nama_lengkap' => 'required|string|max:255',
+            'tahun_lulus'  => 'required|string|max:10',
+            'no_wa'        => 'required|string|max:20',
+            'jumlah_lembar'=> 'required|integer|min:1|max:50',
+            'keperluan'    => 'nullable|string|max:1000',
+        ]);
+
+        $layanan = Layanan::firstOrCreate(
+            ['nama_layanan' => 'Legalisir Ijazah'],
+            [
+                'deskripsi' => 'Layanan legalisir ijazah bagi alumni',
+                'persyaratan' => '1. Fotokopi Ijazah\n2. Dokumen Asli Ijazah',
+                'kategori'  => 'umum',
+                'is_active' => true,
+            ]
+        );
+
+        $permohonan = Permohonan::create([
+            'user_id'    => auth()->check() ? auth()->id() : null,
+            'layanan_id' => $layanan->id,
+            'no_tiket'   => 'PTSP-LGL-' . strtoupper(Str::random(5)),
+            'status'     => 'pending',
+            'data_form'  => [
+                'nama_lengkap'  => $request->nama_lengkap,
+                'tahun_lulus'   => $request->tahun_lulus,
+                'no_wa'         => $request->no_wa,
+                'jumlah_lembar' => $request->jumlah_lembar,
+                'keperluan'     => $request->keperluan,
+            ],
+        ]);
+
+        return response()->json([
+            'success'  => true,
+            'message'  => 'Permohonan legalisir ijazah berhasil dikirim.',
+            'no_tiket' => $permohonan->no_tiket,
+        ]);
+    }
+
     public function show(Permohonan $permohonan)
     {
         // Ensure user can only see their own permohonan

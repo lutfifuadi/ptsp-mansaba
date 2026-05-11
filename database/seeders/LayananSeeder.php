@@ -37,9 +37,16 @@ class LayananSeeder extends Seeder
             ],
             [
                 'nama_layanan' => 'Legalisir',
-                'deskripsi' => 'Layanan pengesahan fotokopi ijazah atau dokumen akademik lainnya.',
+                'deskripsi' => 'Layanan pengesahan fotokopi raport, SKKB dan dokumen akademik untuk siswa aktif.',
                 'persyaratan' => '1. Dokumen Asli\n2. Fotokopi Dokumen (Maks. 5 Lembar)',
                 'kategori' => 'siswa',
+                'is_active' => true,
+            ],
+            [
+                'nama_layanan' => 'Legalisir Ijazah',
+                'deskripsi' => 'Layanan legalisir ijazah bagi alumni MAN 1 Kota Bandung.',
+                'persyaratan' => '1. Fotokopi Ijazah\n2. Dokumen Asli Ijazah',
+                'kategori' => 'umum',
                 'is_active' => true,
             ],
         ];

@@ -467,7 +467,7 @@
           <span style="color:var(--text-muted);font-weight:400;text-transform:none;letter-spacing:0;font-size:0.75rem">(opsional, pilih jika diperlukan)</span>
         </label>
         <div class="checkbox-group">
-          @foreach(['Raport', 'SKKB', 'Ijazah'] as $item)
+          @foreach(['Raport', 'SKKB'] as $item)
             <label class="checkbox-item" for="legalisir_{{ strtolower($item) }}">
               <input
                 type="checkbox"

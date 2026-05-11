@@ -48,6 +48,10 @@ Route::post('/buku-tamu', [GuestBookController::class, 'store'])->name('buku-tam
 Route::get('/ptsp/pengambilan-ijazah', [PermohonanController::class, 'pengambilanIjazah'])->name('ptsp.pengambilan-ijazah');
 Route::post('/ptsp/pengambilan-ijazah', [PermohonanController::class, 'storeIjazah'])->name('ptsp.pengambilan-ijazah.store');
 
+// Legalisir Ijazah Routes (Public) — untuk alumni, tanpa validasi NISN
+Route::get('/ptsp/legalisir-ijazah', [PermohonanController::class, 'legalisirIjazah'])->name('ptsp.legalisir-ijazah');
+Route::post('/ptsp/legalisir-ijazah', [PermohonanController::class, 'storeLegalisirIjazah'])->name('ptsp.legalisir-ijazah.store');
+
 Route::get('/page-2', [Page2::class, 'index'])->name('pages-page-2');
 
 // locale
