@@ -964,3 +964,88 @@ Sistem telah diperbarui dengan fondasi **Role Management**. Kolom `role` telah d
 #### Catatan untuk Sprint Berikutnya
 
 - Implementasi pembatasan akses UI (sidebar/tombol) berbasis role di level frontend dan backend middleware.
+### Aulia — 11 Mei 2026 11:20
+
+**Tugas** : Perbaikan Vite Manifest Not Found (Deployment Script)
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menjalankan build frontend secara lokal (`yarn build`) untuk memastikan integritas `public/build/manifest.json`.
+- Memodifikasi `deploy.sh` untuk menggunakan folder temporary saat ekstraksi build asset. Sekarang folder `public/build` lama hanya akan dihapus jika ekstraksi dari `aplikasi.zip` berhasil.
+- Memodifikasi `install.sh` dengan logika pengaman yang sama untuk mencegah error tampilan saat instalasi awal.
+- Memastikan `.gitignore` tetap mengecualikan `public/build` agar build pipeline di GitHub tetap menjadi sumber utama.
+
+#### Hasil
+
+- Skrip deployment lebih robust terhadap kegagalan ekstraksi zip.
+- Manifest valid tersedia di workspace lokal untuk di-push/sync.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 11 Mei 2026 11:18
+- Hasil : Bersih (Hanya ada error lama dari Tinker)
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Sinta melakukan verifikasi struktural dan instruksi deployment.
+
+---
+
+### Sinta — 11 Mei 2026 11:25
+
+**Tugas** : QA — Verifikasi Perbaikan Build/Deploy
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- **Verifikasi Kode**: Memastikan logika `mkdir -p /tmp/build_extract` dan pengecekan `-d "/tmp/build_extract/public/build"` sudah terimplementasi di `deploy.sh` dan `install.sh`.
+- **Verifikasi File**: Memastikan `public/build/manifest.json` ada di workspace lokal setelah build Aulia.
+- **Simulasi**: Memastikan alur skrip tidak akan merusak folder `public/build` jika file zip tidak valid.
+
+#### Hasil
+
+- Risiko "Vite manifest not found" akibat kegagalan download/ekstraksi di server telah diminimalisir.
+- Sistem siap untuk di-deploy ulang.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 11 Mei 2026 11:25
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap di-review Gilang untuk laporan final.
+
+---
+
+### LAPORAN FINAL — GILANG
+
+**Tugas** : Perbaikan Vite Manifest Not Found di Live Site
+**Tanggal** : 11 Mei 2026
+**Status** : Selesai
+
+#### Ringkasan Agen
+
+| Agen  | Tugas | Status | laravel.log |
+| ----- | ----- | ------ | ----------- |
+| Aulia | Build lokal & Robust Deployment Script | OK | Bersih |
+| Sinta | QA & Verifikasi Struktural | OK | Bersih |
+
+#### Definition of Done
+
+- [x] Backend/DevOps selesai: Skrip deploy & install diperbarui.
+- [x] laravel.log bersih — tidak ada error baru di lokal.
+- [x] Manifest valid tersedia di `public/build`.
+- [x] QA sign-off Sinta.
+
+#### Ringkasan Hasil
+
+Error `Vite manifest not found` di live site diidentifikasi terjadi karena kegagalan dalam proses download atau ekstraksi build asset (`aplikasi.zip`) yang menyebabkan folder `public/build` terhapus tanpa diganti dengan yang baru. Kami telah memperbaiki skrip `deploy.sh` dan `install.sh` agar menggunakan mekanisme folder temporary (atomic-like update). Sekarang, folder build lama hanya akan diganti jika folder build baru sudah dipastikan berhasil diekstrak sepenuhnya.
+
+#### Catatan untuk Sprint Berikutnya
+
+- User disarankan untuk menjalankan `bash deploy.sh` di server setelah melakukan push perubahan ini untuk menerapkan perbaikan.
+- Pastikan GitHub Secret `GITHUB_TOKEN` valid jika repository bersifat private agar proses download release asset lancar.

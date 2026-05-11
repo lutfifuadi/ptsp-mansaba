@@ -108,10 +108,19 @@ if [ -n "$LATEST_URL" ]; then
     fi
 
     if [ $? -eq 0 ]; then
-        rm -rf public/build
-        unzip -o /tmp/aplikasi.zip 'public/build/*' -d "$APP_PATH" > /dev/null
+        echo "[INFO] Mengekstrak build asset..."
+        mkdir -p /tmp/build_extract
+        unzip -o /tmp/aplikasi.zip 'public/build/*' -d /tmp/build_extract/ > /dev/null
+        
+        if [ -d "/tmp/build_extract/public/build" ]; then
+            rm -rf public/build
+            mv /tmp/build_extract/public/build public/
+            echo "[OK] public/build berhasil diekstrak."
+        else
+            echo "[ERROR] Folder public/build tidak ditemukan dalam zip!"
+        fi
+        rm -rf /tmp/build_extract
         rm /tmp/aplikasi.zip
-        echo "[OK] public/build berhasil diekstrak."
     else
         echo "[WARN] Gagal mengunduh build asset. Lanjutkan instalasi, tapi tampilan mungkin rusak."
         echo "[WARN] Hubungi developer untuk mengirim build asset manual."

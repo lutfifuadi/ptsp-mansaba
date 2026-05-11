@@ -13,3 +13,4 @@
 [2026-05-11] Sinkronisasi UI Data Siswa dengan Buku Tamu (Stats cards, Layout Master to ContentNavbar)
 [2026-05-11] Fitur Export Excel & CSV untuk semua layanan PTSP (Admin Dashboard)
 [2026-05-11] Dinamisasi Footer (Copyright, Made By, & Toggle Links) via Pengaturan Admin
+[2026-05-11] Perbaikan error 'Vite manifest not found' — skrip deploy & build robust
