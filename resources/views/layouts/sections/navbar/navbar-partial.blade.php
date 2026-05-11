@@ -100,7 +100,7 @@ use Illuminate\Support\Facades\Route;
                   John Doe
                   @endif
                 </h6>
-                <small class="text-body-secondary">Admin</small>
+                <small class="text-body-secondary">{{ ucfirst(Auth::user()->role ?? 'User') }}</small>
               </div>
             </div>
           </a>
