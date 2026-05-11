@@ -48,6 +48,37 @@ class SuratSiswaController extends Controller
     }
 
     /**
+     * STEP 2.5: Update NIS & Kelas dari halaman konfirmasi
+     * POST /ptsp/surat/konfirmasi
+     */
+    public function konfirmasiUpdate(Request $request)
+    {
+        $nisn = session('last_checked_nisn_surat');
+
+        if (!$nisn) {
+            return redirect()->route('ptsp.surat.cek-form')->withErrors([
+                'nisn' => 'Sesi tidak valid. Silakan mulai dari awal.',
+            ]);
+        }
+
+        $request->validate([
+            'nis'   => ['nullable', 'string', 'max:20'],
+            'kelas' => ['required', 'string', 'max:50'],
+        ], [
+            'kelas.required' => 'Kelas wajib diisi.',
+        ]);
+
+        $siswa = Siswa::where('nisn', $nisn)->firstOrFail();
+        $siswa->update([
+            'nis'   => $request->nis,
+            'kelas' => $request->kelas,
+        ]);
+
+        return redirect()->route('ptsp.surat.form')
+            ->with('success', 'Data berhasil diperbarui.');
+    }
+
+    /**
      * STEP 3: Form detail pengajuan surat
      * GET /ptsp/surat/form
      * Proteksi: harus ada session last_checked_nisn_surat

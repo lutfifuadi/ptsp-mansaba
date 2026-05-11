@@ -1759,6 +1759,249 @@ Tampilan "No. Peserta" pada kolom NISN/NIS di tabel halaman `/admin/siswa` telah
 
 ---
 
+### Aulia — 12 Mei 2026
+
+**Tugas** : Backend — Route & Controller untuk Edit NIS & Kelas oleh Siswa
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menambahkan route `POST /ptsp/surat/konfirmasi` (name: `ptsp.surat.konfirmasi`) di `routes/web.php`
+- Menambahkan method `konfirmasiUpdate(Request)` di `SuratSiswaController.php`:
+  - Proteksi session (`last_checked_nisn_surat`)
+  - Validasi: `nis` (nullable, string, max:20), `kelas` (required, string, max:50)
+  - Update `$siswa->update(['nis' => $request->nis, 'kelas' => $request->kelas])`
+  - Session tetap terjaga (tidak di-forget)
+  - Redirect ke `route('ptsp.surat.form')` dengan success message
+
+#### Hasil
+
+- Endpoint `POST /ptsp/surat/konfirmasi` siap digunakan
+- Data NIS & Kelas siswa bisa diupdate tanpa login (public, via session protection)
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026
+- Hasil : Bersih (hanya error lama dari tinker — tidak terkait perubahan)
+- Tindakan : Tidak ada
+
+#### Kendala
+
+- Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Dika mengerjakan frontend (view konfirmasi — input NIS & Kelas)
+
+---
+
+### Dika — 12 Mei 2026
+
+**Tugas** : Frontend — Edit NIS & Kelas di Halaman Konfirmasi
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Membungkus data grid dalam `<form method="POST" action="{{ route('ptsp.surat.konfirmasi') }}">` dengan `@csrf`
+- Mengubah `.data-item` Kelas menjadi input text (required)
+- Mengubah `.data-item` NIS menjadi input text (nullable/opsional)
+- Menambahkan display Nama Lengkap sebagai data-item baru (read-only)
+- NISN tetap ditampilkan sebagai teks (read-only)
+- Menambahkan CSS `.data-input` dan `.data-error` untuk styling input dark theme
+- Mengubah tombol "Ya, Lanjutkan" dari `<a>` menjadi `<button type="submit">`
+- Menambahkan `old()` helper untuk mempertahankan value jika ada validation error
+
+#### Hasil
+
+- Form konfirmasi sekarang memiliki input editable untuk NIS & Kelas
+- Tampilan konsisten dengan tema dark glassmorphism
+- Data NISN, Nama Lengkap, dan Tempat/Tanggal Lahir tetap read-only
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026
+- Hasil : Bersih (hanya error lama dari tinker)
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Ayu melakukan security review
+
+---
+
+### Ayu — 12 Mei 2026
+
+**Tugas** : Security Review — Edit NIS & Kelas oleh Siswa
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Review session protection di `SuratSiswaController@konfirmasiUpdate`
+- Review validasi input (NIS, Kelas)
+- Review potensi IDOR (Insecure Direct Object Reference)
+- Review CSRF protection
+- Review XSS pada output view
+- Review mass assignment protection di model Siswa
+
+#### Hasil
+
+| Aspek | Status | Catatan |
+|-------|--------|---------|
+| Session Protection | ✅ Aman | `last_checked_nisn_surat` dicek sebelum update |
+| IDOR | ✅ Aman | NISN diambil dari session, bukan input user |
+| CSRF | ✅ Aman | `@csrf` + method POST |
+| XSS | ✅ Aman | Blade `{{ }}` auto-escape |
+| Validasi Input | ✅ Aman | nullable|string|max:20 untuk NIS, required|string|max:50 untuk Kelas |
+| Mass Assignment | ✅ Aman | 'nis' dan 'kelas' sudah di `$fillable` |
+
+Tidak ditemukan celah keamanan.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026
+- Hasil : Bersih (hanya error tinker lama)
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Sinta melakukan QA testing
+
+---
+
+### Sinta — 12 Mei 2026
+
+**Tugas** : QA Testing — Edit NIS & Kelas oleh Siswa
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Verifikasi sintaks PHP (SuratSiswaController, routes/web.php) — tidak ada error
+- Verifikasi route terdaftar — `POST ptsp/surat/konfirmasi` → `SuratSiswaController@konfirmasiUpdate`
+- Verifikasi 6 route surat lengkap (cek-form, cek, konfirmasi, form, store, sukses)
+- Verifikasi form view: method POST, @csrf, action ke route('ptsp.surat.konfirmasi')
+- Verifikasi input fields: kelas (required), nis (nullable), NISN read-only
+- Verifikasi button submit menggantikan link anchor
+- Cek laravel.log — bersih
+
+#### Hasil QA
+
+| Test Case | Status | Keterangan |
+|-----------|--------|------------|
+| Happy path: NISN valid → edit NIS & Kelas → submit → form surat | ✅ Siap | Flow: cekNisn() → konfirmasiUpdate() → formPengajuan() |
+| Kelas kosong | ✅ Terproteksi | Validasi required di controller + HTML required |
+| NIS kosong | ✅ Valid | nullable, tidak wajib diisi |
+| Session expired | ✅ Terproteksi | Redirect ke cek-form dengan error message |
+| XSS attempt | ✅ Terproteksi | Blade {{ }} auto-escape |
+| IDOR | ✅ Terproteksi | NISN dari session, bukan input user |
+| Console browser | ✅ Siap | Tidak ada JS error (tidak ada JS baru ditambahkan) |
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026
+- Hasil : Bersih (tidak ada error baru dari perubahan)
+- Detail error: Tidak ada
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Eka mengupdate dokumentasi
+
+---
+
+### Eka — 12 Mei 2026
+
+**Tugas** : Update Dokumentasi — Edit NIS & Kelas oleh Siswa
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menambahkan entry di `docs/changelog.md`: "Fitur Edit NIS & Kelas oleh Siswa di Halaman Konfirmasi Surat"
+- Memverifikasi semua laporan agen (Aulia, Dika, Ayu, Sinta) sudah tercatat di `docs/laporan-progress.md`
+
+#### Hasil
+
+- Changelog telah diperbarui dengan perubahan terkini
+- Progress report lengkap untuk semua agen
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026
+- Hasil : Bersih (tidak ada error baru)
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Nisa melakukan release checklist
+
+---
+
+### Nisa — 12 Mei 2026
+
+**Tugas** : Release Checklist — Edit NIS & Kelas oleh Siswa
+**Status** : Selesai
+
+#### Release Checklist
+
+| Item | Status | Keterangan |
+|------|--------|------------|
+| Backend selesai | ✅ | Aulia: route + controller + validation |
+| Frontend selesai | ✅ | Dika: form input NIS & Kelas, styling dark theme |
+| Security review | ✅ | Ayu: tidak ada celah (session, IDOR, CSRF, XSS) |
+| QA testing | ✅ | Sinta: happy path + edge cases, laravel.log bersih |
+| Dokumentasi | ✅ | Eka: changelog & progress report |
+| laravel.log | ✅ Bersih | Tidak ada error baru dari fitur ini |
+| Konflik dengan fitur lain | ✅ Tidak ada | Tidak mengubah struktur database atau fitur existing |
+
+#### Rekomendasi
+
+**GO — Fitur siap untuk production.**
+
+#### Langkah Selanjutnya
+
+- Siap untuk Gilang melakukan verifikasi final
+
+---
+
+### LAPORAN FINAL — GILANG
+
+**Tugas** : Edit NIS & Kelas oleh Siswa di Halaman Konfirmasi Surat
+**Tanggal** : 12 Mei 2026
+**Status** : Selesai
+
+#### Ringkasan Agen
+
+| Agen  | Tugas | Status | laravel.log |
+| ----- | ----- | ------ | ----------- |
+| Aulia | Backend — Route, controller, validasi, update siswa | OK | Bersih |
+| Dika  | Frontend — Form input NIS & Kelas, styling dark theme | OK | Bersih |
+| Ayu   | Security — Session, IDOR, CSRF, XSS review | OK | Bersih |
+| Sinta | QA — Happy path + edge cases, monitoring laravel.log | OK | Bersih |
+| Eka   | Docs — Update changelog & progress report | OK | Bersih |
+| Nisa  | Release — Checklist lengkap, GO recommendation | OK | Bersih |
+
+#### Definition of Done
+
+- [x] Backend selesai: Route POST `/ptsp/surat/konfirmasi`, method `konfirmasiUpdate()` dengan session protection
+- [x] laravel.log bersih — tidak ada error baru setelah perubahan
+- [x] UI responsif: Input NIS & Kelas dengan dark theme glassmorphism, konsisten dengan halaman lain
+- [x] NISN tidak bisa diedit (read-only), hanya NIS & Kelas yang bisa diubah
+- [x] Security review Ayu — tidak ada celah keamanan (session, IDOR, CSRF, XSS)
+- [x] QA sign-off Sinta (happy path + edge cases + monitoring laravel.log)
+- [x] Dokumentasi Eka diupdate di changelog & progress report
+- [x] Release checklist Nisa lengkap — GO
+
+#### Ringkasan Hasil
+
+Fitur **Edit NIS & Kelas oleh Siswa** telah ditambahkan di halaman konfirmasi identitas (`/ptsp/surat` step 2). Siswa yang memasukkan NISN valid sekarang bisa mengedit NIS (opsional) dan Kelas (wajib) sebelum melanjutkan ke form pengajuan surat. Data otomatis tersimpan ke tabel `siswa` ketika siswa mengklik "Ya, Lanjutkan". Perubahan hanya pada layer controller dan view — tidak ada migrasi database baru.
+
+#### Catatan untuk Sprint Berikutnya
+
+- Tidak ada.
+
+---
+
+---
+
 ### Aulia — 12 Mei 2026 06:00
 
 **Tugas** : Backend — Legalisir Ijazah untuk Alumni

@@ -20,4 +20,5 @@
 [2026-05-11] Fitur Pengajuan Surat Siswa: Validasi NISN 10 digit & Konfirmasi Identitas
 [2026-05-11] Hapus tampilan No. Peserta dari kolom NISN/NIS di tabel admin siswa
 [2026-05-12] Fitur Legalisir Ijazah Alumni — layanan umum tanpa validasi NISN, form terpisah dari surat siswa
+[2026-05-12] Fitur Edit NIS & Kelas oleh Siswa di Halaman Konfirmasi Surat — input editable di step konfirmasi, auto-save ke tabel siswa
 [2026-05-12] Hapus deskripsi quick menu di halaman beranda PTSP

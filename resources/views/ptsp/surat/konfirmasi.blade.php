@@ -197,6 +197,29 @@
 
     .data-value { font-size: 0.95rem; font-weight: 600; color: var(--text-main); }
 
+    .data-input {
+      width: 100%; padding: 8px 0; margin-top: 4px;
+      background: transparent;
+      border: none; border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-main); font-size: 0.95rem; font-weight: 600;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      outline: none; transition: var(--transition);
+    }
+
+    .data-input:focus {
+      border-bottom-color: var(--primary-light);
+      box-shadow: 0 2px 8px rgba(52, 211, 153, 0.1);
+    }
+
+    .data-input::placeholder {
+      color: var(--text-muted); font-weight: 400; font-size: 0.85rem;
+    }
+
+    .data-error {
+      font-size: 0.72rem; color: var(--error);
+      margin-top: 4px; font-weight: 500;
+    }
+
     /* Question */
     .question-box { text-align: center; margin-bottom: 24px; }
     .question-box p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 4px; }
@@ -316,39 +339,61 @@
       </div>
     </div>
 
-    <!-- Data Grid -->
-    <div class="data-grid">
-      <div class="data-item">
-        <div class="data-label">Kelas</div>
-        <div class="data-value">{{ $siswa->kelas ?? '-' }}</div>
-      </div>
-      <div class="data-item">
-        <div class="data-label">NISN</div>
-        <div class="data-value" style="letter-spacing:1.5px">{{ $siswa->nisn }}</div>
-      </div>
-      <div class="data-item" style="grid-column: 1 / -1">
-        <div class="data-label">Tempat & Tanggal Lahir</div>
-        <div class="data-value">
-          {{ $siswa->tempat_lahir ?? '-' }}
-          @if($siswa->tanggal_lahir)
-            , {{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->locale('id')->translatedFormat('d F Y') }}
-          @endif
+    <!-- Form Edit Data -->
+    <form method="POST" action="{{ route('ptsp.surat.konfirmasi') }}" id="form-konfirmasi">
+      @csrf
+
+      <!-- Data Grid -->
+      <div class="data-grid">
+        <div class="data-item">
+          <div class="data-label">Kelas</div>
+          <input type="text" name="kelas" value="{{ old('kelas', $siswa->kelas) }}"
+                 class="data-input" placeholder="Masukkan kelas"
+                 required>
+          @error('kelas')
+            <div class="data-error">{{ $message }}</div>
+          @enderror
+        </div>
+        <div class="data-item">
+          <div class="data-label">NIS</div>
+          <input type="text" name="nis" value="{{ old('nis', $siswa->nis) }}"
+                 class="data-input" placeholder="NIS (opsional)">
+          @error('nis')
+            <div class="data-error">{{ $message }}</div>
+          @enderror
+        </div>
+        <div class="data-item">
+          <div class="data-label">NISN</div>
+          <div class="data-value" style="letter-spacing:1.5px">{{ $siswa->nisn }}</div>
+        </div>
+        <div class="data-item">
+          <div class="data-label">Nama Lengkap</div>
+          <div class="data-value">{{ $siswa->nama_lengkap }}</div>
+        </div>
+        <div class="data-item" style="grid-column: 1 / -1">
+          <div class="data-label">Tempat & Tanggal Lahir</div>
+          <div class="data-value">
+            {{ $siswa->tempat_lahir ?? '-' }}
+            @if($siswa->tanggal_lahir)
+              , {{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->locale('id')->translatedFormat('d F Y') }}
+            @endif
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="question-box">
-      <p>Apakah data di atas adalah <strong>data Anda?</strong></p>
-    </div>
+      <div class="question-box">
+        <p>Jika data sudah sesuai, silakan lanjutkan. <strong>NIS dan Kelas</strong> dapat diedit jika belum sesuai.</p>
+      </div>
 
-    <div class="btn-group">
-      <a href="{{ route('ptsp.surat.form') }}" class="btn-yes" id="btn-lanjut">
-        <i class="ti ti-check"></i> Ya, Lanjutkan
-      </a>
-      <a href="{{ route('ptsp.surat.cek-form') }}" class="btn-no">
-        <i class="ti ti-x"></i> Tidak, Kembali
-      </a>
-    </div>
+      <div class="btn-group">
+        <button type="submit" class="btn-yes" id="btn-lanjut">
+          <i class="ti ti-check"></i> Ya, Lanjutkan
+        </button>
+        <a href="{{ route('ptsp.surat.cek-form') }}" class="btn-no">
+          <i class="ti ti-x"></i> Tidak, Kembali
+        </a>
+      </div>
+    </form>
   </div>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

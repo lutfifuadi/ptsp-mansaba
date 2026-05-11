@@ -33,6 +33,7 @@ Route::prefix('ptsp')->name('ptsp.')->group(function () {
   Route::post('/surat/cek', [SuratSiswaController::class, 'cekNisn'])->name('surat.cek');
   Route::get('/surat/form', [SuratSiswaController::class, 'formPengajuan'])->name('surat.form');
   Route::post('/surat/store', [SuratSiswaController::class, 'store'])->name('surat.store');
+  Route::post('/surat/konfirmasi', [SuratSiswaController::class, 'konfirmasiUpdate'])->name('surat.konfirmasi');
   Route::get('/surat/sukses/{noTiket}', [SuratSiswaController::class, 'sukses'])->name('surat.sukses');
 });
 
