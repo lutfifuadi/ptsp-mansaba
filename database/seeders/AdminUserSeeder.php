@@ -14,6 +14,7 @@ class AdminUserSeeder extends Seeder
             'email' => 'admin@ptsp.com',
             'username' => 'admin',
             'password' => 'sangatrahasia123',
+            'role' => 'admin',
         ]);
     }
 }

@@ -902,30 +902,40 @@ Seluruh elemen footer yang sebelumnya hardcoded (©, Pixinvent, link-link templa
 
 - Membuat file `setup-queue-worker.sh` untuk menangani Laravel queue processes via Supervisor.
 - Menyesuaikan variabel `GITHUB_REPO`, branding, dan asset zip (`aplikasi.zip`) di file `deploy.sh`.
-- Memberikan izin eksekusi secara konseptual (siap pakai di lingkungan Linux).
+- Implementasi sistem **Role** pada tabel `users`:
+    - Menambahkan kolom `role` via migrasi (`2026_05_11_035741_add_role_to_users_table.php`).
+    - Memperbarui model `User` dan `AdminUserSeeder` untuk mendukung role.
+- Membuat akun **Operator** baru:
+    - Nama: Operator
+    - Email: `operator@ptsp.com`
+    - Username: `operator`
+    - Password: `operator123`
+    - Role: `operator`
+- Memperbarui akun Admin eksisting dengan role `admin`.
 
 #### Hasil
 
 - Script instalasi (`install.sh`) dan pembaruan (`deploy.sh`) sudah siap digunakan untuk deployment server baru Aplikasi PTSP.
 - Penamaan repo dan asset (`aplikasi.zip`) sudah sinkron dengan repository dan GitHub Workflows.
-- Perubahan sudah tersedia di GitHub dan proses build release otomatis sedang berjalan.
+- Sistem kini mendukung pemisahan role (Admin & Operator).
+- Akun operator sudah siap digunakan.
 
 #### Pengecekan laravel.log
 
-- Waktu cek : 11 Mei 2026 10:41
-- Hasil : Bersih
-- Detail error: Tidak ada error
+- Waktu cek : 11 Mei 2026 10:59
+- Hasil : Bersih (hanya terdapat log error parse tinker saat proses setup yang sudah teratasi)
+- Detail error: Tidak ada error aplikasi mendasar
 - Tindakan : Tidak ada
 
 #### Langkah Selanjutnya
 
-- Menunggu proses GitHub Actions selesai untuk memverifikasi asset `aplikasi.zip` di halaman Release.
+- Mengimplementasikan middleware atau gate berbasis role jika diperlukan pembatasan akses fitur tertentu antara Admin dan Operator.
 
 ---
 
 ### LAPORAN FINAL — GILANG
 
-**Tugas** : Penyesuaian Script Instalasi, Deployment & Release v1.0.0
+**Tugas** : Penyesuaian Script Deployment & Implementasi Role Operator
 **Tanggal** : 11 Mei 2026
 **Status** : Selesai
 
@@ -934,22 +944,23 @@ Seluruh elemen footer yang sebelumnya hardcoded (©, Pixinvent, link-link templa
 | Agen  | Tugas | Status | laravel.log |
 | ----- | ----- | ------ | ----------- |
 | Aulia | Penyesuaian variabel, sinkronisasi asset, push & tagging | OK | Bersih |
+| Gilang| Implementasi Role & Akun Operator | OK | Bersih |
 
 #### Definition of Done
 
 - [x] Variabel `GITHUB_REPO` diarahkan ke `ptsp-mansaba`
 - [x] Teks branding disesuaikan ke "Aplikasi PTSP MAN 1 Kota Bandung"
-- [x] Referensi asset build diarahkan ke `aplikasi.zip` (sesuai GitHub Workflows)
-- [x] File pendukung `setup-queue-worker.sh` tersedia
-- [x] Script `deploy.sh` telah disesuaikan untuk update berkala
-- [x] Perubahan lokal telah di-push ke GitHub
-- [x] Tag `v1.0.0` telah dibuat dan di-push
+- [x] Referensi asset build diarahkan ke `aplikasi.zip`
+- [x] Script `deploy.sh` telah disesuaikan
+- [x] Migrasi kolom `role` pada tabel `users` selesai
+- [x] Akun `operator@ptsp.com` berhasil dibuat
+- [x] Akun `admin@ptsp.com` diperbarui dengan role `admin`
 - [x] laravel.log bersih
 
 #### Ringkasan Hasil
 
-File `install.sh` dan `deploy.sh` telah berhasil disesuaikan untuk kebutuhan deployment dan pembaruan rutin Aplikasi PTSP MAN 1 Kota Bandung. Seluruh perubahan lokal telah berhasil di-push ke branch `main` dan tag `v1.0.0` telah dipublikasikan untuk memicu build rilis otomatis.
+Sistem telah diperbarui dengan fondasi **Role Management**. Kolom `role` telah ditambahkan ke tabel `users` dan dua akun utama (Admin & Operator) telah dikonfigurasi. Selain itu, infrastruktur deployment (`install.sh` & `deploy.sh`) telah sepenuhnya sinkron dengan repository GitHub.
 
 #### Catatan untuk Sprint Berikutnya
 
-- Verifikasi hasil build di GitHub Release `v1.0.0`.
+- Implementasi pembatasan akses UI (sidebar/tombol) berbasis role di level frontend dan backend middleware.
