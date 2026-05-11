@@ -246,6 +246,9 @@
             <button type="submit" class="btn btn-premium-primary">
               <i class="icon-base ti tabler-upload me-1"></i> Mulai Import
             </button>
+            <a href="{{ route('admin.siswa.import.template') }}" class="btn btn-outline-primary">
+              <i class="icon-base ti tabler-download me-1"></i> Download Template
+            </a>
             <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Batal</button>
           </div>
         </form>

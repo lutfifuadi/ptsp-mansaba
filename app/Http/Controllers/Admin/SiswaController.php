@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Exports\SiswaTemplateExport;
 use App\Imports\SiswaImport;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
@@ -134,5 +135,9 @@ class SiswaController extends Controller
         }
     }
 
+    public function downloadTemplate()
+    {
+        return Excel::download(new SiswaTemplateExport(), 'template-import-siswa.xlsx');
+    }
 
 }

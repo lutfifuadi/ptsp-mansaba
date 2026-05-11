@@ -14,3 +14,8 @@
 [2026-05-11] Fitur Export Excel & CSV untuk semua layanan PTSP (Admin Dashboard)
 [2026-05-11] Dinamisasi Footer (Copyright, Made By, & Toggle Links) via Pengaturan Admin
 [2026-05-11] Perbaikan error 'Vite manifest not found' — skrip deploy & build robust
+[2026-05-11] Fitur download template Excel import siswa di halaman admin/siswa
+[2026-05-11] Zona waktu sistem bisa diubah via Pengaturan Umum Admin (Asia/Jakarta, Makassar, Jayapura, dll)
+[2026-05-11] Fix Error: View [ptsp.tracking-result] not found (Controller & Missing View)
+[2026-05-11] Fitur Pengajuan Surat Siswa: Validasi NISN 10 digit & Konfirmasi Identitas
+[2026-05-11] Hapus tampilan No. Peserta dari kolom NISN/NIS di tabel admin siswa

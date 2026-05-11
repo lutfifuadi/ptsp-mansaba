@@ -18,6 +18,7 @@ class GeneralSettingController extends Controller
             'wa_sender'     => Pengaturan::get('wa_sender', ''),
             'app_name'      => Pengaturan::get('app_name', 'Aplikasi PTSP'),
             'app_version'   => Pengaturan::get('app_version', '1.0.0'),
+            'app_timezone'  => Pengaturan::get('app_timezone', 'Asia/Jakarta'),
             'footer_copyright' => Pengaturan::get('footer_copyright', '© ' . date('Y')),
             'footer_made_by' => Pengaturan::get('footer_made_by', 'Pixinvent'),
             'footer_made_by_url' => Pengaturan::get('footer_made_by_url', 'https://pixinvent.com'),
@@ -29,6 +30,8 @@ class GeneralSettingController extends Controller
 
     public function update(Request $request)
     {
+        $timezones = timezone_identifiers_list();
+
         $request->validate([
             'tahun_ajaran'  => ['required', 'string', 'max:20'],
             'tanggal_surat' => ['required', 'date'],
@@ -37,6 +40,7 @@ class GeneralSettingController extends Controller
             'wa_sender'     => ['nullable', 'string', 'max:20'],
             'app_name'      => ['nullable', 'string', 'max:100'],
             'app_version'   => ['nullable', 'string', 'max:20'],
+            'app_timezone'  => ['nullable', 'string', 'in:' . implode(',', $timezones)],
             'footer_copyright' => ['nullable', 'string', 'max:100'],
             'footer_made_by' => ['nullable', 'string', 'max:100'],
             'footer_made_by_url' => ['nullable', 'url', 'max:255'],
@@ -50,6 +54,7 @@ class GeneralSettingController extends Controller
         Pengaturan::set('wa_sender', $request->wa_sender);
         Pengaturan::set('app_name', $request->app_name);
         Pengaturan::set('app_version', $request->app_version);
+        Pengaturan::set('app_timezone', $request->app_timezone);
         Pengaturan::set('footer_copyright', $request->footer_copyright);
         Pengaturan::set('footer_made_by', $request->footer_made_by);
         Pengaturan::set('footer_made_by_url', $request->footer_made_by_url);

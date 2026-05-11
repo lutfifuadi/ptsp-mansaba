@@ -64,12 +64,26 @@ $configData = Helper::appClasses();
               <div class="form-text">Nama yang tampil di title bar dan header sistem.</div>
             </div>
 
-            <div class="mb-0">
+            <div class="mb-3">
               <label class="form-label fw-bold">
                 <i class="icon-base ti tabler-tag me-1 text-primary"></i> Versi Aplikasi
               </label>
               <input type="text" name="app_version" class="form-control" value="{{ old('app_version', $pengaturan['app_version']) }}" placeholder="1.0.0" required>
               <div class="form-text">Versi rilis aplikasi saat ini.</div>
+            </div>
+
+            <div class="mb-0">
+              <label class="form-label fw-bold">
+                <i class="icon-base ti tabler-clock me-1 text-primary"></i> Zona Waktu
+              </label>
+              <select name="app_timezone" class="form-select">
+                <option value="Asia/Jakarta" {{ $pengaturan['app_timezone'] == 'Asia/Jakarta' ? 'selected' : '' }}>Asia/Jakarta (WIB — GMT+7)</option>
+                <option value="Asia/Makassar" {{ $pengaturan['app_timezone'] == 'Asia/Makassar' ? 'selected' : '' }}>Asia/Makassar (WITA — GMT+8)</option>
+                <option value="Asia/Jayapura" {{ $pengaturan['app_timezone'] == 'Asia/Jayapura' ? 'selected' : '' }}>Asia/Jayapura (WIT — GMT+9)</option>
+                <option value="Asia/Pontianak" {{ $pengaturan['app_timezone'] == 'Asia/Pontianak' ? 'selected' : '' }}>Asia/Pontianak (WIB — GMT+7)</option>
+                <option value="UTC" {{ $pengaturan['app_timezone'] == 'UTC' ? 'selected' : '' }}>UTC</option>
+              </select>
+              <div class="form-text">Zona waktu sistem untuk menentukan waktu server.</div>
             </div>
           </div>
         </div>

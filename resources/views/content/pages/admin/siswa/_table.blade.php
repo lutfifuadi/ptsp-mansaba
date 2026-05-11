@@ -103,7 +103,6 @@
         <td>
           <div class="fw-bold text-dark">{{ $s->nisn }}</div>
           <div class="text-muted small">NIS: {{ $s->nis ?? '-' }}</div>
-          <div class="text-primary small fw-semibold">No. Peserta: {{ $s->no_peserta ?? '-' }}</div>
         </td>
         <td>
           <div class="fw-bold">{{ $s->nama_lengkap }}</div>
