@@ -41,11 +41,19 @@ class SiswaController extends Controller
         $jurusanList = Siswa::distinct()->orderBy('jurusan')->pluck('jurusan');
         $jenisKelaminList = Siswa::distinct()->orderBy('jenis_kelamin')->pluck('jenis_kelamin');
 
+        // Statistik untuk UI
+        $stats = [
+            'total' => Siswa::count(),
+            'laki_laki' => Siswa::where('jenis_kelamin', 'laki-laki')->count(),
+            'perempuan' => Siswa::where('jenis_kelamin', 'perempuan')->count(),
+            'total_kelas' => $kelasList->count(),
+        ];
+
         if ($request->ajax()) {
             return view('content.pages.admin.siswa._table', compact('siswa'))->render();
         }
 
-        return view('content.pages.admin.siswa.index', compact('siswa', 'kelasList', 'jurusanList', 'jenisKelaminList'));
+        return view('content.pages.admin.siswa.index', compact('siswa', 'kelasList', 'jurusanList', 'jenisKelaminList', 'stats'));
     }
 
     public function create()
@@ -63,7 +71,6 @@ class SiswaController extends Controller
             'tempat_lahir'     => ['nullable', 'string', 'max:100'],
             'tanggal_lahir'    => ['nullable', 'date'],
             'jenis_kelamin'    => ['nullable', 'in:laki-laki,perempuan'],
-            'nama_orang_tua'   => ['nullable', 'string', 'max:255'],
             'kelas'            => ['required', 'string', 'max:50'],
             'jurusan'          => ['required', 'string', 'max:100'],
         ], [
@@ -91,7 +98,6 @@ class SiswaController extends Controller
             'tempat_lahir'     => ['nullable', 'string', 'max:100'],
             'tanggal_lahir'    => ['nullable', 'date'],
             'jenis_kelamin'    => ['nullable', 'in:laki-laki,perempuan'],
-            'nama_orang_tua'   => ['nullable', 'string', 'max:255'],
             'kelas'            => ['required', 'string', 'max:50'],
             'jurusan'          => ['required', 'string', 'max:100'],
         ]);

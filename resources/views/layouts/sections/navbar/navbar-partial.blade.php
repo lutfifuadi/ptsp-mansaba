@@ -31,6 +31,14 @@ use Illuminate\Support\Facades\Route;
 @endif
 
 <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+  <!-- Style Switcher -->
+  <div class="navbar-nav align-items-center">
+    <li class="nav-item d-none d-md-flex align-items-center me-3">
+      <h5 class="mb-0 fw-bold text-primary">
+        @yield('navbar-title', config('variables.templateName'))
+      </h5>
+    </li>
+  </div>
   @if ($configData['hasCustomizer'] == true)
   <!-- Style Switcher -->
   <div class="navbar-nav align-items-center">

@@ -77,15 +77,19 @@
   <div class="footer-bottom py-3 py-md-5">
     <div class="container d-flex flex-wrap justify-content-between flex-md-row flex-column text-center text-md-start">
       <div class="mb-2 mb-md-0">
-        <span class="footer-bottom-text">©
-          <script>
-            document.write(new Date().getFullYear());
-          </script>
+        <span class="footer-bottom-text">
+          @php
+            $footerCopyright = \App\Models\Pengaturan::get('footer_copyright', '© ' . date('Y'));
+            $footerMadeBy = \App\Models\Pengaturan::get('footer_made_by', config('variables.creatorName'));
+            $footerMadeByUrl = \App\Models\Pengaturan::get('footer_made_by_url', config('variables.creatorUrl'));
+          @endphp
+          {!! $footerCopyright !!}
         </span>
-        <a href="{{ config('variables.creatorUrl') }}" target="_blank"
-          class="text-white">{{ config('variables.creatorName') }},</a>
+        <a href="{{ !empty($footerMadeByUrl) ? $footerMadeByUrl : '#' }}" target="_blank"
+          class="text-white">{{ $footerMadeBy }},</a>
         <span class="footer-bottom-text"> Made with ❤️ for a better web.</span>
       </div>
+      @if(\App\Models\Pengaturan::get('footer_show_links', '1') === '1')
       <div>
         <a href="{{ config('variables.githubFreeUrl') }}" class="me-4 text-white" target="_blank">
           <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -126,6 +130,7 @@
           </svg>
         </a>
       </div>
+      @endif
     </div>
   </div>
 </footer>

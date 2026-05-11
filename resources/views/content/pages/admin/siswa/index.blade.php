@@ -1,10 +1,7 @@
-@php
-$configData = Helper::appClasses();
-@endphp
-
-@extends('layouts/layoutMaster')
+@extends('layouts/contentNavbarLayout')
 
 @section('title', 'Data Siswa - Admin')
+@section('navbar-title', 'Data Siswa')
 
 @section('page-style')
 <style>
@@ -72,46 +69,97 @@ $configData = Helper::appClasses();
 @endsection
 
 @section('content')
-  {{-- Header --}}
-  <div class="header-gradient d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-    <div>
-      <h3 class="fw-bold mb-1 text-primary">Data Siswa</h3>
-      <p class="text-muted mb-0">Kelola informasi siswa dan import data massal.</p>
-      <nav aria-label="breadcrumb" class="mt-2">
-        <ol class="breadcrumb mb-0">
-          <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-          <li class="breadcrumb-item active">Data Siswa</li>
-        </ol>
-      </nav>
-    </div>
-    <div class="d-flex flex-wrap gap-2">
-      <button class="btn btn-outline-primary bg-white px-4" style="border-radius: 4px;" data-bs-toggle="modal" data-bs-target="#modalImport">
-        <i class="icon-base ti tabler-file-import me-1"></i> Import Excel
-      </button>
-      <a href="{{ route('admin.siswa.create') }}" class="btn btn-premium-primary rounded" style="border-radius: 4px !important;">
-        <i class="icon-base ti tabler-plus me-1"></i> Tambah Siswa
-      </a>
-    </div>
-  </div>
-
-  {{-- Alert --}}
-  @if(session('success'))
-    <div class="alert alert-success alert-dismissible d-flex align-items-center mb-4" role="alert" style="border-radius: 4px;">
-      <i class="icon-base ti tabler-circle-check me-2 fs-4"></i>
+<div class="row">
+  <div class="col-12">
+    {{-- Header --}}
+    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-3">
       <div>
-        <h6 class="alert-heading mb-1 fw-bold">Berhasil!</h6>
-        <span>{{ session('success') }}</span>
+        <h4 class="fw-bold mb-1">Data Siswa</h4>
+        <p class="text-muted mb-0">Kelola informasi siswa dan import data massal.</p>
       </div>
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      <div class="d-flex flex-wrap gap-2">
+        <button class="btn btn-outline-primary bg-white" data-bs-toggle="modal" data-bs-target="#modalImport">
+          <i class="icon-base ti tabler-file-import me-1"></i> Import Excel
+        </button>
+        <a href="{{ route('admin.siswa.create') }}" class="btn btn-primary">
+          <i class="icon-base ti tabler-plus me-1"></i> Tambah Siswa
+        </a>
+      </div>
     </div>
-  @endif
+
+    {{-- Alert --}}
+    @if(session('success'))
+      <div class="alert alert-success alert-dismissible mb-4" role="alert">
+        <i class="icon-base ti tabler-circle-check me-2"></i>{{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    @endif
+
+    {{-- Stats Cards --}}
+    <div class="row g-3 mb-4">
+      <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body d-flex align-items-center gap-3">
+            <div class="avatar avatar-md bg-label-primary">
+              <i class="icon-base ti tabler-users fs-4"></i>
+            </div>
+            <div>
+              <div class="fw-bold fs-4">{{ $stats['total'] }}</div>
+              <div class="text-muted small">Total Siswa</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body d-flex align-items-center gap-3">
+            <div class="avatar avatar-md bg-label-info">
+              <i class="icon-base ti tabler-gender-male fs-4"></i>
+            </div>
+            <div>
+              <div class="fw-bold fs-4">{{ $stats['laki_laki'] }}</div>
+              <div class="text-muted small">Laki-laki</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body d-flex align-items-center gap-3">
+            <div class="avatar avatar-md bg-label-danger">
+              <i class="icon-base ti tabler-gender-female fs-4"></i>
+            </div>
+            <div>
+              <div class="fw-bold fs-4">{{ $stats['perempuan'] }}</div>
+              <div class="text-muted small">Perempuan</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-6 col-md-3">
+        <div class="card border-0 shadow-sm h-100">
+          <div class="card-body d-flex align-items-center gap-3">
+            <div class="avatar avatar-md bg-label-warning">
+              <i class="icon-base ti tabler-chalkboard fs-4"></i>
+            </div>
+            <div>
+              <div class="fw-bold fs-4">{{ $stats['total_kelas'] }}</div>
+              <div class="text-muted small">Total Kelas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
   {{-- Filter --}}
   <div class="card card-filter mb-4 border-0">
     <div class="card-body p-4">
       <form method="GET" action="{{ route('admin.siswa.index') }}" id="filterForm">
         <div class="row g-3">
-          <div class="col-12 col-md-3">
+          <div class="col-12 col-md-4">
             <div class="filter-input-group">
               <label class="filter-label"><i class="icon-base ti tabler-search"></i> Cari Siswa</label>
               <input type="text" name="search" id="searchInput" class="filter-control" value="{{ request('search') }}" placeholder="NISN atau Nama Lengkap...">
@@ -139,7 +187,7 @@ $configData = Helper::appClasses();
               </select>
             </div>
           </div>
-          <div class="col-6 col-md-2">
+          <div class="col-6 col-md-3">
             <div class="filter-input-group">
               <label class="filter-label"><i class="icon-base ti tabler-school"></i> Jurusan</label>
               <select name="jurusan" class="filter-control" id="filterJurusan">
@@ -151,7 +199,7 @@ $configData = Helper::appClasses();
             </div>
           </div>
           <div class="col-6 col-md-1">
-            <a href="{{ route('admin.siswa.index') }}" class="btn btn-label-secondary w-100 h-100 d-flex align-items-center justify-content-center" style="border-radius: 4px;">
+            <a href="{{ route('admin.siswa.index') }}" class="btn btn-label-secondary w-100 h-100 d-flex align-items-center justify-content-center" style="border-radius: 4px; min-height: 58px;">
               <i class="icon-base ti tabler-refresh"></i>
             </a>
           </div>
@@ -179,7 +227,7 @@ $configData = Helper::appClasses();
           <div class="alert alert-label-primary d-flex mb-4" role="alert" style="border-radius: 4px;">
           <i class="icon-base ti tabler-info-circle me-2 fs-4"></i>
           <div class="small">
-            Format kolom: <strong>nisn, nis, no_peserta, nama_lengkap, tempat_lahir, tanggal_lahir, jenis_kelamin, nama_orang_tua, kelas, jurusan</strong><br>
+            Format kolom: <strong>nisn, nis, no_peserta, nama_lengkap, tempat_lahir, tanggal_lahir, jenis_kelamin, kelas, jurusan</strong><br>
             Jenis kelamin: <code>laki-laki</code> atau <code>perempuan</code>
           </div>
         </div>
@@ -203,6 +251,7 @@ $configData = Helper::appClasses();
         </form>
       </div>
     </div>
+  </div>
   </div>
 </div>
 @endsection

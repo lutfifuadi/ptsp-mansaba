@@ -1,18 +1,19 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Detail Permohonan — ' . $permohonan->no_tiket)
+@section('title', ($permohonan->layanan ? $permohonan->layanan->nama_layanan : 'Permohonan') . ' — ' . $permohonan->no_tiket)
+@section('navbar-title', 'Detail ' . ($permohonan->layanan ? $permohonan->layanan->nama_layanan : 'Permohonan'))
 
 @section('content')
-<div class="row justify-content-center">
-  <div class="col-12 col-lg-10">
+<div class="row">
+  <div class="col-12">
 
     {{-- Breadcrumb & Back --}}
     <div class="d-flex align-items-center gap-3 mb-4">
-      <a href="{{ route('admin.ptsp.index') }}" class="btn btn-outline-secondary btn-sm">
+      <a href="{{ $permohonan->layanan_id ? route('admin.ptsp.index', ['layanan_id' => $permohonan->layanan_id]) : route('admin.ptsp.index') }}" class="btn btn-outline-secondary btn-sm">
         <i class="bx bx-arrow-back me-1"></i> Kembali
       </a>
       <div>
-        <h5 class="fw-bold mb-0">Detail Permohonan</h5>
+        <h5 class="fw-bold mb-0">Detail {{ $permohonan->layanan->nama_layanan ?? 'Permohonan' }}</h5>
         <small class="text-muted">{{ $permohonan->no_tiket }}</small>
       </div>
     </div>

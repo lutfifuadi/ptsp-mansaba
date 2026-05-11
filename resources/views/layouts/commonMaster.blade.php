@@ -45,8 +45,8 @@
     content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
   <title>
-    @yield('title') | {{ config('variables.templateName') ? config('variables.templateName') : 'TemplateName' }}
-    - {{ config('variables.templateSuffix') ? config('variables.templateSuffix') : 'TemplateSuffix' }}
+    @yield('title') | {{ config('variables.templateName') ?: 'PTSP' }}
+    @if(config('variables.templateSuffix')) - {{ config('variables.templateSuffix') }} @endif
   </title>
   <meta name="description"
     content="{{ config('variables.templateDescription') ? config('variables.templateDescription') : '' }}" />
@@ -59,7 +59,7 @@
   <meta property="og:description"
     content="{{ config('variables.templateDescription') ? config('variables.templateDescription') : '' }}" />
   <meta property="og:site_name"
-    content="{{ config('variables.creatorName') ? config('variables.creatorName') : '' }}" />
+    content="{{ config('variables.templateName') ?: 'PTSP' }}" />
   <meta name="robots" content="noindex, nofollow" />
   <!-- laravel CRUD token -->
   <meta name="csrf-token" content="{{ csrf_token() }}" />

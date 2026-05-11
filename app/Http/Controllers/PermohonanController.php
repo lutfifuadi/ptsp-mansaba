@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Layanan;
 use App\Models\Permohonan;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 
 class PermohonanController extends Controller
 {
@@ -124,6 +125,14 @@ class PermohonanController extends Controller
     {
         $query = Permohonan::with(['user', 'layanan', 'siswa'])->latest();
 
+        $selectedLayanan = null;
+        if ($request->filled('layanan_id')) {
+            $selectedLayanan = Layanan::find($request->layanan_id);
+            if ($selectedLayanan) {
+                $query->where('layanan_id', $request->layanan_id);
+            }
+        }
+
         // Filter status
         if ($request->filled('status')) {
             $query->where('status', $request->status);
@@ -138,11 +147,6 @@ class PermohonanController extends Controller
             }
         }
 
-        // Filter layanan
-        if ($request->filled('layanan_id')) {
-            $query->where('layanan_id', $request->layanan_id);
-        }
-
         // Search tiket / nama
         if ($request->filled('search')) {
             $search = $request->search;
@@ -153,7 +157,7 @@ class PermohonanController extends Controller
         }
 
         $permohonan = $query->paginate(15);
-        return view('admin.ptsp.index', compact('permohonan'));
+        return view('admin.ptsp.index', compact('permohonan', 'selectedLayanan'));
     }
 
     public function adminShow(Permohonan $permohonan)
@@ -175,5 +179,23 @@ class PermohonanController extends Controller
         ]);
 
         return back()->with('success', 'Status permohonan berhasil diperbarui.');
+    }
+
+    public function adminReset(Layanan $layanan)
+    {
+        try {
+            $count = Permohonan::where('layanan_id', $layanan->id)->count();
+            Permohonan::where('layanan_id', $layanan->id)->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => "{$count} data permohonan layanan \"{$layanan->nama_layanan}\" berhasil direset."
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mereset data: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

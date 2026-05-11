@@ -10,6 +10,9 @@ use App\Http\Controllers\authentications\RegisterBasic;
 use App\Http\Controllers\Admin\SiswaController;
 use App\Http\Controllers\Admin\LembagaSettingController;
 use App\Http\Controllers\Admin\GeneralSettingController;
+use App\Http\Controllers\Admin\AdminGuestBookController;
+use App\Http\Controllers\Admin\ExportGuestBookController;
+use App\Http\Controllers\Admin\ExportPermohonanController;
 use App\Http\Controllers\PermohonanController;
 use App\Http\Controllers\SuratSiswaController;
 
@@ -74,10 +77,24 @@ Route::middleware([
     Route::post('/siswa/import', [SiswaController::class, 'import'])->name('siswa.import');
 
 
-      // Data PTSP
+    // Data PTSP
     Route::get('/ptsp', [PermohonanController::class, 'adminIndex'])->name('ptsp.index');
+    Route::get('/ptsp/export/{format}', [ExportPermohonanController::class, 'export'])->name('ptsp.export');
     Route::get('/ptsp/{permohonan}', [PermohonanController::class, 'adminShow'])->name('ptsp.show');
     Route::put('/ptsp/{permohonan}/status', [PermohonanController::class, 'updateStatus'])->name('ptsp.status');
+    Route::post('/ptsp/reset/{layanan}', [PermohonanController::class, 'adminReset'])->name('ptsp.reset');
+
+    // Buku Tamu
+    Route::get('/buku-tamu', [AdminGuestBookController::class, 'index'])->name('guest-book.index');
+
+    // Buku Tamu - Rekap & Export (HARUS sebelum {guestBook} wildcard)
+    Route::get('/buku-tamu/rekap', [ExportGuestBookController::class, 'rekap'])->name('guest-book.rekap');
+    Route::get('/buku-tamu/export/{format}', [ExportGuestBookController::class, 'export'])->name('guest-book.export');
+
+    Route::get('/buku-tamu/{guestBook}', [AdminGuestBookController::class, 'show'])->name('guest-book.show');
+    Route::delete('/buku-tamu/{guestBook}', [AdminGuestBookController::class, 'destroy'])->name('guest-book.destroy');
+    Route::post('/buku-tamu/reset', [AdminGuestBookController::class, 'reset'])->name('guest-book.reset');
+
     // Pengaturan
     Route::prefix('pengaturan')->name('pengaturan.')->group(function () {
       // Lembaga

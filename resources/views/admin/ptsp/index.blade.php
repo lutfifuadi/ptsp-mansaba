@@ -1,6 +1,7 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Manajemen Permohonan PTSP')
+@section('title', $selectedLayanan ? 'Manajemen ' . $selectedLayanan->nama_layanan : 'Manajemen Permohonan PTS')
+@section('navbar-title', $selectedLayanan ? $selectedLayanan->nama_layanan : 'Manajemen Permohonan')
 
 @section('content')
 <div class="row">
@@ -9,11 +10,37 @@
     {{-- Header --}}
     <div class="d-flex align-items-center justify-content-between mb-4">
       <div>
-        <h4 class="fw-bold mb-1">Manajemen Permohonan</h4>
-        <p class="text-muted mb-0">Kelola semua permohonan layanan PTSP (login & publik)</p>
+        <h4 class="fw-bold mb-1">{{ $selectedLayanan ? $selectedLayanan->nama_layanan : 'Manajemen Permohonan' }}</h4>
+        <p class="text-muted mb-0">
+          @if($selectedLayanan)
+            Kelola permohonan khusus layanan <strong>{{ $selectedLayanan->nama_layanan }}</strong>
+          @else
+            Kelola semua permohonan layanan PTSP (login & publik)
+          @endif
+        </p>
       </div>
       <div class="d-flex gap-2">
-        <a href="{{ route('ptsp.index') }}" class="btn btn-outline-secondary" target="_blank">
+        <div class="dropdown">
+          <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius:4px;">
+            <i class="icon-base ti tabler-download me-1"></i> Export
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.ptsp.export', array_merge(['format' => 'xlsx'], request()->query())) }}">
+                <i class="icon-base ti tabler-file-spreadsheet text-success me-2"></i> Export Excel (.xlsx)
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="{{ route('admin.ptsp.export', array_merge(['format' => 'csv'], request()->query())) }}">
+                <i class="icon-base ti tabler-file-text text-warning me-2"></i> Export CSV (.csv)
+              </a>
+            </li>
+          </ul>
+        </div>
+        <button type="button" class="btn btn-danger btn-reset-ptsp" style="border-radius:4px;">
+          <i class="bx bx-trash me-1"></i> Reset Data
+        </button>
+        <a href="{{ route('ptsp.index') }}" class="btn btn-outline-secondary" target="_blank" style="border-radius:4px;">
           <i class="bx bx-link-external me-1"></i> Portal Publik
         </a>
       </div>
@@ -30,11 +57,11 @@
     {{-- Stats Cards --}}
     <div class="row g-3 mb-4">
       @php
-        $allPermohonan = $permohonan->getCollection();
-        $statPending  = \App\Models\Permohonan::where('status','pending')->count();
-        $statProses   = \App\Models\Permohonan::where('status','proses')->count();
-        $statSelesai  = \App\Models\Permohonan::where('status','selesai')->count();
-        $statPublik   = \App\Models\Permohonan::whereNull('user_id')->count();
+        $layananId = $selectedLayanan ? $selectedLayanan->id : null;
+        $statPending  = \App\Models\Permohonan::where('status','pending')->when($layananId, fn($q) => $q->where('layanan_id', $layananId))->count();
+        $statProses   = \App\Models\Permohonan::where('status','proses')->when($layananId, fn($q) => $q->where('layanan_id', $layananId))->count();
+        $statSelesai  = \App\Models\Permohonan::where('status','selesai')->when($layananId, fn($q) => $q->where('layanan_id', $layananId))->count();
+        $statPublik   = \App\Models\Permohonan::whereNull('user_id')->when($layananId, fn($q) => $q->where('layanan_id', $layananId))->count();
       @endphp
 
       <div class="col-6 col-md-3">
@@ -100,6 +127,9 @@
         <h6 class="mb-0 fw-semibold">Daftar Permohonan</h6>
         {{-- Filter / Search --}}
         <form method="GET" action="{{ route('admin.ptsp.index') }}" class="d-flex gap-2">
+          @if(request('layanan_id'))
+            <input type="hidden" name="layanan_id" value="{{ request('layanan_id') }}">
+          @endif
           <select name="status" class="form-select form-select-sm" onchange="this.form.submit()" style="width:140px">
             <option value="">Semua Status</option>
             @foreach(['pending','proses','selesai','ditolak'] as $s)
@@ -231,4 +261,83 @@
     </div>
   </div>
 </div>
+
+{{-- Modal Reset Data --}}
+<div class="modal fade" id="modalReset" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content border-0 shadow-lg" style="border-radius:8px;">
+      <div class="modal-header border-bottom p-4" style="background:linear-gradient(135deg, #fef5f5 0%, #fff 100%);">
+        <h5 class="modal-title fw-bold text-danger mb-0">
+          <i class="bx bx-trash me-1"></i> Reset Data Permohonan
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div class="alert alert-warning d-flex align-items-center mb-4" role="alert" style="border-radius:4px;">
+          <i class="bx bx-info-circle me-2 fs-4"></i>
+          <div class="small">
+            Pilih layanan yang datanya ingin direset. Data yang sudah dihapus <strong>tidak bisa dikembalikan</strong>.
+          </div>
+        </div>
+        <div class="d-flex flex-column gap-2" id="layananResetList">
+          @php $layananList = \App\Models\Layanan::where('is_active', true)->get(); @endphp
+          @foreach($layananList as $l)
+            @php $count = \App\Models\Permohonan::where('layanan_id', $l->id)->count(); @endphp
+            <div class="d-flex align-items-center justify-content-between p-3 rounded" style="background:#f8f9fa;">
+              <div>
+                <div class="fw-semibold small">{{ $l->nama_layanan }}</div>
+                <div class="text-muted small">{{ $count }} data</div>
+              </div>
+              <button type="button" class="btn btn-sm btn-outline-danger btn-reset-layanan" data-id="{{ $l->id }}" data-name="{{ $l->nama_layanan }}" data-count="{{ $count }}" style="border-radius:4px;" {{ $count == 0 ? 'disabled' : '' }}>
+                <i class="bx bx-trash me-1"></i> Reset
+              </button>
+            </div>
+          @endforeach
+        </div>
+      </div>
+      <div class="modal-footer border-top bg-light p-3">
+        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal" style="border-radius:4px;">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('click', function(e) {
+  const btnOpenReset = e.target.closest('.btn-reset-ptsp');
+  if (btnOpenReset) {
+    e.preventDefault();
+    const modal = new bootstrap.Modal(document.getElementById('modalReset'));
+    modal.show();
+  }
+
+  const btnResetLayanan = e.target.closest('.btn-reset-layanan');
+  if (btnResetLayanan) {
+    e.preventDefault();
+    const id = btnResetLayanan.dataset.id;
+    const name = btnResetLayanan.dataset.name;
+    const count = btnResetLayanan.dataset.count;
+
+    if (confirm(`Yakin ingin mereset ${count} data permohonan "${name}"? Data yang dihapus tidak bisa dikembalikan.`)) {
+      const url = `{{ url('admin/ptsp/reset') }}/${id}`;
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': '{{ csrf_token() }}',
+          'Accept': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert(data.message);
+          location.reload();
+        } else {
+          alert('Gagal: ' + data.message);
+        }
+      });
+    }
+  }
+});
+</script>
 @endsection

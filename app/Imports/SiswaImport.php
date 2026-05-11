@@ -31,7 +31,6 @@ class SiswaImport implements ToModel, WithHeadingRow, SkipsOnError, WithBatchIns
             'tempat_lahir'     => trim($row['tempat_lahir'] ?? ''),
             'tanggal_lahir'    => $this->parseIndonesianDate($row['tanggal_lahir'] ?? null),
             'jenis_kelamin'    => $this->normalizeGender(trim($row['jenis_kelamin'] ?? '')),
-            'nama_orang_tua'   => trim($row['nama_orang_tua'] ?? ''),
             'kelas'            => trim($row['kelas'] ?? ''),
             'jurusan'          => trim($row['jurusan'] ?? ''),
         ]);

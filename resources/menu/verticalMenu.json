@@ -11,8 +11,8 @@
     },
     {
       "url": "/admin/ptsp",
-      "icon": "menu-icon icon-base ti tabler-file-description",
-      "name": "Permohonan",
+      "icon": "menu-icon icon-base ti tabler-database",
+      "name": "Semua Data",
       "slug": "admin.ptsp"
     },
     {

@@ -59,6 +59,9 @@ class MenuServiceProvider extends ServiceProvider
 
     private function getLayananUrl($l): string
     {
+        if (str_contains(strtolower($l->nama_layanan), 'buku tamu')) {
+            return url('/admin/buku-tamu');
+        }
         return '/admin/ptsp?layanan_id=' . $l->id;
     }
 

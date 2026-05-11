@@ -577,14 +577,20 @@
       const btnSubmit = document.getElementById('btnSubmit');
 
       // Toggle Nama Instansi input
-      jenisInstansi.on('change', function() {
-        if (this.value === 'Personal') {
-          $(namaInstansiGroup).fadeOut();
-          namaInstansiGroup.querySelector('input').value = '';
+      function toggleNamaInstansi() {
+        const input = namaInstansiGroup.querySelector('input');
+        if (jenisInstansi.val() === 'Personal') {
+          $(namaInstansiGroup).hide();
+          input.value = '';
+          input.removeAttribute('required');
         } else {
-          $(namaInstansiGroup).fadeIn();
+          $(namaInstansiGroup).show();
+          input.setAttribute('required', 'required');
         }
-      });
+      }
+
+      jenisInstansi.on('change', toggleNamaInstansi);
+      toggleNamaInstansi(); // Run on load
 
       // Select2 focus outline fix (optional)
       $('.select2').on('select2:open', function(e) {
@@ -606,6 +612,7 @@
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
 
         try {
+          console.log('Sending guest book data...');
           const response = await fetch('{{ route('buku-tamu.store') }}', {
             method: 'POST',
             headers: {
@@ -615,7 +622,9 @@
             body: formData
           });
 
+          console.log('Response status:', response.status);
           const data = await response.json();
+          console.log('Response data:', data);
 
           if (response.ok) {
             Swal.fire({
@@ -654,7 +663,7 @@
           } else {
             throw new Error(data.message || 'Terjadi kesalahan sistem.');
           }
-        } catch (error) {
+          console.error('Submission error:', error);
           Swal.fire({
             icon: 'error',
             title: 'Kesalahan',

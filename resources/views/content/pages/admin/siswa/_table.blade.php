@@ -92,7 +92,6 @@
         <th>Nama Lengkap</th>
         <th>Jenis Kelamin</th>
         <th>TTL</th>
-        <th>Nama Orang Tua</th>
         <th>Kelas & Jurusan</th>
         <th class="text-end pe-4">Aksi</th>
       </tr>
@@ -127,9 +126,6 @@
           @endif
         </td>
         <td>
-          <span class="small">{{ $s->nama_orang_tua ?: '-' }}</span>
-        </td>
-        <td>
           <div class="badge bg-label-secondary" style="border-radius: 4px;">{{ $s->kelas }}</div>
           <div class="small text-muted mt-1">{{ $s->jurusan }}</div>
         </td>
@@ -149,7 +145,7 @@
       </tr>
       @empty
       <tr>
-        <td colspan="8" class="text-center py-5">
+        <td colspan="7" class="text-center py-5">
           <div class="text-muted mb-2"><i class="icon-base ti tabler-user-off fs-1"></i></div>
           <div class="fw-bold">Tidak ada data siswa.</div>
           <div class="text-muted small">Coba sesuaikan filter atau cari kata kunci lain.</div>

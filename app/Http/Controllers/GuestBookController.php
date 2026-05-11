@@ -46,6 +46,7 @@ class GuestBookController extends Controller
                 'message' => 'Data buku tamu berhasil dikirim. Terima kasih atas kunjungan Anda!'
             ]);
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('GuestBook Error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat menyimpan data. Silakan coba lagi.'

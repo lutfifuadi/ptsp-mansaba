@@ -134,9 +134,49 @@ $configData = Helper::appClasses();
           </div>
         </div>
       </div>
-      <div class="card-footer bg-transparent border-0 pt-0 pb-4 px-4">
-        <button type="submit" class="btn btn-primary w-100">
-          <i class="icon-base ti tabler-device-floppy me-2"></i>Simpan Pengaturan
+    {{-- Pengaturan Footer --}}
+    <div class="card shadow-sm border-0 mt-4">
+      <div class="card-header bg-label-secondary py-3">
+        <h5 class="mb-0 text-secondary"><i class="icon-base ti tabler-layout-footer me-2"></i>Pengaturan Footer</h5>
+      </div>
+      <div class="card-body pt-4">
+        <div class="row g-3">
+          <div class="col-12 col-md-4">
+            <label class="form-label fw-bold">
+              <i class="icon-base ti tabler-copyright me-1 text-primary"></i> Teks Copyright
+            </label>
+            <input type="text" name="footer_copyright" class="form-control" value="{{ old('footer_copyright', $pengaturan['footer_copyright']) }}" placeholder="© 2026">
+            <div class="form-text">Contoh: <code>© 2026</code></div>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <label class="form-label fw-bold">
+              <i class="icon-base ti tabler-user me-1 text-primary"></i> Made By (Nama)
+            </label>
+            <input type="text" name="footer_made_by" class="form-control" value="{{ old('footer_made_by', $pengaturan['footer_made_by']) }}" placeholder="Pixinvent">
+            <div class="form-text">Nama instansi/developer di footer.</div>
+          </div>
+
+          <div class="col-12 col-md-4">
+            <label class="form-label fw-bold">
+              <i class="icon-base ti tabler-link me-1 text-primary"></i> Made By (URL)
+            </label>
+            <input type="url" name="footer_made_by_url" class="form-control" value="{{ old('footer_made_by_url', $pengaturan['footer_made_by_url']) }}" placeholder="https://...">
+            <div class="form-text">Link tujuan saat nama di atas diklik.</div>
+          </div>
+
+          <div class="col-12 mt-3">
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" name="footer_show_links" id="footer_show_links" value="1" {{ old('footer_show_links', $pengaturan['footer_show_links']) == '1' ? 'checked' : '' }}>
+              <label class="form-check-label fw-bold" for="footer_show_links">Tampilkan Link Footer (License, Documentation, dll.)</label>
+            </div>
+            <div class="form-text">Jika dinonaktifkan, link di sisi kanan footer akan disembunyikan.</div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer bg-transparent border-0 pt-0 pb-4 px-4 text-end">
+        <button type="submit" class="btn btn-primary btn-lg shadow">
+          <i class="icon-base ti tabler-device-floppy me-2"></i>Simpan Semua Pengaturan
         </button>
       </div>
     </div>
