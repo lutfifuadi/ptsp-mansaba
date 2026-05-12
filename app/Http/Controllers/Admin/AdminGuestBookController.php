@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\GuestBook;
+use App\Models\Guru;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -36,6 +37,7 @@ class AdminGuestBookController extends Controller
     public function show(GuestBook $guestBook)
     {
         if (request()->wantsJson()) {
+            $guestBook->load('guru');
             return response()->json([
                 'success' => true,
                 'data' => [
@@ -45,6 +47,8 @@ class AdminGuestBookController extends Controller
                     'alamat' => $guestBook->alamat,
                     'jenis_instansi' => $guestBook->jenis_instansi,
                     'nama_instansi' => $guestBook->nama_instansi,
+                    'guru_id' => $guestBook->guru_id,
+                    'guru' => $guestBook->guru,
                     'tujuan' => $guestBook->tujuan,
                     'keperluan' => $guestBook->keperluan,
                     'waktu' => $guestBook->created_at->format('d F Y H:i') . ' WIB',

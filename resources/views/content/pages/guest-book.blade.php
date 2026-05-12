@@ -543,6 +543,17 @@
         </div>
       </div>
 
+      {{-- Guru Field (hidden by default, shown when tujuan=Guru) --}}
+      <div id="guru-field" class="form-group" style="display:none;">
+        <div class="input-wrapper">
+          <i class="ti ti-users-group input-icon"></i>
+          <select name="guru_id" id="guru_id" class="form-control select2">
+            <option value="">-- Pilih Guru --</option>
+          </select>
+          <div class="invalid-feedback" data-field="guru_id"></div>
+        </div>
+      </div>
+
       <div class="form-group">
         <div class="input-wrapper">
           <i class="ti ti-note input-icon"></i>
@@ -596,6 +607,45 @@
       $('.select2').on('select2:open', function(e) {
         $('.select2-search__field').get(0).focus();
       });
+
+      // Guru dynamic field
+      const tujuanSelect = $('select[name="tujuan"]');
+      const guruField = $('#guru-field');
+      const guruSelect = $('#guru_id');
+
+      function loadGurus() {
+        fetch('/guru', {
+          headers: { 'Accept': 'application/json' }
+        })
+        .then(res => res.json())
+        .then(data => {
+          guruSelect.empty();
+          if (data.length === 0) {
+            guruSelect.append('<option value="" disabled>-- Belum ada data guru --</option>');
+          } else {
+            guruSelect.append('<option value="">-- Pilih Guru --</option>');
+            data.forEach(g => {
+              guruSelect.append(`<option value="${g.id}">${g.nama_lengkap}</option>`);
+            });
+          }
+          guruSelect.trigger('change');
+        });
+      }
+
+      function toggleGuruField() {
+        if (tujuanSelect.val() === 'Guru') {
+          guruField.show();
+          guruSelect.next('.select2-container').show();
+          loadGurus();
+        } else {
+          guruField.hide();
+          guruSelect.next('.select2-container').hide();
+          guruSelect.val('').trigger('change');
+        }
+      }
+
+      tujuanSelect.on('change', toggleGuruField);
+      toggleGuruField();
 
       // Handle form submission
       form.addEventListener('submit', async function(e) {
@@ -663,6 +713,7 @@
           } else {
             throw new Error(data.message || 'Terjadi kesalahan sistem.');
           }
+        } catch (error) {
           console.error('Submission error:', error);
           Swal.fire({
             icon: 'error',

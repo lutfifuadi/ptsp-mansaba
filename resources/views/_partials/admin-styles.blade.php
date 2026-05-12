@@ -144,13 +144,13 @@
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 1.2px;
-    padding: 12px 16px !important;
+    padding: 12px 20px !important;
     border-bottom: 2px solid var(--border) !important;
     border-top: none !important;
   }
 
   .tbl td {
-    padding: 13px 16px !important;
+    padding: 12px 20px !important;
     vertical-align: middle;
     border-bottom: 1px solid #f1f5f9 !important;
     font-size: 0.88rem;
@@ -231,6 +231,18 @@
     border: 1px solid #cbd5e1;
   }
 
+  .st-success {
+    background: #dcfce7;
+    color: #14532d;
+    border: 1px solid #86efac;
+  }
+
+  .st-danger {
+    background: #fee2e2;
+    color: #7f1d1d;
+    border: 1px solid #fca5a5;
+  }
+
   .panel {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -298,5 +310,44 @@
   .stat-card:nth-child(4) { animation-delay: 0.20s; }
   .stat-card:nth-child(5) { animation-delay: 0.25s; }
   .stat-card:nth-child(6) { animation-delay: 0.30s; }
+
+  .pagination {
+    gap: 2px;
+  }
+
+  .pagination .page-link {
+    border-radius: var(--r) !important;
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    min-width: 32px;
+    text-align: center;
+    transition: all 0.15s;
+  }
+
+  .pagination .page-link:hover {
+    background: var(--bg);
+    border-color: var(--p);
+    color: var(--p);
+  }
+
+  .pagination .page-item.active .page-link {
+    background: var(--p);
+    border-color: var(--p);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  .pagination .page-item.disabled .page-link {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+
+  .pagination .page-item:first-child .page-link,
+  .pagination .page-item:last-child .page-link {
+    padding: 6px 10px;
+  }
 </style>
 @endonce

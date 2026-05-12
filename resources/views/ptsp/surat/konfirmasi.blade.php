@@ -215,6 +215,20 @@
       color: var(--text-muted); font-weight: 400; font-size: 0.85rem;
     }
 
+    select.data-input {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      cursor: pointer;
+      background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0 center;
+      padding-right: 24px;
+    }
+
+    select.data-input option {
+      background: #1e293b;
+      color: #f8fafc;
+    }
+
     .data-error {
       font-size: 0.72rem; color: var(--error);
       margin-top: 4px; font-weight: 500;
@@ -347,9 +361,12 @@
       <div class="data-grid">
         <div class="data-item">
           <div class="data-label">Kelas</div>
-          <input type="text" name="kelas" value="{{ old('kelas', $siswa->kelas) }}"
-                 class="data-input" placeholder="Masukkan kelas"
-                 required>
+          <select name="kelas" class="data-input" required>
+            <option value="">Pilih kelas</option>
+            @foreach(config('kelas') as $k)
+              <option value="{{ $k }}" {{ old('kelas', $siswa->kelas) == $k ? 'selected' : '' }}>{{ $k }}</option>
+            @endforeach
+          </select>
           @error('kelas')
             <div class="data-error">{{ $message }}</div>
           @enderror

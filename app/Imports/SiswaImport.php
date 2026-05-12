@@ -26,7 +26,6 @@ class SiswaImport implements ToModel, WithHeadingRow, SkipsOnError, WithBatchIns
         return new Siswa([
             'nisn'             => $nisn,
             'nis'              => trim($row['nis'] ?? ''),
-            'no_peserta'       => trim($row['no_peserta'] ?? ''),
             'nama_lengkap'     => trim($row['nama_lengkap'] ?? ''),
             'tempat_lahir'     => trim($row['tempat_lahir'] ?? ''),
             'tanggal_lahir'    => $this->parseIndonesianDate($row['tanggal_lahir'] ?? null),

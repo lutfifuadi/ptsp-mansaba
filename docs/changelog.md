@@ -1,3 +1,5 @@
+[2026-05-12] Tampilkan hanya nama guru di dropdown & detail admin buku tamu (hilangkan bidang studi)
+[2026-05-12] Perbaikan pagination & padding halaman admin siswa — kustomisasi view pagination dengan Tabler Icons, CSS tema emerald, padding konsisten 20px horizontal di tabel dan panel.
 [2026-05-11] Penghapusan field 'Nama Orang Tua' dari data siswa (Database, Model, Controller, View, Import)
 [2026-05-11] Fix GitHub Actions Workflow — PHP Version Incompatibility
 [2026-05-11] Hapus bismillah Arab di halaman beranda PTSP
@@ -28,9 +30,12 @@
 [2026-05-12] Ubah border-radius halaman beranda (dashboard) dari 16px menjadi maksimal 5px — CSS .card, .btn, .badge, .avatar-initial, .quick-action-box, .stat-icon-wrapper, .premium-banner, .rounded, .time-badge
 [2026-05-12] Rapikan posisi icon di beranda — tambah flexbox centering pada .stat-icon-wrapper dan .banner-icon-box agar icon tepat di tengah card
 [2026-05-12] Implementasi UI Admin Premium untuk modul: Legalisir Ijazah, Buku Tamu, Pengambilan Ijazah, Pembuatan Surat, Legalisir, dan Semua Data.
+[2026-05-12] Fitur Database Guru (Migration, Model, CRUD Admin, Public JSON API) & Integrasi dengan Buku Tamu — pengunjung bisa memilih guru tujuan dari dropdown dinamis saat memilih opsi "Guru" di form buku tamu.
 [2026-05-12] Restrukturisasi Admin Dashboard: Penggunaan AdminPermohonanController untuk manajemen data per layanan yang lebih teratur.
 [2026-05-12] Integrasi Menu Sidebar Admin: Penambahan link akses langsung ke tiap kategori layanan PTSP di menu navigasi utama.
 [2026-05-12] Dokumentasi API Admin: Penambahan referensi endpoint administratif di docs/api/admin-ptsp.md.
 [2026-05-12] Proporsionalitas font dashboard: perbesar font stat, heading, tabel; perkecil font quick menu.
 [2026-05-12] Perkecil font form secara global (form-control, form-label, dll) via app.css + form surat publik.
 [2026-05-12] Sinkronisasi UI Admin dengan Dashboard — shared CSS partial, stat-card, tbl, st-badge pattern di 12 halaman admin
+[2026-05-12] Fitur Dropdown Kelas — input kelas di konfirmasi surat siswa & admin create/edit berubah dari text menjadi select dengan 36 opsi kelas (X.E-1 s/d XII.F-12). Validasi backend menggunakan config('kelas').
+[2026-05-12] Hapus field 'Nomor Peserta' dari data siswa — Model, Controller (validasi + search), Import/Export, Migration drop column, View edit/create/index. UI Cleanup form edit & create siswa mengikuti gaya halaman pengaturan lembaga (form-actions, btn-primary).

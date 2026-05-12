@@ -63,9 +63,10 @@ class SuratSiswaController extends Controller
 
         $request->validate([
             'nis'   => ['nullable', 'string', 'max:20'],
-            'kelas' => ['required', 'string', 'max:50'],
+            'kelas' => ['required', 'string', 'in:' . implode(',', config('kelas'))],
         ], [
             'kelas.required' => 'Kelas wajib diisi.',
+            'kelas.in'       => 'Kelas yang dipilih tidak valid.',
         ]);
 
         $siswa = Siswa::where('nisn', $nisn)->firstOrFail();

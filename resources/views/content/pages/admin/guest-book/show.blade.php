@@ -52,6 +52,12 @@
             <div class="stat-label">Tujuan</div>
             <div class="fw-bold">{{ $guestBook->tujuan }}</div>
           </div>
+          @if($guestBook->guru)
+          <div class="col-md-6">
+            <div class="stat-label">Guru Tujuan</div>
+            <div class="fw-bold">{{ $guestBook->guru->nama_lengkap }}</div>
+          </div>
+          @endif
           <div class="col-md-6">
             <div class="stat-label">Waktu Kunjungan</div>
             <div class="fw-bold">{{ $guestBook->created_at->format('d F Y H:i') }} WIB</div>

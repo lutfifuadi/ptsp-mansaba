@@ -65,6 +65,12 @@
       "slug": "admin.siswa"
     },
     {
+      "url": "/admin/guru",
+      "icon": "menu-icon icon-base ti tabler-users-group",
+      "name": "Database Guru",
+      "slug": "admin.guru"
+    },
+    {
       "url": "/admin/pengaturan/lembaga",
       "icon": "menu-icon icon-base ti tabler-building-community",
       "name": "Profil Lembaga",

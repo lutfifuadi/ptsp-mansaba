@@ -5,23 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class GuestBook extends Model
+class Guru extends Model
 {
     use HasFactory;
 
+    protected $table = 'guru';
+
     protected $fillable = [
         'nama_lengkap',
+        'nip',
+        'nuptk',
+        'bidang_studi',
         'no_whatsapp',
         'alamat',
-        'jenis_instansi',
-        'nama_instansi',
-        'guru_id',
-        'tujuan',
-        'keperluan',
+        'is_active',
     ];
 
-    public function guru()
+    protected function casts(): array
     {
-        return $this->belongsTo(Guru::class);
+        return [
+            'is_active' => 'boolean',
+        ];
     }
 }

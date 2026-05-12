@@ -16,6 +16,8 @@ use App\Http\Controllers\Admin\ExportPermohonanController;
 use App\Http\Controllers\PermohonanController;
 use App\Http\Controllers\SuratSiswaController;
 use App\Http\Controllers\GuestBookController;
+use App\Http\Controllers\GuruController;
+use App\Http\Controllers\Admin\AdminGuruController;
 use App\Http\Controllers\Admin\AdminPermohonanController;
 
 // PTSP Routes
@@ -43,9 +45,11 @@ Route::prefix('ptsp')->name('ptsp.')->group(function () {
 Route::get('/', [PermohonanController::class, 'index'])->name('home');
 
 // Guest Book Routes
-// Guest Book Routes
 Route::get('/buku-tamu', [GuestBookController::class, 'index'])->name('buku-tamu.index');
 Route::post('/buku-tamu', [GuestBookController::class, 'store'])->name('buku-tamu.store');
+
+// Public Guru API
+Route::get('/guru', [GuruController::class, 'index'])->name('guru.index');
 
 // Pengambilan Ijazah Routes (Public)
 Route::get('/ptsp/pengambilan-ijazah', [PermohonanController::class, 'pengambilanIjazah'])->name('ptsp.pengambilan-ijazah');
@@ -98,6 +102,17 @@ Route::middleware([
     Route::get('/ptsp/{permohonan}', [PermohonanController::class, 'adminShow'])->name('ptsp.show');
     Route::put('/ptsp/{permohonan}/status', [PermohonanController::class, 'updateStatus'])->name('ptsp.status');
     Route::post('/ptsp/reset/{layanan}', [PermohonanController::class, 'adminReset'])->name('ptsp.reset');
+
+    // Data Guru
+    Route::get('/guru', [AdminGuruController::class, 'index'])->name('guru.index');
+    Route::get('/guru/tambah', [AdminGuruController::class, 'create'])->name('guru.create');
+    Route::post('/guru', [AdminGuruController::class, 'store'])->name('guru.store');
+    Route::get('/guru/{guru}', [AdminGuruController::class, 'show'])->name('guru.show');
+    Route::get('/guru/{guru}/edit', [AdminGuruController::class, 'edit'])->name('guru.edit');
+    Route::put('/guru/{guru}', [AdminGuruController::class, 'update'])->name('guru.update');
+    Route::delete('/guru/{guru}', [AdminGuruController::class, 'destroy'])->name('guru.destroy');
+    Route::post('/guru/import', [AdminGuruController::class, 'import'])->name('guru.import');
+    Route::get('/guru/import/template', [AdminGuruController::class, 'downloadTemplate'])->name('guru.import.template');
 
     // Buku Tamu
     Route::get('/buku-tamu', [AdminGuestBookController::class, 'index'])->name('guest-book.index');

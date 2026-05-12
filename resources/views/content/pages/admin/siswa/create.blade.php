@@ -50,12 +50,6 @@ $configData = Helper::appClasses();
             @error('nis')<div class="invalid-feedback">{{ $message }}</div>@enderror
           </div>
 
-          <div class="col-md-4 mb-3">
-            <label class="form-label fw-bold text-primary">Nomor Peserta</label>
-            <input type="text" name="no_peserta" class="form-control @error('no_peserta') is-invalid @enderror"
-              value="{{ old('no_peserta') }}" placeholder="Contoh: 01-001-001-1" style="border-left: 3px solid #696cff;">
-            @error('no_peserta')<div class="invalid-feedback">{{ $message }}</div>@enderror
-          </div>
         </div>
 
         <div class="mb-3">
@@ -92,8 +86,12 @@ $configData = Helper::appClasses();
         <div class="row">
           <div class="col-md-6 mb-3">
             <label class="form-label fw-bold">Kelas <span class="text-danger">*</span></label>
-            <input type="text" name="kelas" class="form-control @error('kelas') is-invalid @enderror"
-              value="{{ old('kelas') }}" placeholder="Contoh: XII IPA 1" required>
+            <select name="kelas" class="form-select @error('kelas') is-invalid @enderror" required>
+              <option value="">Pilih kelas</option>
+              @foreach(config('kelas') as $k)
+                <option value="{{ $k }}" {{ old('kelas') == $k ? 'selected' : '' }}>{{ $k }}</option>
+              @endforeach
+            </select>
             @error('kelas')<div class="invalid-feedback">{{ $message }}</div>@enderror
           </div>
           <div class="col-md-6 mb-3">
@@ -104,11 +102,11 @@ $configData = Helper::appClasses();
           </div>
         </div>
 
-        <div class="pt-3 border-top d-flex gap-2">
-          <button type="submit" class="btn btn-view">
+        <div class="form-actions text-end">
+          <button type="submit" class="btn btn-primary">
             <i class="ti tabler-device-floppy me-1"></i> Simpan Data Siswa
           </button>
-          <a href="{{ route('admin.siswa.index') }}" class="btn btn-label-secondary">Batal</a>
+          <a href="{{ route('admin.siswa.index') }}" class="btn btn-label-secondary ms-2">Batal</a>
         </div>
       </form>
     </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\GuestBook;
+use App\Models\Guru;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -21,15 +22,22 @@ class GuestBookController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $rules = [
             'nama_lengkap' => 'required|string|max:255',
             'no_whatsapp' => 'required|string|max:20',
             'alamat' => 'required|string',
             'jenis_instansi' => 'required|in:Instansi,Lembaga,Personal',
             'nama_instansi' => 'nullable|string|max:255',
+            'guru_id' => 'nullable|exists:guru,id',
             'tujuan' => 'required|string|max:255',
             'keperluan' => 'required|string',
-        ]);
+        ];
+
+        if ($request->tujuan === 'Guru') {
+            $rules['guru_id'] = 'required|exists:guru,id';
+        }
+
+        $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
             return response()->json([

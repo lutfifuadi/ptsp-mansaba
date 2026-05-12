@@ -1,7 +1,16 @@
+@php
+use App\Models\Guru;
+$stats = [
+    'total' => Guru::count(),
+    'aktif' => Guru::where('is_active', true)->count(),
+    'nonaktif' => Guru::where('is_active', false)->count(),
+];
+@endphp
+
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Data Siswa - Admin')
-@section('navbar-title', 'Data Siswa')
+@section('title', 'Data Guru - Admin')
+@section('navbar-title', 'Data Guru')
 
 @section('page-style')
 @include('_partials.admin-styles')
@@ -13,15 +22,15 @@
     {{-- Header --}}
     <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between mb-4 gap-3">
       <div>
-        <h4 class="fw-bold mb-1">Data Siswa</h4>
-        <p class="text-muted mb-0">Kelola informasi siswa dan import data massal.</p>
+        <h4 class="fw-bold mb-1">Data Guru</h4>
+        <p class="text-muted mb-0">Kelola informasi guru dan tenaga pendidik.</p>
       </div>
       <div class="d-flex flex-wrap gap-2">
         <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalImport">
           <i class="ti tabler-file-import me-1"></i> Import Excel
         </button>
-        <a href="{{ route('admin.siswa.create') }}" class="btn btn-primary">
-          <i class="ti tabler-plus me-1"></i> Tambah Siswa
+        <a href="{{ route('admin.guru.create') }}" class="btn btn-primary">
+          <i class="ti tabler-plus me-1"></i> Tambah Guru
         </a>
       </div>
     </div>
@@ -33,104 +42,69 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       </div>
     @endif
+    @if(session('error'))
+      <div class="alert alert-danger alert-dismissible mb-4" role="alert">
+        <i class="ti tabler-alert-circle me-2"></i>{{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    @endif
 
     {{-- Stats Cards --}}
     <div class="row g-3 mb-4">
-      <div class="col-6 col-md-3">
+      <div class="col-6 col-md-4">
         <div class="card stat-card h-100" style="--accent-color: var(--p); --icon-bg: #ecfdf5;">
           <div class="card-body d-flex align-items-center gap-3">
             <div class="stat-icon">
-              <i class="ti tabler-users"></i>
+              <i class="ti tabler-users-group"></i>
             </div>
             <div>
               <div class="stat-value">{{ $stats['total'] }}</div>
-              <div class="stat-label">Total Siswa</div>
+              <div class="stat-label">Total Guru</div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="col-6 col-md-3">
+      <div class="col-6 col-md-4">
         <div class="card stat-card h-100" style="--accent-color: var(--indigo); --icon-bg: #eef2ff;">
           <div class="card-body d-flex align-items-center gap-3">
             <div class="stat-icon">
-              <i class="ti tabler-gender-male"></i>
+              <i class="ti tabler-circle-check"></i>
             </div>
             <div>
-              <div class="stat-value">{{ $stats['laki_laki'] }}</div>
-              <div class="stat-label">Laki-laki</div>
+              <div class="stat-value">{{ $stats['aktif'] }}</div>
+              <div class="stat-label">Guru Aktif</div>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="col-6 col-md-3">
+      <div class="col-6 col-md-4">
         <div class="card stat-card h-100" style="--accent-color: var(--red); --icon-bg: #fee2e2;">
           <div class="card-body d-flex align-items-center gap-3">
             <div class="stat-icon">
-              <i class="ti tabler-gender-female"></i>
+              <i class="ti tabler-circle-x"></i>
             </div>
             <div>
-              <div class="stat-value">{{ $stats['perempuan'] }}</div>
-              <div class="stat-label">Perempuan</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-6 col-md-3">
-        <div class="card stat-card h-100" style="--accent-color: var(--amber); --icon-bg: #fef3c7;">
-          <div class="card-body d-flex align-items-center gap-3">
-            <div class="stat-icon">
-              <i class="ti tabler-chalkboard"></i>
-            </div>
-            <div>
-              <div class="stat-value">{{ $stats['total_kelas'] }}</div>
-              <div class="stat-label">Total Kelas</div>
+              <div class="stat-value">{{ $stats['nonaktif'] }}</div>
+              <div class="stat-label">Guru Tidak Aktif</div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    {{-- Filter --}}
+    {{-- Search --}}
     <div class="panel mb-4">
       <div class="panel-body">
-        <form method="GET" action="{{ route('admin.siswa.index') }}" id="filterForm">
+        <form method="GET" action="{{ route('admin.guru.index') }}" id="filterForm">
           <div class="row g-3">
-            <div class="col-12 col-md-4">
-              <label class="form-label"><i class="ti tabler-search"></i> Cari Siswa</label>
-              <input type="text" name="search" id="searchInput" class="form-control" value="{{ request('search') }}" placeholder="NISN atau Nama Lengkap...">
+            <div class="col">
+              <label class="form-label"><i class="ti tabler-search"></i> Cari Guru</label>
+              <input type="text" name="search" id="searchInput" class="form-control" value="{{ request('search') }}" placeholder="Nama Lengkap, NIP, atau Bidang Studi...">
             </div>
-            <div class="col-6 col-md-2">
-              <label class="form-label"><i class="ti tabler-gender-male"></i> Jenis Kelamin</label>
-              <select name="jenis_kelamin" class="form-select" id="filterJenisKelamin">
-                <option value="">Semua JK</option>
-                @foreach($jenisKelaminList as $jk)
-                  <option value="{{ $jk }}" @selected(request('jenis_kelamin') == $jk)>{{ ucfirst($jk) }}</option>
-                @endforeach
-              </select>
-            </div>
-            <div class="col-6 col-md-2">
-              <label class="form-label"><i class="ti tabler-chalkboard"></i> Kelas</label>
-              <select name="kelas" class="form-select" id="filterKelas">
-                <option value="">Semua Kelas</option>
-                @foreach($kelasList as $k)
-                  <option value="{{ $k }}" @selected(request('kelas') == $k)>{{ $k }}</option>
-                @endforeach
-              </select>
-            </div>
-            <div class="col-6 col-md-3">
-              <label class="form-label"><i class="ti tabler-school"></i> Jurusan</label>
-              <select name="jurusan" class="form-select" id="filterJurusan">
-                <option value="">Semua Jurusan</option>
-                @foreach($jurusanList as $j)
-                  <option value="{{ $j }}" @selected(request('jurusan') == $j)>{{ $j }}</option>
-                @endforeach
-              </select>
-            </div>
-            <div class="col-6 col-md-1 d-flex align-items-end">
-              <a href="{{ route('admin.siswa.index') }}" class="btn btn-outline-secondary w-100" style="min-height: 38px;">
+            <div class="col-auto d-flex align-items-end">
+              <a href="{{ route('admin.guru.index') }}" class="btn btn-outline-secondary" style="min-height: 38px;">
                 <i class="ti tabler-refresh"></i>
               </a>
             </div>
@@ -142,7 +116,7 @@
 
     {{-- Tabel --}}
     <div class="panel shadow-sm" id="tableContainer">
-      @include('content.pages.admin.siswa._table')
+      @include('content.pages.admin.guru._table')
     </div>
 
     {{-- Modal Import --}}
@@ -150,18 +124,18 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 shadow-lg">
           <div class="modal-header border-bottom p-4">
-            <h5 class="modal-title fw-bold"><i class="ti tabler-file-import text-primary me-2"></i>Import Data Siswa</h5>
+            <h5 class="modal-title fw-bold"><i class="ti tabler-file-import text-primary me-2"></i>Import Data Guru</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body p-4">
             <div class="alert alert-primary d-flex mb-4" role="alert">
               <i class="ti tabler-info-circle me-2 fs-4"></i>
               <div class="small">
-                Format kolom: <strong>nisn, nis, nama_lengkap, tempat_lahir, tanggal_lahir, jenis_kelamin, kelas, jurusan</strong><br>
-                Jenis kelamin: <code>laki-laki</code> atau <code>perempuan</code>
+                Format kolom: <strong>nama_lengkap, nip, nuptk, bidang_studi, no_whatsapp, alamat, is_active</strong><br>
+                Is Active: <code>ya</code> atau <code>tidak</code>
               </div>
             </div>
-            <form method="POST" action="{{ route('admin.siswa.import') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('admin.guru.import') }}" enctype="multipart/form-data">
               @csrf
               <div class="mb-4 text-center p-4 border rounded" style="border-style: dashed !important; background: #fcfdfe;">
                 <i class="ti tabler-cloud-upload fs-1 text-muted mb-2"></i>
@@ -173,10 +147,10 @@
                 @enderror
               </div>
               <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-view">
+                <button type="submit" class="btn btn-primary">
                   <i class="ti tabler-upload me-1"></i> Mulai Import
                 </button>
-                <a href="{{ route('admin.siswa.import.template') }}" class="btn btn-outline-primary">
+                <a href="{{ route('admin.guru.import.template') }}" class="btn btn-outline-primary">
                   <i class="ti tabler-download me-1"></i> Download Template
                 </a>
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
@@ -192,11 +166,9 @@
 
 @section('page-script')
 <script>
-function fetchStudents(url) {
+function fetchGurus(url) {
   fetch(url, {
-    headers: {
-      'X-Requested-With': 'XMLHttpRequest'
-    }
+    headers: { 'X-Requested-With': 'XMLHttpRequest' }
   })
   .then(response => response.text())
   .then(html => {
@@ -214,7 +186,7 @@ inputs.forEach(input => {
     debounceTimer = setTimeout(() => {
       const formData = new FormData(filterForm);
       const params = new URLSearchParams(formData);
-      fetchStudents(`${filterForm.action}?${params.toString()}`);
+      fetchGurus(`${filterForm.action}?${params.toString()}`);
     }, 400);
   });
 });
@@ -223,12 +195,12 @@ document.addEventListener('click', function(e) {
   const pageLink = e.target.closest('.pagination a');
   if (pageLink) {
     e.preventDefault();
-    fetchStudents(pageLink.href);
+    fetchGurus(pageLink.href);
   }
 
   const formHapus = e.target.closest('.form-hapus');
   if (formHapus && e.target.closest('button[type="submit"]')) {
-    if (!confirm('Yakin ingin menghapus data siswa ini?')) {
+    if (!confirm('Yakin ingin menghapus data guru ini?')) {
       e.preventDefault();
     }
   }

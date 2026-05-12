@@ -13,13 +13,13 @@
         <th>Jenis Kelamin</th>
         <th>TTL</th>
         <th>Kelas & Jurusan</th>
-        <th class="text-end pe-4">Aksi</th>
+        <th class="text-end">Aksi</th>
       </tr>
     </thead>
     <tbody>
       @forelse($siswa as $index => $s)
       <tr>
-        <td class="text-muted small ps-4">{{ $siswa->firstItem() + $index }}</td>
+        <td class="text-muted small">{{ $siswa->firstItem() + $index }}</td>
         <td>
           <div class="fw-bold text-dark">{{ $s->nisn }}</div>
           <div class="text-muted small">NIS: {{ $s->nis ?? '-' }}</div>
@@ -48,7 +48,7 @@
           <span class="st-badge st-default">{{ $s->kelas }}</span>
           <div class="small text-muted mt-1">{{ $s->jurusan }}</div>
         </td>
-        <td class="text-end pe-4">
+        <td class="text-end">
           <div class="d-flex justify-content-end gap-1">
             <a href="{{ route('admin.siswa.edit', $s->id) }}" class="btn btn-view btn-sm" title="Edit">
               <i class="ti tabler-edit"></i>
@@ -77,8 +77,13 @@
   </table>
 </div>
 
-<div class="border-top py-3">
-  <div class="d-flex justify-content-end">
+@if($siswa->hasPages())
+<div class="border-top d-flex align-items-center justify-content-between px-3 py-3">
+  <div class="text-muted small d-none d-md-block">
+    Halaman {{ $siswa->currentPage() }} dari {{ $siswa->lastPage() }}
+  </div>
+  <div class="d-flex justify-content-center justify-content-md-end flex-grow-1">
     {{ $siswa->links() }}
   </div>
 </div>
+@endif

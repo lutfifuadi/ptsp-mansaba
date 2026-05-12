@@ -20,8 +20,7 @@ class SiswaController extends Controller
             $query->where(function ($q) use ($search) {
                 $q->where('nisn', 'like', "%{$search}%")
                   ->orWhere('nama_lengkap', 'like', "%{$search}%")
-                  ->orWhere('nis', 'like', "%{$search}%")
-                  ->orWhere('no_peserta', 'like', "%{$search}%");
+                  ->orWhere('nis', 'like', "%{$search}%");
             });
         }
 
@@ -67,16 +66,16 @@ class SiswaController extends Controller
         $data = $request->validate([
             'nisn'             => ['required', 'digits:10', 'unique:siswa,nisn'],
             'nis'              => ['nullable', 'string', 'max:20'],
-            'no_peserta'       => ['nullable', 'string', 'max:50'],
             'nama_lengkap'     => ['required', 'string', 'max:255'],
             'tempat_lahir'     => ['nullable', 'string', 'max:100'],
             'tanggal_lahir'    => ['nullable', 'date'],
             'jenis_kelamin'    => ['nullable', 'in:laki-laki,perempuan'],
-            'kelas'            => ['required', 'string', 'max:50'],
+            'kelas'            => ['required', 'string', 'in:' . implode(',', config('kelas'))],
             'jurusan'          => ['required', 'string', 'max:100'],
         ], [
             'nisn.unique' => 'NISN sudah terdaftar.',
             'nisn.digits' => 'NISN harus 10 digit angka.',
+            'kelas.in'    => 'Kelas yang dipilih tidak valid.',
         ]);
 
         Siswa::create($data);
@@ -94,13 +93,14 @@ class SiswaController extends Controller
         $data = $request->validate([
             'nisn'             => ['required', 'digits:10', 'unique:siswa,nisn,' . $siswa->id],
             'nis'              => ['nullable', 'string', 'max:20'],
-            'no_peserta'       => ['nullable', 'string', 'max:50'],
             'nama_lengkap'     => ['required', 'string', 'max:255'],
             'tempat_lahir'     => ['nullable', 'string', 'max:100'],
             'tanggal_lahir'    => ['nullable', 'date'],
             'jenis_kelamin'    => ['nullable', 'in:laki-laki,perempuan'],
-            'kelas'            => ['required', 'string', 'max:50'],
+            'kelas'            => ['required', 'string', 'in:' . implode(',', config('kelas'))],
             'jurusan'          => ['required', 'string', 'max:100'],
+        ], [
+            'kelas.in' => 'Kelas yang dipilih tidak valid.',
         ]);
 
         $siswa->update($data);

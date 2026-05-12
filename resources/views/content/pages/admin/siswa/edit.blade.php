@@ -7,7 +7,27 @@ $configData = Helper::appClasses();
 @section('title', 'Edit Siswa - Admin')
 
 @section('page-style')
-@include('_partials.admin-styles')
+  @include('_partials.admin-styles')
+  <style>
+    .panel-body {
+      padding: 1.5rem;
+    }
+
+    .section-head {
+      padding: 0.6rem 1.5rem !important;
+      min-height: 45px;
+    }
+
+    .section-head-title {
+      margin: 0 !important;
+    }
+
+    .form-actions {
+      border-top: 1px solid var(--border);
+      padding-top: 1.25rem;
+      margin-top: 1.25rem;
+    }
+  </style>
 @endsection
 
 @section('content')
@@ -15,7 +35,7 @@ $configData = Helper::appClasses();
     <div>
       <h4 class="fw-bold mb-1">Edit Siswa</h4>
       <nav aria-label="breadcrumb">
-        <ol class="breadcrumb mb-0">
+        <ol class="breadcrumb breadcrumb-style1 mb-0">
           <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
           <li class="breadcrumb-item"><a href="{{ route('admin.siswa.index') }}">Data Siswa</a></li>
           <li class="breadcrumb-item active">Edit</li>
@@ -31,31 +51,25 @@ $configData = Helper::appClasses();
     <div class="section-head">
       <h5 class="section-head-title"><span class="dot"></span> Edit Data: {{ $siswa->nama_lengkap }}</h5>
     </div>
-    <div class="panel-body pt-4">
+    <div class="panel-body">
       <form method="POST" action="{{ route('admin.siswa.update', $siswa->id) }}">
         @csrf @method('PUT')
 
         <div class="row">
-          <div class="col-md-4 mb-3">
+          <div class="col-md-6 mb-3">
             <label class="form-label fw-bold">NISN <span class="text-danger">*</span></label>
             <input type="text" name="nisn" class="form-control @error('nisn') is-invalid @enderror"
               value="{{ old('nisn', $siswa->nisn) }}" maxlength="10" inputmode="numeric" required>
             @error('nisn')<div class="invalid-feedback">{{ $message }}</div>@enderror
           </div>
 
-          <div class="col-md-4 mb-3">
+          <div class="col-md-6 mb-3">
             <label class="form-label fw-bold">NIS</label>
             <input type="text" name="nis" class="form-control @error('nis') is-invalid @enderror"
               value="{{ old('nis', $siswa->nis) }}" maxlength="20">
             @error('nis')<div class="invalid-feedback">{{ $message }}</div>@enderror
           </div>
 
-          <div class="col-md-4 mb-3">
-            <label class="form-label fw-bold text-primary">Nomor Peserta</label>
-            <input type="text" name="no_peserta" class="form-control @error('no_peserta') is-invalid @enderror"
-              value="{{ old('no_peserta', $siswa->no_peserta) }}" style="border-left: 3px solid #696cff;">
-            @error('no_peserta')<div class="invalid-feedback">{{ $message }}</div>@enderror
-          </div>
         </div>
 
         <div class="mb-3">
@@ -92,8 +106,12 @@ $configData = Helper::appClasses();
         <div class="row">
           <div class="col-md-6 mb-3">
             <label class="form-label fw-bold">Kelas <span class="text-danger">*</span></label>
-            <input type="text" name="kelas" class="form-control @error('kelas') is-invalid @enderror"
-              value="{{ old('kelas', $siswa->kelas) }}" required>
+            <select name="kelas" class="form-select @error('kelas') is-invalid @enderror" required>
+              <option value="">Pilih kelas</option>
+              @foreach(config('kelas') as $k)
+                <option value="{{ $k }}" {{ old('kelas', $siswa->kelas) == $k ? 'selected' : '' }}>{{ $k }}</option>
+              @endforeach
+            </select>
             @error('kelas')<div class="invalid-feedback">{{ $message }}</div>@enderror
           </div>
           <div class="col-md-6 mb-3">
@@ -104,11 +122,11 @@ $configData = Helper::appClasses();
           </div>
         </div>
 
-        <div class="pt-3 border-top d-flex gap-2">
-          <button type="submit" class="btn btn-view">
+        <div class="form-actions text-end">
+          <a href="{{ route('admin.siswa.index') }}" class="btn btn-label-secondary me-2">Batal</a>
+          <button type="submit" class="btn btn-primary">
             <i class="ti tabler-device-floppy me-1"></i> Simpan Perubahan
           </button>
-          <a href="{{ route('admin.siswa.index') }}" class="btn btn-label-secondary">Batal</a>
         </div>
       </form>
     </div>
