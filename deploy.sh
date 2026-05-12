@@ -10,6 +10,8 @@ APP_PATH="$(cd "$(dirname "$0")" && pwd)"
 WEB_USER="www"
 GITHUB_OWNER="lutfifuadi"
 GITHUB_REPO="ptsp-mansaba"
+export COMPOSER_ALLOW_SUPERUSER=1
+
 
 echo "=========================================="
 echo "  Deploy Aplikasi PTSP - VPS"
