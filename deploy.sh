@@ -77,16 +77,18 @@ fi
 RELEASE_JSON=$(curl -sLf $AUTH_HEADER "https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/releases/latest")
 
 if [ $? -ne 0 ] || [ -z "$RELEASE_JSON" ]; then
-    echo "[WARN] Gagal mengambil data release dari GitHub API. Cek koneksi atau rate limit."
+    echo "[WARN] Gagal mengambil data release dari GitHub API. Cek koneksi, token, atau rate limit."
     LATEST_URL=""
 else
-    LATEST_URL=$(echo "$RELEASE_JSON" | grep "browser_download_url" | grep "aplikasi.zip" | cut -d '"' -f 4 | head -n 1)
+    # Mencari URL download dengan cara yang lebih kuat terhadap format JSON (single line atau pretty print)
+    LATEST_URL=$(echo "$RELEASE_JSON" | sed 's/[()]/ /g; s/"/\n"/g' | grep "https" | grep "aplikasi.zip" | head -n 1 | tr -d '"')
 fi
 
 if [ -n "$LATEST_URL" ]; then
     echo "[INFO] Mengunduh: $LATEST_URL"
     if [ -n "$GITHUB_TOKEN" ]; then
-        ASSET_ID=$(echo "$RELEASE_JSON" | grep -B 1 "aplikasi.zip" | grep "\"id\":" | head -n 1 | cut -d ':' -f 2 | tr -d ' ,')
+        # Mengambil Asset ID dengan cara yang lebih kuat
+        ASSET_ID=$(echo "$RELEASE_JSON" | sed 's/[()]/ /g; s/"/\n"/g' | grep -B 10 "aplikasi.zip" | grep "\"id\":" | head -n 1 | sed 's/[^0-9]//g')
         
         wget -q $WGET_HEADER --header="Accept: application/octet-stream" \
             -O /tmp/aplikasi.zip \
