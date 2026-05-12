@@ -16,20 +16,20 @@ class LembagaSettingController extends Controller
     {
         $pengaturan = [
             // Institution Details
-            'nama_lembaga'            => Pengaturan::get('nama_lembaga', 'NAMA SEKOLAH'),
-            'npsn'                    => Pengaturan::get('npsn'),
-            'alamat_lembaga'          => Pengaturan::get('alamat_lembaga', 'ALAMAT SEKOLAH'),
-            'kabupaten_kota'          => Pengaturan::get('kabupaten_kota', 'KOTA BANDUNG'),
-            'provinsi'                => Pengaturan::get('provinsi', 'JAWA BARAT'),
-            'telepon'                 => Pengaturan::get('telepon'),
+            'nama_lembaga'            => Pengaturan::get('nama_lembaga', 'MAN 1 Kota Bandung'),
+            'npsn'                    => Pengaturan::get('npsn', '20277069'),
+            'alamat_lembaga'          => Pengaturan::get('alamat_lembaga', 'Jl. Terusan H. Alpi, Cibuntu, Kec. Bandung Kulon'),
+            'kabupaten_kota'          => Pengaturan::get('kabupaten_kota', 'Kota Bandung'),
+            'provinsi'                => Pengaturan::get('provinsi', 'Jawa Barat'),
+            'telepon'                 => Pengaturan::get('telepon', '(022) 6027957'),
             'fax'                     => Pengaturan::get('fax'),
-            'kode_pos'                => Pengaturan::get('kode_pos'),
-            'email'                   => Pengaturan::get('email'),
-            'website'                 => Pengaturan::get('website'),
+            'kode_pos'                => Pengaturan::get('kode_pos', '40212'),
+            'email'                   => Pengaturan::get('email', 'info@man1kotabandung.sch.id'),
+            'website'                 => Pengaturan::get('website', 'https://man1kotabandung.sch.id'),
 
             // Header (KOP)
             'header_baris_1'          => Pengaturan::get('header_baris_1', 'KEMENTERIAN AGAMA REPUBLIK INDONESIA'),
-            'header_baris_2'          => Pengaturan::get('header_baris_2'),
+            'header_baris_2'          => Pengaturan::get('header_baris_2', 'KANTOR KEMENTERIAN AGAMA KOTA BANDUNG'),
             'logo_kiri'               => Pengaturan::get('logo_kiri'),
             'logo_kanan'              => Pengaturan::get('logo_kanan'),
 
@@ -38,7 +38,7 @@ class LembagaSettingController extends Controller
             'nip_kepala_sekolah'      => Pengaturan::get('nip_kepala_sekolah'),
             'ttd_kepala_sekolah'      => Pengaturan::get('ttd_kepala_sekolah'),
             'stempel_sekolah'         => Pengaturan::get('stempel_sekolah'),
-            'jabatan_penandatangan'   => Pengaturan::get('jabatan_penandatangan', 'Kepala ${nama_lembaga}'),
+            'jabatan_penandatangan'   => Pengaturan::get('jabatan_penandatangan'),
         ];
 
         return view('content.pages.admin.pengaturan.lembaga', compact('pengaturan'));

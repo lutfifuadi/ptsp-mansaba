@@ -1,14 +1,12 @@
 @php use Illuminate\Support\Str; @endphp
 
-<div class="card-header d-flex justify-content-between align-items-center py-4 px-4">
-  <h6 class="mb-0 fw-bold d-flex align-items-center gap-2">
-    <i class="ti tabler-list text-primary"></i> Daftar Kunjungan
-  </h6>
+<div class="section-head">
+  <h6 class="section-head-title"><i class="ti tabler-list text-primary"></i> Daftar Kunjungan</h6>
   <span class="badge bg-label-primary rounded-pill px-3">{{ $guestBooks->total() }} Total Record</span>
 </div>
 
 <div class="table-responsive">
-  <table class="table table-hover align-middle mb-0 premium-table">
+  <table class="table tbl mb-0">
     <thead>
       <tr>
         <th width="50">#</th>
@@ -70,7 +68,7 @@
 </div>
 
 @if($guestBooks->hasPages())
-<div class="card-footer border-top d-flex justify-content-center py-4">
+<div class="border-top d-flex justify-content-center py-4">
   {{ $guestBooks->links() }}
 </div>
 @endif

@@ -33,3 +33,4 @@
 [2026-05-12] Dokumentasi API Admin: Penambahan referensi endpoint administratif di docs/api/admin-ptsp.md.
 [2026-05-12] Proporsionalitas font dashboard: perbesar font stat, heading, tabel; perkecil font quick menu.
 [2026-05-12] Perkecil font form secara global (form-control, form-label, dll) via app.css + form surat publik.
+[2026-05-12] Sinkronisasi UI Admin dengan Dashboard — shared CSS partial, stat-card, tbl, st-badge pattern di 12 halaman admin

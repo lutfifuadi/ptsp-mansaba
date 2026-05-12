@@ -1,90 +1,10 @@
-<style>
-  .table-siswa th {
-    background-color: #fcfdfe !important;
-    text-transform: uppercase;
-    font-size: 0.7rem;
-    letter-spacing: 1px;
-    font-weight: 700;
-    color: #566a7f;
-    border-top: none !important;
-    padding-top: 1.2rem !important;
-    padding-bottom: 1.2rem !important;
-  }
-  .table-siswa td {
-    padding-top: 1rem !important;
-    padding-bottom: 1rem !important;
-    vertical-align: middle;
-  }
-  .table-siswa tr:hover {
-    background-color: #f5f7ff !important;
-  }
-  .status-badge {
-    padding: 0.5rem 0.8rem;
-    font-weight: 600;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    border-radius: 4px;
-  }
-  .bulk-bar {
-    background: #fff;
-    border: 1px solid #eef0f2;
-    border-radius: 4px;
-    padding: 1rem 1.5rem;
-    box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
-    z-index: 10;
-  }
-  /* Fix Pagination Bootstrap 5 */
-  .pagination-container nav > div:first-child {
-    display: none !important;
-  }
-  .pagination-container nav > div:last-child {
-    display: flex !important;
-    width: 100%;
-    justify-content: flex-end !important;
-  }
-  .pagination-container nav > div:last-child > div:first-child {
-    display: none !important; /* Hide "Showing X to Y..." */
-  }
-  .pagination-container .pagination {
-    margin-bottom: 0;
-    gap: 4px;
-  }
-  .pagination-container .page-link {
-    border: none;
-    background: #f1f2f4;
-    color: #566a7f;
-    border-radius: 4px !important;
-    margin: 0;
-    padding: 0.5rem 0.85rem;
-    font-weight: 600;
-    font-size: 0.85rem;
-    transition: all 0.2s;
-  }
-  .pagination-container .page-link:hover {
-    background: #eef0f2;
-    color: #696cff;
-    transform: translateY(-1px);
-  }
-  .pagination-container .page-item.active .page-link {
-    background: #696cff;
-    color: #fff;
-    box-shadow: 0 4px 10px rgba(105, 108, 255, 0.3);
-  }
-  .pagination-container .page-item.disabled .page-link {
-    background: #f8f9fa;
-    color: #b4bdc6;
-    pointer-events: none;
-  }
-</style>
-
-<div class="card-header d-flex justify-content-between align-items-center bg-white border-bottom py-3">
-  <h5 class="mb-0 fw-bold">Daftar Siswa</h5>
-  <span class="badge bg-label-primary px-3 py-2" style="border-radius: 4px;">{{ $siswa->total() }} Total Siswa</span>
+<div class="section-head">
+  <h5 class="section-head-title"><span class="dot"></span> Daftar Siswa</h5>
+  <span class="st-badge st-default">{{ $siswa->total() }} Total Siswa</span>
 </div>
 
 <div class="table-responsive">
-  <table class="table table-hover table-siswa mb-0">
+  <table class="table tbl mb-0">
     <thead>
       <tr>
         <th style="width:40px">#</th>
@@ -109,8 +29,8 @@
         </td>
         <td>
           @if($s->jenis_kelamin)
-            <span class="badge bg-label-info" style="border-radius: 4px;">
-              <i class="icon-base ti {{ $s->jenis_kelamin === 'laki-laki' ? 'tabler-mars' : 'tabler-venus' }} fs-5"></i>
+            <span class="st-badge st-default">
+              <i class="ti {{ $s->jenis_kelamin === 'laki-laki' ? 'tabler-mars' : 'tabler-venus' }} me-1"></i>
               {{ ucfirst($s->jenis_kelamin) }}
             </span>
           @else
@@ -125,18 +45,18 @@
           @endif
         </td>
         <td>
-          <div class="badge bg-label-secondary" style="border-radius: 4px;">{{ $s->kelas }}</div>
+          <span class="st-badge st-default">{{ $s->kelas }}</span>
           <div class="small text-muted mt-1">{{ $s->jurusan }}</div>
         </td>
         <td class="text-end pe-4">
           <div class="d-flex justify-content-end gap-1">
-            <a href="{{ route('admin.siswa.edit', $s->id) }}" class="btn btn-sm btn-icon btn-label-primary" title="Edit" style="border-radius: 4px;">
-              <i class="icon-base ti tabler-edit"></i>
+            <a href="{{ route('admin.siswa.edit', $s->id) }}" class="btn btn-view btn-sm" title="Edit">
+              <i class="ti tabler-edit"></i>
             </a>
             <form method="POST" action="{{ route('admin.siswa.destroy', $s->id) }}" class="d-inline form-hapus">
               @csrf @method('DELETE')
-              <button type="submit" class="btn btn-sm btn-icon btn-label-danger" title="Hapus" style="border-radius: 4px;">
-                <i class="icon-base ti tabler-trash"></i>
+              <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
+                <i class="ti tabler-trash"></i>
               </button>
             </form>
           </div>
@@ -144,10 +64,12 @@
       </tr>
       @empty
       <tr>
-        <td colspan="7" class="text-center py-5">
-          <div class="text-muted mb-2"><i class="icon-base ti tabler-user-off fs-1"></i></div>
-          <div class="fw-bold">Tidak ada data siswa.</div>
-          <div class="text-muted small">Coba sesuaikan filter atau cari kata kunci lain.</div>
+        <td colspan="7">
+          <div class="empty-state">
+            <i class="ti tabler-user-off"></i>
+            <p class="fw-bold">Tidak ada data siswa.</p>
+            <p>Coba sesuaikan filter atau cari kata kunci lain.</p>
+          </div>
         </td>
       </tr>
       @endforelse
@@ -155,10 +77,8 @@
   </table>
 </div>
 
-<div class="card-footer bg-white border-top py-3">
+<div class="border-top py-3">
   <div class="d-flex justify-content-end">
-    <div class="pagination-container">
-      {{ $siswa->links() }}
-    </div>
+    {{ $siswa->links() }}
   </div>
 </div>

@@ -4,68 +4,7 @@
 @section('navbar-title', 'Data Siswa')
 
 @section('page-style')
-<style>
-  .card-filter {
-    border: none;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-    border-radius: 4px;
-    background: #fff;
-  }
-  .filter-input-group {
-    background: #f9fafb;
-    border: 1px solid #eef0f2;
-    border-radius: 4px;
-    padding: 10px 15px;
-    transition: all 0.2s;
-  }
-  .filter-input-group:focus-within {
-    border-color: #696cff;
-    background: #fff;
-    box-shadow: 0 0 0 0.2rem rgba(105, 108, 255, 0.1);
-  }
-  .filter-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: #566a7f;
-    margin-bottom: 4px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .filter-control {
-    border: none;
-    background: transparent;
-    padding: 0;
-    font-weight: 500;
-    color: #32475c;
-    width: 100%;
-  }
-  .filter-control:focus {
-    outline: none;
-    box-shadow: none;
-  }
-  .header-gradient {
-    background: linear-gradient(135deg, #f5f7ff 0%, #ffffff 100%);
-    border-radius: 4px;
-    padding: 2rem;
-    margin-bottom: 2rem;
-    border: 1px solid #eef0f2;
-  }
-  .btn-premium-primary {
-    background: linear-gradient(135deg, #696cff 0%, #4f52d4 100%);
-    border: none;
-    box-shadow: 0 4px 12px rgba(105, 108, 255, 0.3);
-    color: #fff;
-    padding: 0.6rem 1.5rem;
-    font-weight: 600;
-  }
-  .btn-premium-primary:hover {
-    box-shadow: 0 6px 18px rgba(105, 108, 255, 0.4);
-    transform: translateY(-1px);
-    color: #fff;
-  }
-</style>
+@include('_partials.admin-styles')
 @endsection
 
 @section('content')
@@ -78,11 +17,11 @@
         <p class="text-muted mb-0">Kelola informasi siswa dan import data massal.</p>
       </div>
       <div class="d-flex flex-wrap gap-2">
-        <button class="btn btn-outline-primary bg-white" data-bs-toggle="modal" data-bs-target="#modalImport">
-          <i class="icon-base ti tabler-file-import me-1"></i> Import Excel
+        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalImport">
+          <i class="ti tabler-file-import me-1"></i> Import Excel
         </button>
         <a href="{{ route('admin.siswa.create') }}" class="btn btn-primary">
-          <i class="icon-base ti tabler-plus me-1"></i> Tambah Siswa
+          <i class="ti tabler-plus me-1"></i> Tambah Siswa
         </a>
       </div>
     </div>
@@ -90,7 +29,7 @@
     {{-- Alert --}}
     @if(session('success'))
       <div class="alert alert-success alert-dismissible mb-4" role="alert">
-        <i class="icon-base ti tabler-circle-check me-2"></i>{{ session('success') }}
+        <i class="ti tabler-circle-check me-2"></i>{{ session('success') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       </div>
     @endif
@@ -98,170 +37,161 @@
     {{-- Stats Cards --}}
     <div class="row g-3 mb-4">
       <div class="col-6 col-md-3">
-        <div class="card border-0 shadow-sm h-100">
+        <div class="card stat-card h-100" style="--accent-color: var(--p); --icon-bg: #ecfdf5;">
           <div class="card-body d-flex align-items-center gap-3">
-            <div class="avatar avatar-md bg-label-primary">
-              <i class="icon-base ti tabler-users fs-4"></i>
+            <div class="stat-icon">
+              <i class="ti tabler-users"></i>
             </div>
             <div>
-              <div class="fw-bold fs-4">{{ $stats['total'] }}</div>
-              <div class="text-muted small">Total Siswa</div>
+              <div class="stat-value">{{ $stats['total'] }}</div>
+              <div class="stat-label">Total Siswa</div>
             </div>
           </div>
         </div>
       </div>
 
       <div class="col-6 col-md-3">
-        <div class="card border-0 shadow-sm h-100">
+        <div class="card stat-card h-100" style="--accent-color: var(--indigo); --icon-bg: #eef2ff;">
           <div class="card-body d-flex align-items-center gap-3">
-            <div class="avatar avatar-md bg-label-info">
-              <i class="icon-base ti tabler-gender-male fs-4"></i>
+            <div class="stat-icon">
+              <i class="ti tabler-gender-male"></i>
             </div>
             <div>
-              <div class="fw-bold fs-4">{{ $stats['laki_laki'] }}</div>
-              <div class="text-muted small">Laki-laki</div>
+              <div class="stat-value">{{ $stats['laki_laki'] }}</div>
+              <div class="stat-label">Laki-laki</div>
             </div>
           </div>
         </div>
       </div>
 
       <div class="col-6 col-md-3">
-        <div class="card border-0 shadow-sm h-100">
+        <div class="card stat-card h-100" style="--accent-color: var(--red); --icon-bg: #fee2e2;">
           <div class="card-body d-flex align-items-center gap-3">
-            <div class="avatar avatar-md bg-label-danger">
-              <i class="icon-base ti tabler-gender-female fs-4"></i>
+            <div class="stat-icon">
+              <i class="ti tabler-gender-female"></i>
             </div>
             <div>
-              <div class="fw-bold fs-4">{{ $stats['perempuan'] }}</div>
-              <div class="text-muted small">Perempuan</div>
+              <div class="stat-value">{{ $stats['perempuan'] }}</div>
+              <div class="stat-label">Perempuan</div>
             </div>
           </div>
         </div>
       </div>
 
       <div class="col-6 col-md-3">
-        <div class="card border-0 shadow-sm h-100">
+        <div class="card stat-card h-100" style="--accent-color: var(--amber); --icon-bg: #fef3c7;">
           <div class="card-body d-flex align-items-center gap-3">
-            <div class="avatar avatar-md bg-label-warning">
-              <i class="icon-base ti tabler-chalkboard fs-4"></i>
+            <div class="stat-icon">
+              <i class="ti tabler-chalkboard"></i>
             </div>
             <div>
-              <div class="fw-bold fs-4">{{ $stats['total_kelas'] }}</div>
-              <div class="text-muted small">Total Kelas</div>
+              <div class="stat-value">{{ $stats['total_kelas'] }}</div>
+              <div class="stat-label">Total Kelas</div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-  {{-- Filter --}}
-  <div class="card card-filter mb-4 border-0">
-    <div class="card-body p-4">
-      <form method="GET" action="{{ route('admin.siswa.index') }}" id="filterForm">
-        <div class="row g-3">
-          <div class="col-12 col-md-4">
-            <div class="filter-input-group">
-              <label class="filter-label"><i class="icon-base ti tabler-search"></i> Cari Siswa</label>
-              <input type="text" name="search" id="searchInput" class="filter-control" value="{{ request('search') }}" placeholder="NISN atau Nama Lengkap...">
+    {{-- Filter --}}
+    <div class="panel mb-4">
+      <div class="panel-body">
+        <form method="GET" action="{{ route('admin.siswa.index') }}" id="filterForm">
+          <div class="row g-3">
+            <div class="col-12 col-md-4">
+              <label class="form-label"><i class="ti tabler-search"></i> Cari Siswa</label>
+              <input type="text" name="search" id="searchInput" class="form-control" value="{{ request('search') }}" placeholder="NISN atau Nama Lengkap...">
             </div>
-          </div>
-          <div class="col-6 col-md-2">
-            <div class="filter-input-group">
-              <label class="filter-label"><i class="icon-base ti tabler-gender-male"></i> Jenis Kelamin</label>
-              <select name="jenis_kelamin" class="filter-control" id="filterJenisKelamin">
+            <div class="col-6 col-md-2">
+              <label class="form-label"><i class="ti tabler-gender-male"></i> Jenis Kelamin</label>
+              <select name="jenis_kelamin" class="form-select" id="filterJenisKelamin">
                 <option value="">Semua JK</option>
                 @foreach($jenisKelaminList as $jk)
                   <option value="{{ $jk }}" @selected(request('jenis_kelamin') == $jk)>{{ ucfirst($jk) }}</option>
                 @endforeach
               </select>
             </div>
-          </div>
-          <div class="col-6 col-md-2">
-            <div class="filter-input-group">
-              <label class="filter-label"><i class="icon-base ti tabler-chalkboard"></i> Kelas</label>
-              <select name="kelas" class="filter-control" id="filterKelas">
+            <div class="col-6 col-md-2">
+              <label class="form-label"><i class="ti tabler-chalkboard"></i> Kelas</label>
+              <select name="kelas" class="form-select" id="filterKelas">
                 <option value="">Semua Kelas</option>
                 @foreach($kelasList as $k)
                   <option value="{{ $k }}" @selected(request('kelas') == $k)>{{ $k }}</option>
                 @endforeach
               </select>
             </div>
-          </div>
-          <div class="col-6 col-md-3">
-            <div class="filter-input-group">
-              <label class="filter-label"><i class="icon-base ti tabler-school"></i> Jurusan</label>
-              <select name="jurusan" class="filter-control" id="filterJurusan">
+            <div class="col-6 col-md-3">
+              <label class="form-label"><i class="ti tabler-school"></i> Jurusan</label>
+              <select name="jurusan" class="form-select" id="filterJurusan">
                 <option value="">Semua Jurusan</option>
                 @foreach($jurusanList as $j)
                   <option value="{{ $j }}" @selected(request('jurusan') == $j)>{{ $j }}</option>
                 @endforeach
               </select>
             </div>
+            <div class="col-6 col-md-1 d-flex align-items-end">
+              <a href="{{ route('admin.siswa.index') }}" class="btn btn-outline-secondary w-100" style="min-height: 38px;">
+                <i class="ti tabler-refresh"></i>
+              </a>
+            </div>
           </div>
-          <div class="col-6 col-md-1">
-            <a href="{{ route('admin.siswa.index') }}" class="btn btn-label-secondary w-100 h-100 d-flex align-items-center justify-content-center" style="border-radius: 4px; min-height: 58px;">
-              <i class="icon-base ti tabler-refresh"></i>
-            </a>
-          </div>
-        </div>
-        <button type="submit" class="btn d-none" id="btnFilter"></button>
-      </form>
-    </div>
-  </div>
-
-  {{-- Tabel --}}
-  <div class="card border-0 shadow-sm overflow-hidden" id="tableContainer" style="border-radius: 4px;">
-    @include('content.pages.admin.siswa._table')
-  </div>
-
-
-{{-- Modal Import --}}
-<div class="modal fade" id="modalImport" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow-lg">
-      <div class="modal-header border-bottom p-4">
-        <h5 class="modal-title fw-bold"><i class="icon-base ti tabler-file-import text-primary me-2"></i>Import Data Siswa</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body p-4">
-          <div class="alert alert-label-primary d-flex mb-4" role="alert" style="border-radius: 4px;">
-          <i class="icon-base ti tabler-info-circle me-2 fs-4"></i>
-          <div class="small">
-            Format kolom: <strong>nisn, nis, no_peserta, nama_lengkap, tempat_lahir, tanggal_lahir, jenis_kelamin, kelas, jurusan</strong><br>
-            Jenis kelamin: <code>laki-laki</code> atau <code>perempuan</code>
-          </div>
-        </div>
-        <form method="POST" action="{{ route('admin.siswa.import') }}" enctype="multipart/form-data">
-          @csrf
-          <div class="mb-4 text-center p-4 border rounded" style="border-style: dashed !important; background: #fcfdfe;">
-            <i class="icon-base ti tabler-cloud-upload fs-1 text-muted mb-2"></i>
-            <h6 class="fw-bold mb-1">Pilih File Excel/CSV</h6>
-            <p class="text-muted small mb-3">Maksimum ukuran file 5MB</p>
-            <input type="file" name="file" class="form-control @error('file') is-invalid @enderror" accept=".xlsx,.xls,.csv" required>
-            @error('file')
-              <div class="invalid-feedback text-start">{{ $message }}</div>
-            @enderror
-          </div>
-          <div class="d-grid gap-2">
-            <button type="submit" class="btn btn-premium-primary">
-              <i class="icon-base ti tabler-upload me-1"></i> Mulai Import
-            </button>
-            <a href="{{ route('admin.siswa.import.template') }}" class="btn btn-outline-primary">
-              <i class="icon-base ti tabler-download me-1"></i> Download Template
-            </a>
-            <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Batal</button>
-          </div>
+          <button type="submit" class="btn d-none" id="btnFilter"></button>
         </form>
       </div>
     </div>
-  </div>
+
+    {{-- Tabel --}}
+    <div class="panel shadow-sm" id="tableContainer">
+      @include('content.pages.admin.siswa._table')
+    </div>
+
+    {{-- Modal Import --}}
+    <div class="modal fade" id="modalImport" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+          <div class="modal-header border-bottom p-4">
+            <h5 class="modal-title fw-bold"><i class="ti tabler-file-import text-primary me-2"></i>Import Data Siswa</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4">
+            <div class="alert alert-primary d-flex mb-4" role="alert">
+              <i class="ti tabler-info-circle me-2 fs-4"></i>
+              <div class="small">
+                Format kolom: <strong>nisn, nis, no_peserta, nama_lengkap, tempat_lahir, tanggal_lahir, jenis_kelamin, kelas, jurusan</strong><br>
+                Jenis kelamin: <code>laki-laki</code> atau <code>perempuan</code>
+              </div>
+            </div>
+            <form method="POST" action="{{ route('admin.siswa.import') }}" enctype="multipart/form-data">
+              @csrf
+              <div class="mb-4 text-center p-4 border rounded" style="border-style: dashed !important; background: #fcfdfe;">
+                <i class="ti tabler-cloud-upload fs-1 text-muted mb-2"></i>
+                <h6 class="fw-bold mb-1">Pilih File Excel/CSV</h6>
+                <p class="text-muted small mb-3">Maksimum ukuran file 5MB</p>
+                <input type="file" name="file" class="form-control @error('file') is-invalid @enderror" accept=".xlsx,.xls,.csv" required>
+                @error('file')
+                  <div class="invalid-feedback text-start">{{ $message }}</div>
+                @enderror
+              </div>
+              <div class="d-grid gap-2">
+                <button type="submit" class="btn btn-view">
+                  <i class="ti tabler-upload me-1"></i> Mulai Import
+                </button>
+                <a href="{{ route('admin.siswa.import.template') }}" class="btn btn-outline-primary">
+                  <i class="ti tabler-download me-1"></i> Download Template
+                </a>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 @endsection
 
 @section('page-script')
 <script>
-// AJAX Fetch Function
 function fetchStudents(url) {
   fetch(url, {
     headers: {
@@ -274,7 +204,6 @@ function fetchStudents(url) {
   });
 }
 
-// Live Search & Filter
 let debounceTimer;
 const filterForm = document.getElementById('filterForm');
 const inputs = filterForm.querySelectorAll('input, select');
@@ -290,7 +219,6 @@ inputs.forEach(input => {
   });
 });
 
-// Event Delegation for Table elements
 document.addEventListener('click', function(e) {
   const pageLink = e.target.closest('.pagination a');
   if (pageLink) {

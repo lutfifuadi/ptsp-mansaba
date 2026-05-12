@@ -3,41 +3,36 @@
 @section('title', 'Buku Tamu Online - Admin')
 @section('navbar-title', 'Buku Tamu Online')
 
-@section('content')
+@section('page-style')
+@include('_partials.admin-styles')
 <style>
-  .card-premium {
-    border: none;
-    border-radius: 12px;
-    transition: all 0.3s ease;
-    background: #fff;
-    overflow: hidden;
-  }
-  .card-premium:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08) !important;
-  }
-  .stat-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    flex-shrink: 0;
-  }
-  .premium-table thead th {
-    background-color: #f8f9fa;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 1px;
-    font-weight: 700;
-    color: #4b5563;
-    padding: 1.2rem 1rem;
-    border-top: none;
-  }
+.detail-field {
+  padding: 1rem 0;
+  border-bottom: 1px solid #f1f2f4;
+}
+.detail-field:last-child {
+  border-bottom: none;
+}
+.detail-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.detail-value {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 0.95rem;
+}
 </style>
+@endsection
 
+@section('content')
 <div class="row">
   <div class="col-12">
 
@@ -77,15 +72,15 @@
     {{-- Stats Cards --}}
     <div class="row g-4 mb-4">
       <div class="col-6 col-md-3">
-        <div class="card card-premium shadow-sm">
+        <div class="card stat-card h-100" style="--accent-color: var(--p); --icon-bg: #ecfdf5;">
           <div class="card-body">
             <div class="d-flex align-items-center gap-3">
-              <div class="stat-icon bg-label-primary">
+              <div class="stat-icon">
                 <i class="ti tabler-users"></i>
               </div>
               <div>
-                <h4 class="fw-bold mb-0">{{ $stats['total'] }}</h4>
-                <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.65rem;">Total Tamu</small>
+                <div class="stat-label">Total Tamu</div>
+                <div class="stat-value">{{ $stats['total'] }}</div>
               </div>
             </div>
           </div>
@@ -93,15 +88,15 @@
       </div>
 
       <div class="col-6 col-md-3">
-        <div class="card card-premium shadow-sm">
+        <div class="card stat-card h-100" style="--accent-color: var(--p); --icon-bg: #ecfdf5;">
           <div class="card-body">
             <div class="d-flex align-items-center gap-3">
-              <div class="stat-icon bg-label-success">
+              <div class="stat-icon">
                 <i class="ti tabler-calendar-event"></i>
               </div>
               <div>
-                <h4 class="fw-bold mb-0">{{ $stats['today'] }}</h4>
-                <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.65rem;">Hari Ini</small>
+                <div class="stat-label">Hari Ini</div>
+                <div class="stat-value">{{ $stats['today'] }}</div>
               </div>
             </div>
           </div>
@@ -109,15 +104,15 @@
       </div>
 
       <div class="col-6 col-md-3">
-        <div class="card card-premium shadow-sm">
+        <div class="card stat-card h-100" style="--accent-color: var(--indigo); --icon-bg: #eef2ff;">
           <div class="card-body">
             <div class="d-flex align-items-center gap-3">
-              <div class="stat-icon bg-label-info">
+              <div class="stat-icon">
                 <i class="ti tabler-calendar-stats"></i>
               </div>
               <div>
-                <h4 class="fw-bold mb-0">{{ $stats['this_week'] }}</h4>
-                <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.65rem;">Minggu Ini</small>
+                <div class="stat-label">Minggu Ini</div>
+                <div class="stat-value">{{ $stats['this_week'] }}</div>
               </div>
             </div>
           </div>
@@ -125,15 +120,15 @@
       </div>
 
       <div class="col-6 col-md-3">
-        <div class="card card-premium shadow-sm">
+        <div class="card stat-card h-100" style="--accent-color: var(--amber); --icon-bg: #fef3c7;">
           <div class="card-body">
             <div class="d-flex align-items-center gap-3">
-              <div class="stat-icon bg-label-warning">
+              <div class="stat-icon">
                 <i class="ti tabler-calendar-due"></i>
               </div>
               <div>
-                <h4 class="fw-bold mb-0">{{ $stats['this_month'] }}</h4>
-                <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.65rem;">Bulan Ini</small>
+                <div class="stat-label">Bulan Ini</div>
+                <div class="stat-value">{{ $stats['this_month'] }}</div>
               </div>
             </div>
           </div>
@@ -142,7 +137,7 @@
     </div>
 
     {{-- Table Container --}}
-    <div class="card card-premium shadow-sm border-0 overflow-hidden" id="tableContainer">
+    <div class="panel shadow-sm" id="tableContainer">
       @include('content.pages.admin.guest-book._table')
     </div>
 
@@ -153,7 +148,7 @@
 <div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" style="max-width: 560px;">
     <div class="modal-content border-0 shadow-lg" style="border-radius: 15px; overflow: hidden;">
-      <div class="modal-header p-4 border-bottom" style="background: linear-gradient(135deg, #fff 0%, #f5f7ff 100%);">
+      <div class="modal-header p-4 border-bottom">
         <div class="d-flex align-items-center gap-3">
           <div class="detail-avatar d-flex align-items-center justify-content-center bg-primary text-white fw-bold rounded-3" id="detailAvatar" style="width: 56px; height: 56px; font-size: 1.5rem;">T</div>
           <div>
@@ -184,32 +179,6 @@
     </div>
   </div>
 </div>
-
-<style>
-  .detail-field {
-    padding: 1rem 0;
-    border-bottom: 1px solid #f1f2f4;
-  }
-  .detail-field:last-child {
-    border-bottom: none;
-  }
-  .detail-label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: #64748b;
-    font-weight: 700;
-    margin-bottom: 0.4rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-  .detail-value {
-    font-weight: 600;
-    color: #1e293b;
-    font-size: 0.95rem;
-  }
-</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {

@@ -3,6 +3,10 @@
 @section('title', ($permohonan->layanan ? $permohonan->layanan->nama_layanan : 'Permohonan') . ' — ' . $permohonan->no_tiket)
 @section('navbar-title', 'Detail ' . ($permohonan->layanan ? $permohonan->layanan->nama_layanan : 'Permohonan'))
 
+@section('page-style')
+@include('_partials.admin-styles')
+@endsection
+
 @section('content')
 <div class="row">
   <div class="col-12">
@@ -32,7 +36,7 @@
       <div class="col-12 col-md-7">
 
         {{-- Tiket & Status --}}
-        <div class="card shadow-sm border-0 mb-4">
+        <div class="card panel shadow-sm border-0 mb-4">
           <div class="card-body">
             <div class="d-flex align-items-center justify-content-between mb-3">
               <div>
@@ -41,11 +45,11 @@
               </div>
               <div class="text-end">
                 @switch($permohonan->status)
-                  @case('pending')  <span class="badge bg-warning text-dark fs-6 px-3 py-2">Pending</span> @break
-                  @case('proses')   <span class="badge bg-info fs-6 px-3 py-2">Diproses</span> @break
-                  @case('selesai')  <span class="badge bg-success fs-6 px-3 py-2">Selesai</span> @break
-                  @case('ditolak')  <span class="badge bg-danger fs-6 px-3 py-2">Ditolak</span> @break
-                  @default          <span class="badge bg-secondary fs-6 px-3 py-2">{{ $permohonan->status }}</span>
+                  @case('pending')  <span class="st-badge st-pending">PENDING</span> @break
+                  @case('proses')   <span class="st-badge st-proses">DIPROSES</span> @break
+                  @case('selesai')  <span class="st-badge st-selesai">SELESAI</span> @break
+                  @case('ditolak')  <span class="st-badge st-ditolak">DITOLAK</span> @break
+                  @default          <span class="st-badge st-default">{{ strtoupper($permohonan->status) }}</span>
                 @endswitch
               </div>
             </div>
@@ -80,7 +84,7 @@
         </div>
 
         {{-- Data Pemohon --}}
-        <div class="card shadow-sm border-0 mb-4">
+        <div class="card panel shadow-sm border-0 mb-4">
           <div class="card-header py-3">
             <h6 class="mb-0 fw-semibold">
               <i class="ti tabler-user me-2 text-primary"></i>Data Pemohon
@@ -147,7 +151,7 @@
 
         {{-- Data Form --}}
         @if($permohonan->data_form)
-        <div class="card shadow-sm border-0">
+        <div class="card panel shadow-sm border-0">
           <div class="card-header py-3">
             <h6 class="mb-0 fw-semibold">
               <i class="ti tabler-file-description me-2 text-primary"></i>Detail Permohonan
@@ -179,7 +183,7 @@
 
       {{-- Right: Update Status --}}
       <div class="col-12 col-md-5">
-        <div class="card shadow-sm border-0 sticky-top" style="top: 80px;">
+        <div class="card panel shadow-sm border-0 sticky-top" style="top: 80px;">
           <div class="card-header py-3">
             <h6 class="mb-0 fw-semibold">
               <i class="ti tabler-edit me-2 text-primary"></i>Update Status
