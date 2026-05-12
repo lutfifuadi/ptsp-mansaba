@@ -29,6 +29,92 @@
   color: #1e293b;
   font-size: 0.95rem;
 }
+
+.notif-toast {
+  position: fixed;
+  top: 20px;
+  right: -420px;
+  max-width: 400px;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 0 1px rgba(5,150,105,0.1);
+  z-index: 9999;
+  transition: right 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+}
+.notif-toast.show {
+  right: 20px;
+}
+.notif-toast .notif-bar {
+  height: 4px;
+  background: linear-gradient(90deg, #059669, #34d399);
+  width: 100%;
+  animation: shrinkWidth 10s linear forwards;
+}
+@keyframes shrinkWidth {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+.notif-toast .notif-body {
+  padding: 20px;
+}
+.notif-toast .notif-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ecfdf5;
+  color: #059669;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+.notif-toast .notif-badge .pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: #059669;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.5); opacity: 0.5; }
+}
+.notif-toast .notif-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.notif-toast .notif-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: #f1f5f9;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.notif-toast .notif-close:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
 </style>
 @endsection
 
@@ -144,6 +230,43 @@
   </div>
 </div>
 
+{{-- Notification Toast --}}
+<div class="notif-toast" id="notifToast">
+  <div class="notif-bar" id="notifBar"></div>
+  <div class="notif-body">
+    <button type="button" class="notif-close" id="notifClose" title="Tutup">
+      <i class="ti tabler-x fs-6"></i>
+    </button>
+    <div class="notif-badge">
+      <span class="pulse-dot"></span>
+      <span id="notifBadgeText">Kunjungan Baru</span>
+    </div>
+    <div class="d-flex gap-3">
+      <div class="notif-avatar bg-primary text-white" id="notifAvatar">T</div>
+      <div class="flex-grow-1 min-width-0">
+        <div class="fw-bold text-dark mb-1" id="notifNama" style="font-size: 1rem;">-</div>
+        <div class="d-flex align-items-center gap-2 text-muted small mb-2">
+          <i class="ti tabler-clock fs-6"></i>
+          <span id="notifWaktu">-</span>
+        </div>
+        <div class="d-flex align-items-center gap-2 mb-1">
+          <i class="ti tabler-target text-warning fs-6"></i>
+          <span class="text-dark small fw-medium" id="notifTujuan">-</span>
+        </div>
+        <div class="text-muted small text-truncate" id="notifKeperluan">-</div>
+        <div class="d-flex gap-2 mt-3">
+          <button class="btn btn-sm btn-primary rounded-3 d-flex align-items-center gap-1" id="notifDetailBtn">
+            <i class="ti tabler-eye fs-6"></i> Lihat Detail
+          </button>
+          <button class="btn btn-sm btn-label-secondary rounded-3" id="notifDismissBtn">
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 {{-- Modal Detail --}}
 <div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" style="max-width: 560px;">
@@ -237,6 +360,62 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   });
+
+  // --- Polling Notifikasi ---
+  let latestId = {{ $guestBooks->first() ? $guestBooks->first()->id : 0 }};
+  let notifTimeout = null;
+
+  function showNotif(entry) {
+    const toast = document.getElementById('notifToast');
+    const bar = document.getElementById('notifBar');
+
+    document.getElementById('notifAvatar').textContent = entry.nama_lengkap.charAt(0).toUpperCase();
+    document.getElementById('notifNama').textContent = entry.nama_lengkap;
+    document.getElementById('notifWaktu').textContent = entry.waktu;
+    document.getElementById('notifTujuan').textContent = entry.tujuan;
+    document.getElementById('notifKeperluan').textContent = entry.keperluan;
+
+    document.getElementById('notifDetailBtn').onclick = function() {
+      hideNotif();
+      loadDetail(entry.id);
+    };
+
+    toast.classList.add('show');
+
+    bar.style.animation = 'none';
+    void bar.offsetWidth;
+    bar.style.animation = 'shrinkWidth 12s linear forwards';
+
+    if (notifTimeout) clearTimeout(notifTimeout);
+    notifTimeout = setTimeout(hideNotif, 12000);
+  }
+
+  function hideNotif() {
+    document.getElementById('notifToast').classList.remove('show');
+    if (notifTimeout) { clearTimeout(notifTimeout); notifTimeout = null; }
+  }
+
+  document.getElementById('notifClose').addEventListener('click', hideNotif);
+  document.getElementById('notifDismissBtn').addEventListener('click', hideNotif);
+
+  function pollLatest() {
+    fetch(`{{ url('admin/buku-tamu/latest') }}?after_id=${latestId}`, {
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(res => res.json())
+    .then(response => {
+      if (response.success && response.total_new > 0) {
+        const entries = response.data;
+        latestId = response.latest_id;
+        showNotif(entries[entries.length - 1]);
+        setTimeout(() => fetchGuestBooks(window.location.href), 1000);
+      }
+    })
+    .catch(() => {});
+  }
+
+  setInterval(pollLatest, 30000);
+  setTimeout(pollLatest, 5000);
 });
 </script>
 @endsection

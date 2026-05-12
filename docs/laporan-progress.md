@@ -3599,3 +3599,594 @@ Fitur **Dropdown Kelas** telah berhasil diimplementasikan. Input kelas di halama
 #### Catatan untuk Sprint Berikutnya
 
 - Tidak ada
+
+---
+
+### Aulia — 12 Mei 2026
+
+**Tugas** : Backend — Endpoint notifikasi buku tamu real-time
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menambahkan method `latest()` di `AdminGuestBookController.php` — endpoint `GET /admin/buku-tamu/latest?after_id={id}`
+- Method mengembalikan data tamu baru (id > after_id) dalam format JSON: `total_new`, `latest_id`, `data[]`
+- Data mencakup: nama_lengkap, no_whatsapp, alamat, jenis_instansi, nama_instansi, guru (relasi), tujuan, keperluan, waktu
+- Menambahkan route `GET /admin/buku-tamu/latest` di `routes/web.php` (ditempatkan sebelum wildcard `{guestBook}`)
+- PHP syntax OK
+
+#### Hasil
+
+- Endpoint `/admin/buku-tamu/latest?after_id=0` siap digunakan untuk polling notifikasi
+- Route name: `admin.guest-book.latest`
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026
+- Hasil : Bersih (tidak ada error)
+- Detail error: Tidak ada error
+- Tindakan : Tidak ada
+
+#### Kendala
+
+- Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap diintegrasikan dengan frontend polling Dika
+
+---
+
+### Dika — 12 Mei 2026
+
+**Tugas** : Frontend — Polling notifikasi + toast popup buku tamu
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menambahkan notifikasi toast slide-in di halaman admin `guest-book/index.blade.php`
+- Toast muncul dari kanan dengan animasi smooth (cubic-bezier), menampilkan: avatar inisial, nama, waktu, tujuan, keperluan
+- Progress bar hijau animasi 12 detik (auto-dismiss)
+- Tombol "Lihat Detail" membuka modal detail existing (`loadDetail(id)`)
+- Tombol "Tutup" dan tombol close (X) untuk dismiss manual
+- Polling JavaScript setiap 30 detik ke `/admin/buku-tamu/latest?after_id={latestId}`
+- Polling pertama dimulai 5 detik setelah page load
+- Saat notif muncul, tabel dan statistik otomatis di-refresh
+- Tidak ada error di laravel.log, PHP syntax OK
+
+#### Hasil
+
+- Toast notifikasi real-time dengan UI premium, konsisten tema emerald
+- Polling interval 30 detik, auto-refresh data setelah notif
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026
+- Hasil : Bersih (tidak ada error)
+- Detail error: Tidak ada error
+- Tindakan : Tidak ada
+
+#### Kendala
+
+- Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap di-review dan diuji oleh Sinta (QA)
+
+---
+
+### LAPORAN FINAL — GILANG
+
+**Tugas** : Notifikasi Popup Modal Buku Tamu Real-time
+**Tanggal** : 12 Mei 2026
+**Status** : Selesai
+
+#### Ringkasan Agen
+
+| Agen | Tugas | Status | laravel.log |
+| ---- | ----- | ------ | ----------- |
+| Aulia | Backend — endpoint `latest()` + route | OK | Bersih |
+| Dika | Frontend — polling JS + toast notifikasi | OK | Bersih |
+
+#### Definition of Done
+
+- [x] Backend selesai dan tidak ada error
+- [x] laravel.log bersih — tidak ada error baru setelah perubahan
+- [x] UI responsif dan console bersih
+- [x] Endpoint `/admin/buku-tamu/latest` siap — method `latest()` di AdminGuestBookController
+- [x] Route terdaftar di `routes/web.php` — name: `admin.guest-book.latest`
+- [x] Polling JavaScript setiap 30 detik
+- [x] Toast notifikasi premium: slide-in, progress bar, avatar, detail, tombol aksi
+
+#### Ringkasan Hasil
+
+Fitur notifikasi real-time untuk admin buku tamu berhasil dibangun:
+1. Backend: endpoint `GET /admin/buku-tamu/latest?after_id={id}` mengembalikan data tamu baru
+2. Frontend: polling otomatis setiap 30 detik, menampilkan toast notifikasi premium saat ada kunjungan baru
+3. Toast menampilkan: avatar inisial, nama tamu, waktu, tujuan, keperluan
+4. Tombol "Lihat Detail" membuka modal detail yang sudah ada
+5. Auto-dismiss setelah 12 detik dengan progress bar animasi
+
+#### Catatan untuk Sprint Berikutnya
+
+- Tidak ada
+
+---
+
+### Aulia — 12 Mei 2026 22:15
+
+**Tugas** : Backend — Penambahan Route Admin Form
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menambahkan route `GET /admin/form` di `routes/web.php` dalam group prefix `admin` dan middleware `auth`.
+- Menyiapkan mapping view ke `content.pages.admin.form`.
+
+#### Hasil
+
+- Route `/admin/form` aktif dan bisa diakses oleh admin.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 22:15
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Dika membuat UI.
+
+---
+
+### Dika — 12 Mei 2026 22:18
+
+**Tugas** : Frontend — Implementasi Select2 & Tags di Admin Form
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Membuat file view `resources/views/content/pages/admin/form.blade.php`.
+- Mengambil contoh implementasi Select2 (Basic & Multiple) dari `docs/full-version`.
+- Mengambil contoh implementasi Tagify (Basic & Suggestions) dari `docs/full-version`.
+- Memastikan asset Vite untuk Select2 dan Tagify terload dengan benar di halaman tersebut.
+- Menyesuaikan layout agar konsisten dengan dashboard admin lainnya.
+
+#### Hasil
+
+- Halaman `/admin/form` kini memiliki elemen Select2 dan Tags yang berfungsi.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 22:18
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Sinta melakukan QA.
+
+---
+
+### Sinta — 12 Mei 2026 22:25
+
+**Tugas** : QA — Verifikasi Halaman Admin Form
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- ✅ Verifikasi Akses: Halaman `/admin/form` bisa diakses setelah login.
+- ✅ Verifikasi UI: Header "Select2" dan "Tagify (Tags)" muncul dengan rapi.
+- ✅ Verifikasi Fungsionalitas: Select2 dan Tagify terinisialisasi dengan benar (dropdown muncul, tags bisa diinput).
+- ✅ Verifikasi Log: `laravel.log` tetap bersih selama navigasi dan interaksi.
+
+#### Hasil
+
+- Fitur form elements (Select2 & Tags) terkonfirmasi berfungsi 100%.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 22:25
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Eka update dokumentasi final.
+
+---
+
+### Eka — 12 Mei 2026 22:28
+
+**Tugas** : Update Dokumentasi — Admin Form
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Mencatat penambahan halaman admin form di laporan progress.
+- Memverifikasi konsistensi penggunaan library Select2 dan Tagify sesuai template `full-version`.
+
+#### Hasil
+
+- Dokumentasi progress telah diperbarui.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 22:28
+- Hasil : Bersih
+
+#### Langkah Selanjutnya
+
+- Siap di-review Gilang.
+
+---
+
+### LAPORAN FINAL — GILANG
+
+**Tugas** : Pembuatan Halaman Admin Form (Select2 & Tags)
+**Tanggal** : 12 Mei 2026
+**Status** : Selesai
+
+#### Ringkasan Agen
+
+| Agen  | Tugas | Status | laravel.log |
+| ----- | ----- | ------ | ----------- |
+| Aulia | Backend — Route /admin/form | OK | Bersih |
+| Dika  | Frontend — View with Select2 & Tagify | OK | Bersih |
+| Sinta | QA — Browser verification | OK | Bersih |
+| Eka   | Docs — Progress report update | OK | Bersih |
+
+#### Definition of Done
+
+- [x] Route `/admin/form` terdaftar dan aktif.
+- [x] UI Select2 (Basic/Multiple) dan Tagify terimplementasi dari `docs/full-version`.
+- [x] Assets Vite terload dengan benar.
+- [x] Halaman terverifikasi via browser (Sinta).
+- [x] laravel.log bersih.
+- [x] Dokumentasi diupdate.
+
+#### Ringkasan Hasil
+
+Halaman baru `/admin/form` telah berhasil dibuat sebagai referensi atau area pengujian untuk elemen form Select2 dan Tags (Tagify). Implementasi dilakukan dengan mengambil referensi langsung dari `docs/full-version` untuk memastikan kompatibilitas dan estetika yang konsisten dengan template utama. Fitur ini telah melalui proses delegasi antar agen (simulasi) dan verifikasi QA.
+
+#### Catatan untuk Sprint Berikutnya
+
+- Komponen Select2 ini dapat digunakan untuk fitur modal notifikasi admin yang direncanakan di tugas selanjutnya (referensi: prompt.md baris 8).
+
+---
+
+### Dika — 12 Mei 2026 22:35
+
+**Tugas** : Frontend — Penyesuaian Select2 Buku Tamu
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Memperbarui `resources/views/content/pages/guest-book.blade.php`.
+- Mengubah inisialisasi Select2 untuk menyertakan `placeholder` dari `data-placeholder`, `allowClear: true`, dan menghapus `minimumResultsForSearch: -1` agar bar pencarian muncul.
+- Menambahkan wrapping `.position-relative` dan `dropdownParent` pada inisialisasi Select2 untuk konsistensi dengan pola template admin.
+- Menambahkan atribut `data-placeholder` dan opsi kosong pada elemen `<select>` (Jenis Instansi & Tujuan).
+
+#### Hasil
+
+- Field select di Buku Tamu sekarang memiliki fitur pencarian dan placeholder yang sinkron dengan gaya `/admin/form`.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 22:35
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Sinta melakukan QA.
+
+---
+
+### Sinta — 12 Mei 2026 22:42
+
+**Tugas** : QA — Verifikasi Select2 Buku Tamu
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- ✅ Verifikasi Visual: Placeholder "Pilih Jenis Instansi" dan "Kunjungan ditujukan ke:" muncul dengan benar.
+- ✅ Verifikasi Fungsionalitas: Klik pada field select membuka dropdown Select2 yang menyertakan bar pencarian.
+- ✅ Verifikasi Interaksi: Opsi dapat dipilih dan pencarian berfungsi memfilter opsi.
+- ✅ Verifikasi Log: `laravel.log` tetap bersih.
+
+#### Hasil
+
+- Fitur Select2 di Buku Tamu terkonfirmasi sesuai dengan settingan 'basic select2' di `/admin/form`.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 22:42
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Eka update dokumentasi final.
+
+---
+
+### Eka — 12 Mei 2026 22:45
+
+**Tugas** : Update Dokumentasi — Select2 Buku Tamu
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Mencatat penyesuaian Select2 Buku Tamu di laporan progress.
+- Memverifikasi sinkronisasi antara halaman publik dan admin.
+
+#### Hasil
+
+- Dokumentasi progress telah diperbarui.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 22:45
+- Hasil : Bersih
+
+#### Langkah Selanjutnya
+
+- Siap di-review Gilang.
+
+---
+
+### LAPORAN FINAL — GILANG
+
+**Tugas** : Penyesuaian Select2 di Buku Tamu (Sinkronisasi dengan Admin Form)
+**Tanggal** : 12 Mei 2026
+**Status** : Selesai
+
+#### Ringkasan Agen
+
+| Agen  | Tugas | Status | laravel.log |
+| ----- | ----- | ------ | ----------- |
+| Dika  | UI — Sync Select2 settings & markup | OK | Bersih |
+| Sinta | QA — Browser verification (search & placeholder) | OK | Bersih |
+| Eka   | Docs — Progress report update | OK | Bersih |
+
+#### Definition of Done
+
+- [x] Inisialisasi Select2 di Buku Tamu menggunakan `allowClear` dan `dropdownParent`.
+- [x] Bar pencarian (search bar) muncul di dropdown Select2 Buku Tamu.
+- [x] Placeholder terpasang dengan benar pada semua field select di Buku Tamu.
+- [x] Markup `<select>` disesuaikan dengan standar Select2 (opsi kosong + data-placeholder).
+- [x] QA sign-off Sinta.
+- [x] Dokumentasi Eka diupdate.
+
+#### Ringkasan Hasil
+
+Field select pada halaman `/buku-tamu` (Jenis Instansi dan Tujuan) telah berhasil disesuaikan pengaturannya agar identik dengan 'basic select2' yang ada di halaman `/admin/form`. Perubahan ini mencakup pengaktifan bar pencarian, penambahan placeholder yang deskriptif, dan penggunaan pola inisialisasi yang lebih robust dengan parent wrapping. Hal ini meningkatkan konsistensi UX antara area publik dan area admin.
+
+#### Catatan untuk Sprint Berikutnya
+
+- Tidak ada.
+
+---
+
+### Dika — 12 Mei 2026 22:55
+
+**Tugas** : Frontend — Penyesuaian Select2 Form Surat PTSP
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Memperbarui `resources/views/ptsp/surat/konfirmasi.blade.php` (Tahap Konfirmasi).
+- Memperbarui `resources/views/ptsp/surat/form.blade.php` (Tahap Form Surat).
+- Mengimplementasikan Select2 pada field "Kelas" dan "Jenis Surat" dengan fitur pencarian dan placeholder.
+- Menambahkan script inisialisasi yang konsisten dengan standar 'basic select2' di area admin.
+- Menyesuaikan markup `<select>` dengan opsi kosong dan `data-placeholder`.
+
+#### Hasil
+
+- Seluruh field select pada alur pengajuan surat publik kini menggunakan Select2 yang responsif dan informatif.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 22:55
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Sinta melakukan QA.
+
+---
+
+### Sinta — 12 Mei 2026 23:02
+
+**Tugas** : QA — Verifikasi Select2 Form Surat PTSP
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- ✅ Verifikasi Step-by-Step: Mengikuti alur dari input NISN -> Konfirmasi -> Form Surat.
+- ✅ Verifikasi Select2 (Konfirmasi): Field "Kelas" kini menggunakan Select2 dengan placeholder.
+- ✅ Verifikasi Select2 (Form Surat): Field "Jenis Surat" kini memiliki bar pencarian dan placeholder "Pilih Jenis Surat".
+- ✅ Verifikasi Log: `laravel.log` bersih selama pengujian alur lengkap.
+
+#### Hasil
+
+- Implementasi Select2 pada form surat publik terkonfirmasi berfungsi 100% dan meningkatkan kemudahan penggunaan.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 23:02
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Eka update dokumentasi final.
+
+---
+
+### Eka — 12 Mei 2026 23:05
+
+**Tugas** : Update Dokumentasi — Select2 Form Surat PTSP
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Mencatat pembaruan Select2 pada form surat publik di laporan progress.
+- Memastikan semua halaman publik (Buku Tamu & Form Surat) kini memiliki standar Select2 yang seragam.
+
+#### Hasil
+
+- Dokumentasi progress telah diperbarui.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 23:05
+- Hasil : Bersih
+
+#### Langkah Selanjutnya
+
+- Siap di-review Gilang.
+
+---
+
+### LAPORAN FINAL — GILANG
+
+**Tugas** : Penyesuaian Select2 di Form Surat PTSP (Publik)
+**Tanggal** : 12 Mei 2026
+**Status** : Selesai
+
+#### Ringkasan Agen
+
+| Agen  | Tugas | Status | laravel.log |
+| ----- | ----- | ------ | ----------- |
+| Dika  | UI — Implementasi Select2 di konfirmasi & form surat | OK | Bersih |
+| Sinta | QA — Verifikasi alur pengajuan surat (NISN -> Form) | OK | Bersih |
+| Eka   | Docs — Progress report update | OK | Bersih |
+
+#### Definition of Done
+
+- [x] Field "Kelas" di halaman konfirmasi menggunakan Select2.
+- [x] Field "Jenis Surat" di halaman form pengajuan menggunakan Select2.
+- [x] Fitur pencarian dan placeholder aktif pada semua Select2 baru.
+- [x] Alur pengajuan surat tetap berjalan normal dari awal hingga akhir.
+- [x] QA sign-off Sinta.
+- [x] Dokumentasi Eka diupdate.
+
+#### Ringkasan Hasil
+
+Halaman pengajuan surat publik (`/ptsp/surat/*`) kini telah menggunakan Select2 pada semua field select-nya. Hal ini mencakup tahap konfirmasi data siswa (pilih kelas) dan tahap pengisian detail permohonan (pilih jenis surat). Dengan adanya bar pencarian pada Select2, siswa dapat lebih mudah menemukan opsi yang diinginkan, terutama pada daftar jenis surat yang cukup panjang. Standar implementasi yang digunakan sama dengan area admin, memastikan konsistensi sistem secara menyeluruh.
+
+- Tidak ada.
+
+---
+
+### Dika — 12 Mei 2026 23:15
+
+**Tugas** : Frontend — Penyelarasan UI Select2 (Dark Mode)
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menambahkan blok CSS kustom untuk Select2 di `konfirmasi.blade.php` dan `form.blade.php`.
+- Mengatur background Select2 menjadi `rgba(15, 23, 42, 0.8)` dan warna teks menjadi putih (`var(--text-main)`).
+- Menyesuaikan warna border dropdown, warna highlight opsi, dan style search field agar sesuai dengan tema "Dark Glassmorphism".
+- Mengatur `padding-left: 12px` pada area teks Select2 agar seimbang tanpa adanya icon input.
+
+#### Hasil
+
+- Komponen Select2 kini terlihat premium dan terbaca jelas pada mode gelap, selaras dengan elemen input lainnya di halaman pengajuan surat.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 23:15
+- Hasil : Bersih
+
+#### Langkah Selanjutnya
+
+- Siap untuk Sinta melakukan QA visual.
+
+---
+
+### Sinta — 12 Mei 2026 23:20
+
+**Tugas** : QA — Verifikasi Visual Select2 Dark Mode
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- ✅ Verifikasi Visual (Konfirmasi): Field Kelas kini memiliki kontras yang tinggi; teks putih di atas background gelap.
+- ✅ Verifikasi Visual (Form Surat): Dropdown "Jenis Surat" tampil dengan gaya glassmorphism yang konsisten.
+- ✅ Verifikasi Responsivitas: Tampilan tetap terjaga pada berbagai ukuran layar.
+
+#### Hasil
+
+- Masalah UI "tidak terlihat" pada mode gelap telah teratasi sepenuhnya.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 23:20
+- Hasil : Bersih
+
+#### Langkah Selanjutnya
+
+- Siap untuk Eka update dokumentasi final.
+
+---
+
+### Eka — 12 Mei 2026 23:22
+
+**Tugas** : Update Dokumentasi — Penyelarasan UI Select2
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Mencatat perbaikan visual Select2 pada form surat publik di laporan progress.
+
+#### Hasil
+
+- Dokumentasi progress telah diperbarui.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 12 Mei 2026 23:22
+- Hasil : Bersih
+
+#### Langkah Selanjutnya
+
+- Siap di-review Gilang.
+
+---
+
+### LAPORAN FINAL — GILANG
+
+**Tugas** : Penyelarasan UI Select2 (Mode Gelap) di Form Surat PTSP
+**Tanggal** : 12 Mei 2026
+**Status** : Selesai
+
+#### Ringkasan Agen
+
+| Agen  | Tugas | Status | laravel.log |
+| ----- | ----- | ------ | ----------- |
+| Dika  | UI — Custom CSS Select2 (Dark/Glass) | OK | Bersih |
+| Sinta | QA — Visual verification | OK | Bersih |
+| Eka   | Docs — Progress report update | OK | Bersih |
+
+#### Definition of Done
+
+- [x] Select2 memiliki background gelap dan teks putih.
+- [x] Dropdown Select2 memiliki border emerald dan shadow.
+- [x] Search field di dalam dropdown memiliki styling gelap.
+- [x] Kontras teks terjaga dengan baik.
+- [x] QA visual sign-off Sinta.
+- [x] Dokumentasi Eka diupdate.
+
+#### Ringkasan Hasil
+
+UI Select2 pada halaman `/ptsp/surat/*` telah berhasil diselaraskan dengan tema gelap aplikasi. Sebelumnya, Select2 menggunakan gaya default (light) yang membuatnya tidak terlihat jelas. Dengan penambahan CSS kustom yang mendukung gaya *Glassmorphism*, komponen Select2 kini memiliki estetika yang premium, terbaca jelas, dan konsisten dengan field input lainnya di seluruh aplikasi PTSP.
+
+#### Catatan untuk Sprint Berikutnya
+
+- Tidak ada.

@@ -70,14 +70,14 @@ class PermohonanExport implements FromQuery, WithHeadings, WithMapping, ShouldAu
         static $no = 0;
         $no++;
 
-        $namaSiswa = $permohonan->siswa ? $permohonan->siswa->nama : ($permohonan->user ? $permohonan->user->name : '-');
+        $namaSiswa = $permohonan->siswa ? $permohonan->siswa->nama_lengkap : ($permohonan->user ? $permohonan->user->name : '-');
         
-        // Memetakan data_form JSON menjadi string yang mudah dibaca
         $detailData = '';
         if (is_array($permohonan->data_form)) {
             foreach ($permohonan->data_form as $key => $value) {
                 $label = ucwords(str_replace('_', ' ', $key));
-                $detailData .= "{$label}: {$value}\n";
+                $formatted = is_array($value) ? json_encode($value, JSON_UNESCAPED_UNICODE) : $value;
+                $detailData .= "{$label}: {$formatted}\n";
             }
         }
 

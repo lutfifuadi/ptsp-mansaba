@@ -35,12 +35,12 @@
           </button>
           <ul class="dropdown-menu dropdown-menu-end shadow-sm">
             <li>
-              <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('admin.ptsp.export', array_merge(['format' => 'xlsx'], request()->query())) }}">
+              <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('admin.ptsp.export', array_merge(['format' => 'xlsx'], isset($layanan) ? ['layanan_id' => $layanan->id] : [], request()->query())) }}">
                 <i class="ti tabler-file-spreadsheet text-success fs-4"></i> Export Excel (.xlsx)
               </a>
             </li>
             <li>
-              <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('admin.ptsp.export', array_merge(['format' => 'csv'], request()->query())) }}">
+              <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('admin.ptsp.export', array_merge(['format' => 'csv'], isset($layanan) ? ['layanan_id' => $layanan->id] : [], request()->query())) }}">
                 <i class="ti tabler-file-text text-warning fs-4"></i> Export CSV (.csv)
               </a>
             </li>

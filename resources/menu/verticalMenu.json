@@ -77,6 +77,12 @@
       "slug": "admin.pengaturan.lembaga"
     },
     {
+      "url": "/admin/role",
+      "icon": "menu-icon icon-base ti tabler-shield",
+      "name": "Manajemen Pengguna",
+      "slug": "admin.role"
+    },
+    {
       "menuHeader": "KONFIGURASI"
     },
     {

@@ -60,6 +60,42 @@ class AdminGuestBookController extends Controller
     }
 
     /**
+     * Get latest guest book entries after a given ID (for polling notifications).
+     */
+    public function latest(Request $request)
+    {
+        $afterId = $request->input('after_id', 0);
+
+        $entries = GuestBook::with('guru')
+            ->where('id', '>', $afterId)
+            ->orderBy('id', 'desc')
+            ->get()
+            ->map(function ($entry) {
+                return [
+                    'id' => $entry->id,
+                    'nama_lengkap' => $entry->nama_lengkap,
+                    'no_whatsapp' => $entry->no_whatsapp,
+                    'alamat' => $entry->alamat,
+                    'jenis_instansi' => $entry->jenis_instansi,
+                    'nama_instansi' => $entry->nama_instansi,
+                    'guru' => $entry->guru ? $entry->guru->nama_lengkap : null,
+                    'tujuan' => $entry->tujuan,
+                    'keperluan' => $entry->keperluan,
+                    'waktu' => $entry->created_at->format('d F Y H:i') . ' WIB',
+                ];
+            });
+
+        $latestId = $entries->isNotEmpty() ? $entries->max('id') : $afterId;
+
+        return response()->json([
+            'success' => true,
+            'total_new' => $entries->count(),
+            'latest_id' => $latestId,
+            'data' => $entries,
+        ]);
+    }
+
+    /**
      * Reset all guest book data.
      */
     public function reset()

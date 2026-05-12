@@ -19,6 +19,7 @@ use App\Http\Controllers\GuestBookController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\Admin\AdminGuruController;
 use App\Http\Controllers\Admin\AdminPermohonanController;
+use App\Http\Controllers\Admin\AdminRoleController;
 
 // PTSP Routes
 Route::prefix('ptsp')->name('ptsp.')->group(function () {
@@ -117,6 +118,9 @@ Route::middleware([
     // Buku Tamu
     Route::get('/buku-tamu', [AdminGuestBookController::class, 'index'])->name('guest-book.index');
 
+    // Buku Tamu - Notifikasi (HARUS sebelum {guestBook} wildcard)
+    Route::get('/buku-tamu/latest', [AdminGuestBookController::class, 'latest'])->name('guest-book.latest');
+
     // Buku Tamu - Rekap & Export (HARUS sebelum {guestBook} wildcard)
     Route::get('/buku-tamu/rekap', [ExportGuestBookController::class, 'rekap'])->name('guest-book.rekap');
     Route::get('/buku-tamu/export/{format}', [ExportGuestBookController::class, 'export'])->name('guest-book.export');
@@ -124,6 +128,19 @@ Route::middleware([
     Route::get('/buku-tamu/{guestBook}', [AdminGuestBookController::class, 'show'])->name('guest-book.show');
     Route::delete('/buku-tamu/{guestBook}', [AdminGuestBookController::class, 'destroy'])->name('guest-book.destroy');
     Route::post('/buku-tamu/reset', [AdminGuestBookController::class, 'reset'])->name('guest-book.reset');
+
+    // Manajemen Pengguna & Role
+    Route::get('/role', [AdminRoleController::class, 'index'])->name('role.index');
+    Route::get('/role/tambah', [AdminRoleController::class, 'create'])->name('role.create');
+    Route::post('/role', [AdminRoleController::class, 'store'])->name('role.store');
+    Route::get('/role/{user}/edit', [AdminRoleController::class, 'edit'])->name('role.edit');
+    Route::put('/role/{user}', [AdminRoleController::class, 'update'])->name('role.update');
+    Route::delete('/role/{user}', [AdminRoleController::class, 'destroy'])->name('role.destroy');
+
+    // Form Elements
+    Route::get('/form', function () {
+      return view('content.pages.admin.form');
+    })->name('form');
 
     // Pengaturan
     Route::prefix('pengaturan')->name('pengaturan.')->group(function () {

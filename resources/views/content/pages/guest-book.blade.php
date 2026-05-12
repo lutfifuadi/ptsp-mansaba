@@ -499,7 +499,8 @@
         <div class="form-group">
           <div class="input-wrapper">
             <i class="ti ti-building input-icon"></i>
-            <select name="jenis_instansi" class="form-control select2" id="jenisInstansi" required>
+            <select name="jenis_instansi" class="form-control select2" id="jenisInstansi" data-placeholder="Pilih Jenis Instansi" required>
+              <option></option>
               <option value="Personal">Personal</option>
               <option value="Lembaga">Lembaga</option>
               <option value="Instansi">Instansi</option>
@@ -528,8 +529,8 @@
       <div class="form-group">
         <div class="input-wrapper">
           <i class="ti ti-target input-icon"></i>
-          <select name="tujuan" class="form-control select2" required>
-            <option value="" disabled selected>Kunjungan ditujukan ke:</option>
+          <select name="tujuan" class="form-control select2" data-placeholder="Kunjungan ditujukan ke:" required>
+            <option></option>
             <option value="Kepala Madrasah">Kepala Madrasah</option>
             <option value="WAKAMAD Kesiswaan">WAKAMAD Kesiswaan</option>
             <option value="WAKAMAD Kurikulum">WAKAMAD Kurikulum</option>
@@ -577,10 +578,18 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Initialize Select2
-      $('.select2').select2({
-        width: '100%',
-        minimumResultsForSearch: -1
-      });
+      const select2 = $('.select2');
+      if (select2.length) {
+        select2.each(function() {
+          var $this = $(this);
+          $this.wrap('<div class="position-relative"></div>').select2({
+            placeholder: $this.data('placeholder'),
+            dropdownParent: $this.parent(),
+            width: '100%',
+            allowClear: true
+          });
+        });
+      }
 
       const form = document.getElementById('guestBookForm');
       const jenisInstansi = $('#jenisInstansi');

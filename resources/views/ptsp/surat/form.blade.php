@@ -349,6 +349,59 @@
       .data-readonly-grid { grid-template-columns: 1fr; }
       .checkbox-group { grid-template-columns: 1fr; }
     }
+
+    /* Select2 Custom Styles (Dark Theme) */
+    .select2-container--default .select2-selection--single {
+      background-color: rgba(15, 23, 42, 0.8) !important;
+      border: 1px solid var(--glass-border) !important;
+      border-radius: 4px !important;
+      height: auto !important;
+      min-height: 45px !important;
+      display: flex !important;
+      align-items: center !important;
+      transition: var(--transition) !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+      color: var(--text-main) !important;
+      padding-left: 12px !important;
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__placeholder {
+      color: var(--text-muted) !important;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+      height: 43px !important;
+    }
+
+    .select2-dropdown {
+      background-color: var(--bg-darker) !important;
+      border: 1px solid var(--primary-light) !important;
+      border-radius: 4px !important;
+      color: var(--text-main) !important;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5) !important;
+    }
+
+    .select2-results__option--selectable {
+      padding: 10px 16px !important;
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+    }
+
+    .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+      background-color: var(--primary) !important;
+      color: #fff !important;
+    }
+
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+      background-color: rgba(15, 23, 42, 0.8) !important;
+      border: 1px solid var(--glass-border) !important;
+      border-radius: 4px !important;
+      color: var(--text-main) !important;
+      padding: 8px 12px !important;
+      outline: none !important;
+    }
   </style>
 </head>
 <body>
@@ -433,10 +486,11 @@
         <select
           id="jenis_surat"
           name="jenis_surat"
-          class="form-select {{ $errors->has('jenis_surat') ? 'is-invalid' : '' }}"
+          class="form-select select2 {{ $errors->has('jenis_surat') ? 'is-invalid' : '' }}"
+          data-placeholder="Pilih Jenis Surat"
           required
         >
-          <option value="" disabled {{ old('jenis_surat') ? '' : 'selected' }}>-- Pilih Jenis Surat --</option>
+          <option></option>
           @foreach([
             'Surat Keterangan Siswa',
             'SKKB (Surat Keterangan Kelakuan Baik)',
@@ -515,18 +569,36 @@
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-    document.getElementById('form-surat').addEventListener('submit', function() {
-      const btn = document.getElementById('btn-submit');
-      btn.disabled = true;
-      btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Mengirim Permohonan...';
-    });
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize Select2
+      const select2 = $('.select2');
+      if (select2.length) {
+        select2.each(function() {
+          var $this = $(this);
+          $this.wrap('<div class="position-relative"></div>').select2({
+            placeholder: $this.data('placeholder'),
+            dropdownParent: $this.parent(),
+            width: '100%',
+            allowClear: true
+          });
+        });
+      }
 
-    const keperluan = document.getElementById('keperluan');
-    const hint = keperluan.nextElementSibling;
-    keperluan.addEventListener('input', function() {
-      const remaining = 1000 - this.value.length;
-      hint.textContent = this.value.length + '/1000 karakter';
-      hint.style.color = remaining < 100 ? '#e67e22' : 'var(--text-muted)';
+      document.getElementById('form-surat').addEventListener('submit', function() {
+        const btn = document.getElementById('btn-submit');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Mengirim Permohonan...';
+      });
+
+      const keperluan = document.getElementById('keperluan');
+      if (keperluan) {
+        const hint = keperluan.nextElementSibling;
+        keperluan.addEventListener('input', function() {
+          const remaining = 1000 - this.value.length;
+          hint.textContent = this.value.length + '/1000 karakter';
+          hint.style.color = remaining < 100 ? '#e67e22' : 'var(--text-muted)';
+        });
+      }
     });
   </script>
 </body>

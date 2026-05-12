@@ -1,3 +1,4 @@
+[2026-05-12] Notifikasi real-time buku tamu — toast popup otomatis untuk admin saat ada kunjungan baru + polling endpoint
 [2026-05-12] Tampilkan hanya nama guru di dropdown & detail admin buku tamu (hilangkan bidang studi)
 [2026-05-12] Perbaikan pagination & padding halaman admin siswa — kustomisasi view pagination dengan Tabler Icons, CSS tema emerald, padding konsisten 20px horizontal di tabel dan panel.
 [2026-05-11] Penghapusan field 'Nama Orang Tua' dari data siswa (Database, Model, Controller, View, Import)
@@ -39,3 +40,6 @@
 [2026-05-12] Sinkronisasi UI Admin dengan Dashboard — shared CSS partial, stat-card, tbl, st-badge pattern di 12 halaman admin
 [2026-05-12] Fitur Dropdown Kelas — input kelas di konfirmasi surat siswa & admin create/edit berubah dari text menjadi select dengan 36 opsi kelas (X.E-1 s/d XII.F-12). Validasi backend menggunakan config('kelas').
 [2026-05-12] Hapus field 'Nomor Peserta' dari data siswa — Model, Controller (validasi + search), Import/Export, Migration drop column, View edit/create/index. UI Cleanup form edit & create siswa mengikuti gaya halaman pengaturan lembaga (form-actions, btn-primary).
+[2026-05-12] Halaman Admin Form — Area referensi/testing komponen Select2 & Tagify (admin/form)
+[2026-05-12] Sinkronisasi Select2 — Penerapan standar Select2 (search enabled, placeholder, dark theme) di halaman Buku Tamu, Konfirmasi Surat, dan Form Surat PTSP.
+[2026-05-12] Manajemen Peran — Penambahan halaman Admin Role (admin/role) untuk pengelolaan akses pengguna.
