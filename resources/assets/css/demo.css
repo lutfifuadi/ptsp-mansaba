@@ -103,3 +103,73 @@
   text-align: center;
   margin-top: 1rem;
 }
+
+/*
+* Custom Sidebar Premium - Aligned with Beranda
+******************************************************************************/
+
+#layout-menu {
+  background: #020617 !important; /* Slate 950 matched with Beranda */
+  border-right: 1px solid rgba(5, 150, 105, 0.2) !important; /* Emerald subtle border */
+}
+
+/* Ensure the layout page and content wrapper are bright and proportional */
+/* Background moved to app.css */
+
+#layout-menu .menu-inner-shadow {
+  background: linear-gradient(#020617 5%, rgba(2, 6, 23, 0) 100%) !important;
+}
+
+.menu-vertical .menu-item.active > .menu-link {
+  background: linear-gradient(72.47deg, #059669 22.16%, rgba(16, 185, 129, 0.7) 76.47%) !important;
+  box-shadow: 0px 4px 18px 0px rgba(5, 150, 105, 0.4) !important;
+  color: #fff !important;
+  border-radius: 4px !important;
+  margin: 0 0.75rem !important;
+}
+
+.menu-vertical .menu-item.open > .menu-link {
+  background-color: rgba(5, 150, 105, 0.05) !important;
+}
+
+.menu-vertical .menu-item .menu-link {
+  color: #94a3b8 !important; /* Slate 400 */
+  transition: all 0.2s ease-in-out;
+  padding-top: 0.65rem !important;
+  padding-bottom: 0.65rem !important;
+}
+
+.menu-vertical .menu-item.active .menu-link i,
+.menu-vertical .menu-item.active .menu-link div {
+  color: #fff !important;
+}
+
+.menu-vertical .menu-item:not(.active) .menu-link:hover {
+  background: rgba(5, 150, 105, 0.1) !important;
+  color: #34d399 !important;
+}
+
+.menu-vertical .menu-header {
+  color: #d4af37 !important; /* Gold premium for headers */
+  opacity: 0.9;
+  letter-spacing: 1.5px;
+  margin-top: 1.5rem !important;
+  font-weight: 700 !important;
+}
+
+.app-brand.demo {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  margin-bottom: 0.5rem;
+}
+
+.app-brand-text.demo {
+  background: linear-gradient(135deg, #fff 30%, #34d399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800 !important;
+  letter-spacing: 1px;
+}
+
+.menu-vertical .menu-sub .menu-link {
+  padding-left: 3.5rem !important;
+}

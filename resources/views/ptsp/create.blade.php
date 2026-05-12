@@ -40,7 +40,7 @@
 
           <div class="d-flex justify-content-between align-items-center">
             <a href="{{ route('ptsp.index') }}" class="btn btn-outline-secondary">Batal</a>
-            <button type="submit" class="btn btn-primary px-5">Kirim Permohonan <i class="bx bx-send ms-1"></i></button>
+            <button type="submit" class="btn btn-primary px-5">Kirim Permohonan <i class="ti tabler-send ms-1"></i></button>
           </div>
         </form>
       </div>

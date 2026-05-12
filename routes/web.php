@@ -15,6 +15,8 @@ use App\Http\Controllers\Admin\ExportGuestBookController;
 use App\Http\Controllers\Admin\ExportPermohonanController;
 use App\Http\Controllers\PermohonanController;
 use App\Http\Controllers\SuratSiswaController;
+use App\Http\Controllers\GuestBookController;
+use App\Http\Controllers\Admin\AdminPermohonanController;
 
 // PTSP Routes
 Route::prefix('ptsp')->name('ptsp.')->group(function () {
@@ -41,7 +43,7 @@ Route::prefix('ptsp')->name('ptsp.')->group(function () {
 Route::get('/', [PermohonanController::class, 'index'])->name('home');
 
 // Guest Book Routes
-use App\Http\Controllers\GuestBookController;
+// Guest Book Routes
 Route::get('/buku-tamu', [GuestBookController::class, 'index'])->name('buku-tamu.index');
 Route::post('/buku-tamu', [GuestBookController::class, 'store'])->name('buku-tamu.store');
 
@@ -84,7 +86,14 @@ Route::middleware([
 
 
     // Data PTSP
-    Route::get('/ptsp', [PermohonanController::class, 'adminIndex'])->name('ptsp.index');
+    // Data PTSP
+    Route::get('/ptsp', [AdminPermohonanController::class, 'semuaData'])->name('ptsp.index');
+    Route::get('/ptsp/semua-data', [AdminPermohonanController::class, 'semuaData'])->name('ptsp.semua-data');
+    Route::get('/ptsp/legalisir-ijazah', [AdminPermohonanController::class, 'legalisirIjazah'])->name('ptsp.legalisir-ijazah');
+    Route::get('/ptsp/pengambilan-ijazah', [AdminPermohonanController::class, 'pengambilanIjazah'])->name('ptsp.pengambilan-ijazah');
+    Route::get('/ptsp/pembuatan-surat', [AdminPermohonanController::class, 'pembuatanSurat'])->name('ptsp.pembuatan-surat');
+    Route::get('/ptsp/legalisir', [AdminPermohonanController::class, 'legalisir'])->name('ptsp.legalisir');
+    
     Route::get('/ptsp/export/{format}', [ExportPermohonanController::class, 'export'])->name('ptsp.export');
     Route::get('/ptsp/{permohonan}', [PermohonanController::class, 'adminShow'])->name('ptsp.show');
     Route::put('/ptsp/{permohonan}/status', [PermohonanController::class, 'updateStatus'])->name('ptsp.status');

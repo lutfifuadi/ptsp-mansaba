@@ -17,6 +17,19 @@
     border-radius: 4px !important;
 }
 
+/* Form font size - slightly reduced */
+.form-control,
+.form-select,
+.form-control-lg,
+.form-select-lg,
+.input-group-text {
+    font-size: 0.875rem !important;
+}
+.form-label,
+.col-form-label {
+    font-size: 0.82rem !important;
+}
+
 /* Override utility classes to follow max 4px rule */
 .rounded,
 .rounded-top,
@@ -30,4 +43,47 @@
 .rounded-pill, 
 .rounded-circle {
     border-radius: 4px !important;
+}
+
+/* Global Theme Overrides */
+:root {
+    --dash-primary: #10b981;
+    --dash-primary-glow: rgba(16, 217, 129, 0.4);
+    --dash-secondary: #6366f1;
+    --dash-accent: #f59e0b;
+    --dash-bg-dark: #020617;
+    --dash-card-bg: rgba(15, 23, 42, 0.6);
+    --dash-border: rgba(255, 255, 255, 0.08);
+    --dash-text-main: #f8fafc;
+    --dash-text-muted: #94a3b8;
+}
+
+.layout-page,
+.content-wrapper,
+.container-fluid {
+    background: #f8f9fa !important;
+}
+
+#layout-navbar.layout-navbar.bg-navbar-theme {
+    background: rgba(255, 255, 255, 0.8) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02) !important;
+}
+
+#layout-navbar.layout-navbar.bg-navbar-theme .navbar-nav .nav-link {
+    color: #64748b !important;
+}
+
+#layout-navbar.layout-navbar.bg-navbar-theme .navbar-nav .nav-link:hover {
+    color: #059669 !important;
+}
+
+/* Fix for the white glow/gradient at the top of the layout */
+.layout-navbar-fixed .layout-wrapper:not(.layout-horizontal) .layout-page::before {
+    background: none !important;
+    backdrop-filter: none !important;
+    mask: none !important;
+    display: none !important;
 }

@@ -274,6 +274,26 @@ class Helpers
   }
 
   /**
+   * Get greeting based on current time (Indonesia locale)
+   *
+   * @return string Time-based greeting
+   */
+  public static function greeting()
+  {
+    $hour = now()->hour;
+
+    if ($hour >= 3 && $hour < 12) {
+      return 'Pagi';
+    } elseif ($hour >= 12 && $hour < 15) {
+      return 'Siang';
+    } elseif ($hour >= 15 && $hour < 18) {
+      return 'Sore';
+    } else {
+      return 'Malam';
+    }
+  }
+
+  /**
    * Generate CSS for primary color
    *
    * @param string $color Hex color code for primary color

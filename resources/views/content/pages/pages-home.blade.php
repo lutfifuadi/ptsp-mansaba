@@ -1,5 +1,6 @@
 @php
-$configData = Helper::appClasses();
+  use Illuminate\Support\Facades\Auth;
+  $configData = Helper::appClasses();
 @endphp
 
 @extends('layouts/layoutMaster')
@@ -7,412 +8,876 @@ $configData = Helper::appClasses();
 @section('title', 'Dashboard PTSP')
 
 @section('vendor-style')
-@vite(['resources/assets/vendor/libs/apex-charts/apex-charts.scss'])
+  @vite(['resources/assets/vendor/libs/apex-charts/apex-charts.scss'])
 @endsection
 
 @section('vendor-script')
-@vite(['resources/assets/vendor/libs/apex-charts/apexcharts.js'])
+  @vite(['resources/assets/vendor/libs/apex-charts/apexcharts.js'])
 @endsection
 
 @section('page-style')
-<style>
-  .card, .btn, .badge, .avatar-initial, .quick-action-box, .stat-icon-wrapper, .premium-banner, .rounded {
-    border-radius: 4px !important;
-  }
+  <style>
+    /* ── ROOT TOKENS ─────────────────────────────── */
+    :root {
+      --p: #059669;
+      --p2: #047857;
+      --p3: #064e3b;
+      --amber: #d97706;
+      --red: #dc2626;
+      --indigo: #4f46e5;
+      --sky: #0284c7;
+      --muted: #64748b;
+      --text: #0f172a;
+      --surface: #ffffff;
+      --bg: #f1f5f9;
+      --border: #e2e8f0;
+      --border2: #cbd5e1;
+      --r: 4px;
+      /* default radius */
+      --r-sm: 3px;
+      --r-lg: 5px;
+      /* max per spec */
+    }
 
-  .premium-banner {
-    background: linear-gradient(135deg, #696cff 0%, #4f52d4 100%);
-    box-shadow: 0 10px 30px rgba(105, 108, 255, 0.2);
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  .premium-banner:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(105, 108, 255, 0.3);
-  }
-  .premium-banner::after {
-    content: '';
-    position: absolute;
-    top: 0; right: 0; bottom: 0; left: 0;
-    background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
-    pointer-events: none;
-  }
-  .stat-card {
-    border: none;
-    transition: all 0.3s ease;
-    background: #fff;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-    position: relative;
-    overflow: hidden;
-  }
-  .stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 25px rgba(0,0,0,0.08);
-  }
-  .stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0;
-    width: 4px; height: 100%;
-  }
-  .stat-card.primary::before { background: #696cff; }
-  .stat-card.success::before { background: #71dd37; }
-  .stat-card.warning::before { background: #ffab00; }
-  .stat-card.info::before { background: #03c3ec; }
-  .stat-card.danger::before { background: #ff3e1d; }
+    /* ── RESET OVERRIDES ─────────────────────────── */
+    .card,
+    .btn,
+    .badge,
+    .avatar-initial,
+    .rounded {
+      border-radius: var(--r) !important;
+    }
 
-  .stat-icon-wrapper {
-    width: 54px; height: 54px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px;
-  }
+    /* ── LAYOUT BG ───────────────────────────────── */
+    .page-body {
+      background: var(--bg) !important;
+    }
 
-  .table-premium th {
-    background-color: #f8f9fa !important;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 1px;
-    font-weight: 600;
-  }
+    /* ── GREETING STRIP ──────────────────────────── */
+    .greeting-strip {
+      border-left: 4px solid var(--p);
+      padding-left: 14px;
+    }
 
-  .quick-action-box {
-    transition: all 0.2s;
-    background: rgba(105, 108, 255, 0.04);
-    border: 1px dashed rgba(105, 108, 255, 0.3);
-  }
-  .quick-action-box:hover {
-    background: rgba(105, 108, 255, 0.08);
-    border-style: solid;
-  }
+    .greeting-strip h4 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text);
+    }
 
-  @media (max-width: 767.98px) {
-    .premium-banner { padding: 1.25rem !important; }
-    .premium-banner h4 { font-size: 1.1rem !important; }
-    .premium-banner p { font-size: 0.9rem !important; }
-    .stat-card .card-body { padding: 1rem !important; }
-    .stat-card h3 { font-size: 1.25rem !important; }
-    .stat-icon-wrapper { width: 42px; height: 42px; font-size: 20px; }
-    .card-header { padding-top: 1rem !important; padding-bottom: 0.75rem !important; }
-    .table-premium th, .table-premium td { padding: 0.75rem 0.5rem !important; }
-    .banner-icon-box { width: 48px !important; height: 48px !important; margin-right: 1rem !important; }
-    .banner-icon-box i { font-size: 1.25rem !important; }
-  }
+    .date-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      padding: 6px 14px;
+      border-radius: var(--r);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--muted);
+    }
 
-  @media (min-width: 768px) and (max-width: 991.98px) {
-    .stat-card h3 { font-size: 1.5rem !important; }
-    .stat-icon-wrapper { width: 48px; height: 48px; }
-  }
-</style>
+    /* ── HERO BANNER ─────────────────────────────── */
+    .hero-banner {
+      background: var(--p3);
+      border-radius: var(--r-lg) !important;
+      position: relative;
+      overflow: hidden;
+      border: none;
+    }
+
+    /* Diagonal accent stripe */
+    .hero-banner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 120px;
+      width: 3px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.08);
+      transform: skewX(-12deg);
+    }
+
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 100px;
+      width: 60px;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      transform: skewX(-12deg);
+    }
+
+    .hero-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--p);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--r);
+      font-size: 1.5rem;
+      color: #fff;
+      flex-shrink: 0;
+      box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.25);
+    }
+
+    .hero-banner h3 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0;
+      letter-spacing: -0.3px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--p);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: var(--r-sm);
+      margin-bottom: 6px;
+    }
+
+    .hero-btn {
+      background: #fff;
+      color: var(--p3) !important;
+      border: none;
+      border-radius: var(--r) !important;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 10px 22px;
+      box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.2);
+      transition: transform 0.15s, box-shadow 0.15s;
+      white-space: nowrap;
+    }
+
+    .hero-btn:hover {
+      transform: translate(-1px, -1px);
+      box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.25);
+      color: var(--p3) !important;
+    }
+
+    /* Decorative large number watermark */
+    .hero-watermark {
+      position: absolute;
+      right: 160px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 6rem;
+      font-weight: 900;
+      line-height: 1;
+      color: rgba(255, 255, 255, 0.04);
+      pointer-events: none;
+      user-select: none;
+      letter-spacing: -6px;
+    }
+
+    /* ── STAT CARDS ───────────────────────────────── */
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg) !important;
+      border-top: 3px solid var(--accent-color, var(--p));
+      transition: transform 0.18s, box-shadow 0.18s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      border-color: var(--accent-color, var(--p));
+      border-top-color: var(--accent-color, var(--p));
+    }
+
+    /* Faint diagonal tint */
+    .stat-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -30px;
+      width: 80px;
+      height: 100%;
+      background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.015));
+      transform: skewX(-15deg);
+      pointer-events: none;
+    }
+
+    .stat-icon {
+      width: 42px;
+      height: 42px;
+      background: var(--icon-bg, #ecfdf5);
+      border-radius: var(--r);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: var(--accent-color, var(--p));
+      flex-shrink: 0;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .stat-card:hover .stat-icon {
+      background: var(--accent-color, var(--p));
+      color: #fff;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 900;
+      line-height: 1.1;
+      color: var(--accent-color, var(--text));
+    }
+
+    .stat-progress {
+      height: 3px;
+      background: var(--border);
+      border-radius: 0;
+      overflow: hidden;
+      margin-top: 12px;
+    }
+
+    .stat-progress-bar {
+      height: 100%;
+      background: var(--accent-color, var(--p));
+      transition: width 1s ease;
+    }
+
+    /* ── SECTION HEADER ───────────────────────────── */
+    .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 20px;
+      border-bottom: 1px solid var(--border);
+      background: #f8fafc;
+    }
+
+    .section-head-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-head-title .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--p);
+      flex-shrink: 0;
+    }
+
+    /* ── TABLE ────────────────────────────────────── */
+    .tbl th {
+      background: #f8fafc !important;
+      color: var(--muted) !important;
+      font-weight: 800;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      padding: 12px 16px !important;
+      border-bottom: 2px solid var(--border) !important;
+      border-top: none !important;
+    }
+
+    .tbl td {
+      padding: 13px 16px !important;
+      vertical-align: middle;
+      border-bottom: 1px solid #f1f5f9 !important;
+      font-size: 0.88rem;
+      color: var(--text);
+    }
+
+    .tbl tbody tr {
+      transition: background 0.12s;
+    }
+
+    .tbl tbody tr:hover td {
+      background: #f8fafc !important;
+    }
+
+    /* Ticket number */
+    .ticket-no {
+      font-family: monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--p);
+      background: #ecfdf5;
+      padding: 4px 10px;
+      border-radius: var(--r-sm);
+      border: 1px solid #a7f3d0;
+      white-space: nowrap;
+    }
+
+    /* Avatar initial */
+    .av {
+      width: 30px;
+      height: 30px;
+      border-radius: var(--r);
+      background: var(--p3);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      text-transform: uppercase;
+    }
+
+    /* Status badges */
+    .st-badge {
+      font-size: 0.72rem;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: var(--r-sm);
+    }
+
+    .st-pending {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fcd34d;
+    }
+
+    .st-proses {
+      background: #e0f2fe;
+      color: #075985;
+      border: 1px solid #7dd3fc;
+    }
+
+    .st-selesai {
+      background: #dcfce7;
+      color: #14532d;
+      border: 1px solid #86efac;
+    }
+
+    .st-ditolak {
+      background: #fee2e2;
+      color: #7f1d1d;
+      border: 1px solid #fca5a5;
+    }
+
+    .st-default {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+    }
+
+    /* ── QUICK ACCESS PANEL ───────────────────────── */
+    .qa-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      background: var(--surface);
+      text-decoration: none !important;
+      transition: border-color 0.15s, transform 0.15s, box-shadow 0.15s;
+      border-left: 3px solid var(--qa-color, var(--p));
+    }
+
+    .qa-item:hover {
+      border-color: var(--qa-color, var(--p));
+      transform: translateX(3px);
+      box-shadow: -3px 0 0 var(--qa-color, var(--p));
+      text-decoration: none !important;
+    }
+
+    .qa-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--qa-bg, #ecfdf5);
+      border-radius: var(--r);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--qa-color, var(--p));
+      flex-shrink: 0;
+    }
+
+    .qa-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .qa-sub {
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* ── SHORTCUTS ────────────────────────────────── */
+    .shortcut {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      background: #f8fafc;
+      text-decoration: none !important;
+      transition: background 0.15s, border-color 0.15s, transform 0.15s;
+      text-align: center;
+    }
+
+    .shortcut:hover {
+      background: var(--surface);
+      border-color: var(--sc-color, var(--p));
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      text-decoration: none !important;
+    }
+
+    .shortcut i {
+      font-size: 1.35rem;
+    }
+
+    .shortcut span {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    /* ── CARD WRAPPER ─────────────────────────────── */
+    .panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg) !important;
+      overflow: hidden;
+    }
+
+    .panel-body {
+      padding: 16px 20px;
+    }
+
+    /* ── EMPTY STATE ─────────────────────────────── */
+    .empty-state {
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .empty-state i {
+      font-size: 2.5rem;
+      color: var(--border2);
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .empty-state p {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    /* ── VIEW ALL BTN ─────────────────────────────── */
+    .btn-view {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 6px 16px;
+      border-radius: var(--r-sm) !important;
+      border: 1.5px solid var(--p);
+      color: var(--p) !important;
+      background: transparent;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .btn-view:hover {
+      background: var(--p);
+      color: #fff !important;
+    }
+
+    /* ── TODAY CHIP ───────────────────────────────── */
+    .today-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      padding: 3px 8px;
+      border-radius: var(--r-sm);
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--p2);
+    }
+
+    .today-chip::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--p);
+      display: inline-block;
+    }
+
+    /* ── RESPONSIVE ───────────────────────────────── */
+    @media (max-width: 767px) {
+      .stat-value {
+        font-size: 1.45rem;
+      }
+
+      .hero-watermark {
+        display: none;
+      }
+
+      .hero-banner h3 {
+        font-size: 1.25rem;
+      }
+    }
+
+    /* ── SUBTLE ENTRANCE ANIM ─────────────────────── */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .stat-card {
+      animation: fadeUp 0.3s ease both;
+    }
+
+    .stat-card:nth-child(1) {
+      animation-delay: 0.05s;
+    }
+
+    .stat-card:nth-child(2) {
+      animation-delay: 0.10s;
+    }
+
+    .stat-card:nth-child(3) {
+      animation-delay: 0.15s;
+    }
+
+    .stat-card:nth-child(4) {
+      animation-delay: 0.20s;
+    }
+
+    .stat-card:nth-child(5) {
+      animation-delay: 0.25s;
+    }
+
+    .stat-card:nth-child(6) {
+      animation-delay: 0.30s;
+    }
+  </style>
 @endsection
 
 @section('content')
-<div class="row g-2 g-md-3">
+  <div class="row g-3">
 
-  {{-- Banner Dashboard PTSP --}}
-  <div class="col-12">
-    <div class="premium-banner p-4 text-white d-flex flex-column flex-md-row justify-content-between align-items-md-center">
-      <div class="d-flex align-items-center mb-3 mb-md-0 z-1">
-        <div class="bg-white p-3 rounded me-4 text-primary shadow-sm banner-icon-box" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;">
-          <i class="icon-base ti tabler-layout-dashboard fs-2"></i>
+    {{-- ── GREETING ────────────────────────────────────── --}}
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <div class="greeting-strip">
+          <h4 class="mb-0">Selamat {{ Helper::greeting() }}, <span
+              style="color:var(--p)">{{ Auth::user()->name ?? 'Admin' }}</span>! 👋</h4>
+          <p class="mb-0 small" style="color:var(--muted); margin-top:2px;">Ringkasan aktivitas PTSP hari ini.</p>
         </div>
-        <div>
-          <h4 class="text-white mb-1 fw-bold">Dashboard PTSP</h4>
-          <p class="mb-0 text-white-50" style="font-size: 1.05rem;">
-            Total <strong class="text-white">{{ number_format($totalPermohonan) }}</strong> permohonan &middot;
-            <strong class="text-white">{{ number_format($totalLayanan) }}</strong> layanan aktif
-          </p>
+        <div class="d-none d-md-flex">
+          <div class="date-chip">
+            <i class="ti tabler-calendar-event" style="font-size:0.9rem; color:var(--p)"></i>
+            {{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
+          </div>
         </div>
-      </div>
-      <div class="d-flex align-items-center gap-3 z-1">
-        <a href="{{ route('ptsp.index') }}" class="btn btn-light rounded px-4 shadow-sm fw-semibold" target="_blank">
-          <i class="icon-base ti tabler-external-link me-1"></i> Portal Publik
-        </a>
       </div>
     </div>
-  </div>
 
-  {{-- Statistik PTSP --}}
-  <div class="col-lg-3 col-md-6 col-sm-6">
-    <div class="card stat-card primary h-100">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
+    {{-- ── HERO BANNER ─────────────────────────────────── --}}
+    <div class="col-12">
+      <div
+        class="hero-banner p-4 p-md-4 d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div class="d-flex align-items-center gap-3 position-relative z-1">
+          <div class="hero-icon">
+            <i class="ti tabler-rocket"></i>
+          </div>
           <div>
-            <p class="text-muted mb-1 fs-6">Total Permohonan</p>
-            <h3 class="mb-0 fw-bold">{{ number_format($totalPermohonan) }}</h3>
-          </div>
-          <div class="stat-icon-wrapper bg-label-primary">
-            <i class="icon-base ti tabler-file-text"></i>
-          </div>
-        </div>
-        <div class="mt-3 pt-2 border-top">
-          <small class="text-muted"><i class="icon-base ti tabler-database me-1"></i>Semua permohonan masuk</small>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-3 col-md-6 col-sm-6">
-    <div class="card stat-card warning h-100">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <p class="text-muted mb-1 fs-6">Pending</p>
-            <h3 class="mb-0 fw-bold">{{ number_format($pending) }}</h3>
-          </div>
-          <div class="stat-icon-wrapper bg-label-warning">
-            <i class="icon-base ti tabler-clock"></i>
+            <span class="hero-badge">PTSP MAN 1</span>
+            <h3>Panel Kontrol PTSP</h3>
+            <p class="mb-0 small" style="color: rgba(255,255,255,0.55); margin-top:2px;">
+              Layanan Terpadu Satu Pintu — MAN 1 Kota Bandung
+            </p>
           </div>
         </div>
-        <div class="mt-3 pt-2 border-top">
-          <small class="text-warning fw-semibold">
-            <i class="icon-base ti tabler-alert-circle me-1"></i>
-            {{ $totalPermohonan > 0 ? round(($pending/$totalPermohonan)*100, 1) : 0 }}%
-          </small>
-          <small class="text-muted">dari total</small>
+        <div class="hero-watermark">PTSP</div>
+        <div class="position-relative z-1">
+          <a href="{{ route('ptsp.index') }}" class="hero-btn d-inline-flex align-items-center gap-2" target="_blank">
+            <i class="ti tabler-world" style="font-size:0.95rem"></i> Lihat Portal
+          </a>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="col-lg-3 col-md-6 col-sm-6">
-    <div class="card stat-card info h-100">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <p class="text-muted mb-1 fs-6">Diproses</p>
-            <h3 class="mb-0 fw-bold">{{ number_format($proses) }}</h3>
+    {{-- ── STAT CARDS ───────────────────────────────────── --}}
+
+    {{-- Total Permohonan --}}
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card stat-card h-100" style="--accent-color: var(--p); --icon-bg: #ecfdf5;">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-2">
+            <div class="flex-grow-1">
+              <p class="stat-label">Total Permohonan</p>
+              <div class="stat-value">{{ number_format($totalPermohonan) }}</div>
+            </div>
+            <div class="stat-icon"><i class="ti tabler-folder-plus"></i></div>
           </div>
-          <div class="stat-icon-wrapper bg-label-info">
-            <i class="icon-base ti tabler-loader"></i>
+          <div class="mt-3">
+            <span class="today-chip">+{{ $permohonanTerbaru->count() }} hari ini</span>
           </div>
-        </div>
-        <div class="mt-3 pt-2 border-top">
-          <small class="text-info fw-semibold">
-            <i class="icon-base ti tabler-trending-up me-1"></i>
-            {{ $totalPermohonan > 0 ? round(($proses/$totalPermohonan)*100, 1) : 0 }}%
-          </small>
-          <small class="text-muted">dari total</small>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="col-lg-3 col-md-6 col-sm-6">
-    <div class="card stat-card success h-100">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <p class="text-muted mb-1 fs-6">Selesai</p>
-            <h3 class="mb-0 fw-bold">{{ number_format($selesai) }}</h3>
+    {{-- Pending --}}
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card stat-card h-100" style="--accent-color: #d97706; --icon-bg: #fef3c7;">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-2">
+            <div class="flex-grow-1">
+              <p class="stat-label">Pending</p>
+              <div class="stat-value">{{ number_format($pending) }}</div>
+            </div>
+            <div class="stat-icon"><i class="ti tabler-clock-hour-4"></i></div>
           </div>
-          <div class="stat-icon-wrapper bg-label-success">
-            <i class="icon-base ti tabler-check-circle"></i>
+          <div class="stat-progress">
+            <div class="stat-progress-bar"
+              style="width: {{ $totalPermohonan > 0 ? ($pending / $totalPermohonan) * 100 : 0 }}%"></div>
           </div>
-        </div>
-        <div class="mt-3 pt-2 border-top">
-          <small class="text-success fw-semibold">
-            <i class="icon-base ti tabler-check me-1"></i>
-            {{ $totalPermohonan > 0 ? round(($selesai/$totalPermohonan)*100, 1) : 0 }}%
-          </small>
-          <small class="text-muted">selesai diproses</small>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="col-lg-3 col-md-6 col-sm-6">
-    <div class="card stat-card danger h-100">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <p class="text-muted mb-1 fs-6">Publik (NISN)</p>
-            <h3 class="mb-0 fw-bold">{{ number_format($publik) }}</h3>
+    {{-- Diproses --}}
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card stat-card h-100" style="--accent-color: #4f46e5; --icon-bg: #eef2ff;">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-2">
+            <div class="flex-grow-1">
+              <p class="stat-label">Diproses</p>
+              <div class="stat-value">{{ number_format($proses) }}</div>
+            </div>
+            <div class="stat-icon"><i class="ti tabler-settings-automation"></i></div>
           </div>
-          <div class="stat-icon-wrapper bg-label-danger">
-            <i class="icon-base ti tabler-id"></i>
+          <div class="stat-progress">
+            <div class="stat-progress-bar"
+              style="width: {{ $totalPermohonan > 0 ? ($proses / $totalPermohonan) * 100 : 0 }}%"></div>
           </div>
-        </div>
-        <div class="mt-3 pt-2 border-top">
-          <small class="text-muted">
-            <i class="icon-base ti tabler-users me-1"></i>Tanpa login
-          </small>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="col-lg-3 col-md-6 col-sm-6">
-    <div class="card stat-card primary h-100">
-      <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-          <div>
-            <p class="text-muted mb-1 fs-6">Layanan Aktif</p>
-            <h3 class="mb-0 fw-bold">{{ number_format($totalLayanan) }}</h3>
+    {{-- Selesai --}}
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card stat-card h-100" style="--accent-color: var(--p); --icon-bg: #ecfdf5;">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-2">
+            <div class="flex-grow-1">
+              <p class="stat-label">Selesai</p>
+              <div class="stat-value">{{ number_format($selesai) }}</div>
+            </div>
+            <div class="stat-icon"><i class="ti tabler-discount-check"></i></div>
           </div>
-          <div class="stat-icon-wrapper bg-label-primary">
-            <i class="icon-base ti tabler-grid"></i>
+          <div class="stat-progress">
+            <div class="stat-progress-bar"
+              style="width: {{ $totalPermohonan > 0 ? ($selesai / $totalPermohonan) * 100 : 0 }}%"></div>
           </div>
-        </div>
-        <div class="mt-3 pt-2 border-top">
-          <small class="text-muted">
-            <i class="icon-base ti tabler-circle-check me-1"></i>Layanan tersedia
-          </small>
         </div>
       </div>
     </div>
-  </div>
 
-  {{-- Tabel Permohonan Terbaru --}}
-  <div class="col-12 col-xl-8">
-    <div class="card h-100 border-0 shadow-sm">
-      <div class="card-header d-flex justify-content-between align-items-center bg-transparent border-bottom pt-4 pb-3">
-        <h5 class="card-title mb-0 fw-bold"><i class="icon-base ti tabler-file-description text-primary me-2"></i>Permohonan Terbaru</h5>
-        <a href="{{ route('admin.ptsp.index') }}" class="btn btn-sm btn-label-primary rounded">Lihat Semua</a>
+    {{-- Akses Publik --}}
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card stat-card h-100" style="--accent-color: #dc2626; --icon-bg: #fee2e2;">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-2">
+            <div class="flex-grow-1">
+              <p class="stat-label">Akses Publik</p>
+              <div class="stat-value">{{ number_format($publik) }}</div>
+            </div>
+            <div class="stat-icon"><i class="ti tabler-user-search"></i></div>
+          </div>
+          <div class="mt-3" style="font-size:0.75rem; color:var(--muted);">Pengunjung portal publik</div>
+        </div>
       </div>
-      <div class="card-body p-0">
+    </div>
+
+    {{-- Layanan Aktif --}}
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card stat-card h-100" style="--accent-color: #0284c7; --icon-bg: #e0f2fe;">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-2">
+            <div class="flex-grow-1">
+              <p class="stat-label">Layanan Aktif</p>
+              <div class="stat-value">{{ number_format($totalLayanan) }}</div>
+            </div>
+            <div class="stat-icon"><i class="ti tabler-layout-grid-add"></i></div>
+          </div>
+          <div class="mt-3" style="font-size:0.75rem; color:var(--muted);">Jenis layanan tersedia</div>
+        </div>
+      </div>
+    </div>
+
+    {{-- ── PERMOHONAN TERBARU ──────────────────────────── --}}
+    <div class="col-12 col-xl-8">
+      <div class="panel h-100">
+        <div class="section-head">
+          <div class="section-head-title">
+            <span class="dot"></span>
+            Permohonan Terbaru
+          </div>
+          <a href="{{ route('admin.ptsp.index') }}" class="btn-view">Lihat Semua →</a>
+        </div>
         <div class="table-responsive">
-          <table class="table table-hover table-premium mb-0">
+          <table class="table tbl mb-0">
             <thead>
               <tr>
                 <th class="ps-4">No. Tiket</th>
                 <th>Pemohon</th>
-                <th>Layanan</th>
                 <th>Status</th>
-                <th class="text-end pe-4">Tanggal</th>
+                <th class="text-end pe-4">Waktu</th>
               </tr>
             </thead>
             <tbody>
-              @if(isset($permohonanTerbaru) && $permohonanTerbaru->count() > 0)
-                @foreach($permohonanTerbaru as $p)
+              @forelse($permohonanTerbaru as $p)
                 <tr>
-                  <td class="ps-4 text-muted fw-semibold">
-                    <code class="text-primary">{{ $p->no_tiket }}</code>
-                  </td>
-                  <td class="fw-bold">
-                    @if($p->user_id)
-                      {{ $p->user->name ?? 'N/A' }}
-                    @elseif($p->nisn)
-                      {{ $p->siswa->nama_lengkap ?? 'NISN: '.$p->nisn }}
-                    @else
-                      <span class="text-muted">—</span>
-                    @endif
+                  <td class="ps-4">
+                    <span class="ticket-no">{{ $p->no_tiket }}</span>
                   </td>
                   <td>
-                    <span class="text-body small">{{ $p->layanan->nama_layanan ?? '—' }}</span>
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="av">{{ substr($p->user->name ?? ($p->siswa->nama_lengkap ?? '?'), 0, 1) }}</div>
+                      <div>
+          <div style="font-weight:700; font-size:0.88rem;">
+            {{ $p->user->name ?? ($p->siswa->nama_lengkap ?? 'N/A') }}</div>
+            <div style="font-size:0.75rem; color:var(--muted);">{{ $p->layanan->nama_layanan ?? '—' }}</div>
+                      </div>
+                    </div>
                   </td>
                   <td>
-                    @switch($p->status)
-                      @case('pending')
-                        <span class="badge bg-label-warning">Pending</span>
-                        @break
-                      @case('proses')
-                        <span class="badge bg-label-info">Diproses</span>
-                        @break
-                      @case('selesai')
-                        <span class="badge bg-label-success">Selesai</span>
-                        @break
-                      @case('ditolak')
-                        <span class="badge bg-label-danger">Ditolak</span>
-                        @break
-                      @default
-                        <span class="badge bg-label-secondary">{{ $p->status }}</span>
-                    @endswitch
+                    @php
+                      $st = $p->status;
+                      $sc = match ($st) {
+                          'pending' => 'st-pending',
+                          'proses' => 'st-proses',
+                          'selesai' => 'st-selesai',
+                          'ditolak' => 'st-ditolak',
+                          default => 'st-default',
+                      };
+                    @endphp
+                    <span class="st-badge {{ $sc }}">{{ strtoupper($st) }}</span>
                   </td>
-                  <td class="text-end pe-4 text-muted small">
-                    {{ $p->created_at->locale('id')->diffForHumans() }}
+                  <td class="text-end pe-4" style="font-size:0.78rem; color:var(--muted); white-space:nowrap;">
+                    {{ $p->created_at->diffForHumans() }}
                   </td>
                 </tr>
-                @endforeach
-              @else
+              @empty
                 <tr>
-                  <td colspan="5" class="text-center py-4 text-muted">Belum ada permohonan.</td>
+                  <td colspan="4" class="p-0">
+                    <div class="empty-state">
+                      <i class="ti tabler-inbox"></i>
+                      <p>Belum ada permohonan masuk.</p>
+                    </div>
+                  </td>
                 </tr>
-              @endif
+              @endforelse
             </tbody>
           </table>
         </div>
       </div>
     </div>
-  </div>
 
-  {{-- Akses Cepat PTSP --}}
-  <div class="col-12 col-xl-4">
-    <div class="card h-100 border-0 shadow-sm">
-      <div class="card-header pt-4 pb-0 bg-transparent border-0">
-        <h5 class="card-title fw-bold mb-0"><i class="icon-base ti tabler-link text-primary me-2"></i>Akses Cepat</h5>
-      </div>
-      <div class="card-body pt-3">
-
-        <div class="d-flex mb-4">
-          <div class="flex-shrink-0 me-3">
-            <div class="avatar avatar-sm">
-              <span class="avatar-initial rounded bg-label-primary"><i class="icon-base ti tabler-file-text"></i></span>
-            </div>
-          </div>
-          <div>
-            <h6 class="mb-1 fw-bold">Manajemen Permohonan</h6>
-            <p class="mb-0 text-muted small">Kelola semua permohonan layanan PTSP, update status, dan lihat detail pemohon.</p>
+    {{-- ── AKSES CEPAT ──────────────────────────────────── --}}
+    <div class="col-12 col-xl-4">
+      <div class="panel h-100">
+        <div class="section-head">
+          <div class="section-head-title">
+            <span class="dot" style="background:var(--amber)"></span>
+            Akses Cepat
           </div>
         </div>
+        <div class="panel-body">
 
-        <div class="d-flex mb-4">
-          <div class="flex-shrink-0 me-3">
-            <div class="avatar avatar-sm">
-              <span class="avatar-initial rounded bg-label-success"><i class="icon-base ti tabler-search"></i></span>
+          {{-- Quick links --}}
+          <div class="d-flex flex-column gap-2 mb-4">
+            <a href="{{ route('admin.ptsp.index') }}" class="qa-item" style="--qa-color: var(--p); --qa-bg: #ecfdf5;">
+              <div class="qa-icon"><i class="ti tabler-clipboard-list"></i></div>
+              <div>
+                <p class="qa-title">Manajemen Permohonan</p>
+                <p class="qa-sub">Kelola antrean dan verifikasi berkas.</p>
+              </div>
+              <i class="ti tabler-arrow-right ms-auto" style="font-size:0.9rem; color:var(--muted); flex-shrink:0;"></i>
+            </a>
+
+            <a href="{{ route('ptsp.tracking') }}" class="qa-item" style="--qa-color: #0284c7; --qa-bg: #e0f2fe;"
+              target="_blank">
+              <div class="qa-icon"><i class="ti tabler-track"></i></div>
+              <div>
+                <p class="qa-title">Tracking Link</p>
+                <p class="qa-sub">Pantau status via nomor tiket publik.</p>
+              </div>
+              <i class="ti tabler-external-link ms-auto"
+                style="font-size:0.9rem; color:var(--muted); flex-shrink:0;"></i>
+            </a>
+          </div>
+
+          {{-- Shortcuts --}}
+          <div style="border-top: 1px solid var(--border); padding-top: 14px;">
+            <p
+              style="font-size:0.65rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:10px;">
+              Shortcuts</p>
+            <div class="row g-2">
+              <div class="col-6">
+                <a href="{{ route('admin.ptsp.index') }}" class="shortcut" style="--sc-color: var(--p);">
+                  <i class="ti tabler-file-analytics" style="color:var(--p)"></i>
+                  <span>Permohonan</span>
+                </a>
+              </div>
+              <div class="col-6">
+                <a href="{{ route('admin.siswa.index') }}" class="shortcut" style="--sc-color: #0284c7;">
+                  <i class="ti tabler-users-group" style="color:#0284c7"></i>
+                  <span>Data Siswa</span>
+                </a>
+              </div>
             </div>
           </div>
-          <div>
-            <h6 class="mb-1 fw-bold">Tracking Permohonan</h6>
-            <p class="mb-0 text-muted small">Pantau status permohonan via nomor tiket yang diberikan ke pemohon.</p>
-          </div>
+
         </div>
-
-        <div class="d-flex mb-4">
-          <div class="flex-shrink-0 me-3">
-            <div class="avatar avatar-sm">
-              <span class="avatar-initial rounded bg-label-warning"><i class="icon-base ti tabler-settings"></i></span>
-            </div>
-          </div>
-          <div>
-            <h6 class="mb-1 fw-bold">Pengaturan Sistem</h6>
-            <p class="mb-0 text-muted small">Atur konfigurasi umum, layanan, dan preferensi sistem PTSP.</p>
-          </div>
-        </div>
-
-        <div class="mt-4 pt-3 border-top">
-          <h6 class="fw-bold mb-3">Menu Cepat</h6>
-          <div class="row g-2">
-            <div class="col-6">
-              <a href="{{ route('admin.ptsp.index') }}" class="d-block p-3 quick-action-box text-center text-decoration-none">
-                <i class="icon-base ti tabler-file-text fs-3 text-primary mb-1"></i>
-                <div class="fw-semibold text-dark small">Permohonan</div>
-              </a>
-            </div>
-            <div class="col-6">
-              <a href="{{ route('ptsp.tracking') }}" class="d-block p-3 quick-action-box text-center text-decoration-none" target="_blank">
-                <i class="icon-base ti tabler-search fs-3 text-success mb-1"></i>
-                <div class="fw-semibold text-dark small">Tracking</div>
-              </a>
-            </div>
-            <div class="col-6">
-              <a href="{{ route('admin.pengaturan.umum') }}" class="d-block p-3 quick-action-box text-center text-decoration-none">
-                <i class="icon-base ti tabler-settings fs-3 text-warning mb-1"></i>
-                <div class="fw-semibold text-dark small">Pengaturan</div>
-              </a>
-            </div>
-            <div class="col-6">
-              <a href="{{ route('admin.siswa.index') }}" class="d-block p-3 quick-action-box text-center text-decoration-none">
-                <i class="icon-base ti tabler-users fs-3 text-info mb-1"></i>
-                <div class="fw-semibold text-dark small">Data Siswa</div>
-              </a>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
-  </div>
 
-</div>
+  </div>
 @endsection

@@ -10,7 +10,7 @@
     {{-- Breadcrumb & Back --}}
     <div class="d-flex align-items-center gap-3 mb-4">
       <a href="{{ $permohonan->layanan_id ? route('admin.ptsp.index', ['layanan_id' => $permohonan->layanan_id]) : route('admin.ptsp.index') }}" class="btn btn-outline-secondary btn-sm">
-        <i class="bx bx-arrow-back me-1"></i> Kembali
+        <i class="ti tabler-arrow-left me-1"></i> Kembali
       </a>
       <div>
         <h5 class="fw-bold mb-0">Detail {{ $permohonan->layanan->nama_layanan ?? 'Permohonan' }}</h5>
@@ -21,7 +21,7 @@
     {{-- Flash --}}
     @if(session('success'))
       <div class="alert alert-success alert-dismissible mb-4" role="alert">
-        <i class="bx bx-check-circle me-2"></i>{{ session('success') }}
+        <i class="ti tabler-circle-check me-2"></i>{{ session('success') }}
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
       </div>
     @endif
@@ -83,7 +83,7 @@
         <div class="card shadow-sm border-0 mb-4">
           <div class="card-header py-3">
             <h6 class="mb-0 fw-semibold">
-              <i class="bx bx-user me-2 text-primary"></i>Data Pemohon
+              <i class="ti tabler-user me-2 text-primary"></i>Data Pemohon
             </h6>
           </div>
           <div class="card-body">
@@ -150,7 +150,7 @@
         <div class="card shadow-sm border-0">
           <div class="card-header py-3">
             <h6 class="mb-0 fw-semibold">
-              <i class="bx bx-file me-2 text-primary"></i>Detail Permohonan
+              <i class="ti tabler-file-description me-2 text-primary"></i>Detail Permohonan
             </h6>
           </div>
           <div class="card-body">
@@ -182,7 +182,7 @@
         <div class="card shadow-sm border-0 sticky-top" style="top: 80px;">
           <div class="card-header py-3">
             <h6 class="mb-0 fw-semibold">
-              <i class="bx bx-edit me-2 text-primary"></i>Update Status
+              <i class="ti tabler-edit me-2 text-primary"></i>Update Status
             </h6>
           </div>
           <div class="card-body">
@@ -205,7 +205,7 @@
               </div>
 
               <button type="submit" class="btn btn-primary w-100">
-                <i class="bx bx-save me-1"></i> Simpan Perubahan
+                <i class="ti tabler-device-floppy me-1"></i> Simpan Perubahan
               </button>
             </form>
 

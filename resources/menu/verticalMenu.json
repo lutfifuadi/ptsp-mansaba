@@ -7,36 +7,76 @@
       "slug": "dashboard"
     },
     {
-      "menuHeader": "LAYANAN"
+      "menuHeader": "PTSP DASHBOARD"
     },
     {
-      "url": "/admin/ptsp",
-      "icon": "menu-icon icon-base ti tabler-database",
+      "url": "/admin/ptsp/semua-data",
+      "icon": "menu-icon icon-base ti tabler-layout-grid",
       "name": "Semua Data",
-      "slug": "admin.ptsp"
+      "slug": "admin.ptsp.semua-data"
     },
     {
-      "menuHeader": "Master Data"
+      "url": "/admin/buku-tamu",
+      "icon": "menu-icon icon-base ti tabler-address-book",
+      "name": "Buku Tamu",
+      "slug": "admin.guest-book"
     },
     {
-      "url": "/admin/pengaturan/lembaga",
+      "name": "Layanan Siswa",
+      "icon": "menu-icon icon-base ti tabler-users-group",
+      "slug": ["admin.ptsp.pembuatan-surat", "admin.ptsp.legalisir"],
+      "submenu": [
+        {
+          "url": "/admin/ptsp/pembuatan-surat",
+          "name": "Pembuatan Surat",
+          "slug": "admin.ptsp.pembuatan-surat"
+        },
+        {
+          "url": "/admin/ptsp/legalisir",
+          "name": "Legalisir Raport/SKKB",
+          "slug": "admin.ptsp.legalisir"
+        }
+      ]
+    },
+    {
+      "name": "Layanan Alumni",
       "icon": "menu-icon icon-base ti tabler-school",
-      "name": "Lembaga",
-      "slug": "admin.pengaturan.lembaga"
+      "slug": ["admin.ptsp.legalisir-ijazah", "admin.ptsp.pengambilan-ijazah"],
+      "submenu": [
+        {
+          "url": "/admin/ptsp/legalisir-ijazah",
+          "name": "Legalisir Ijazah",
+          "slug": "admin.ptsp.legalisir-ijazah"
+        },
+        {
+          "url": "/admin/ptsp/pengambilan-ijazah",
+          "name": "Pengambilan Ijazah",
+          "slug": "admin.ptsp.pengambilan-ijazah"
+        }
+      ]
+    },
+    {
+      "menuHeader": "MASTER DATA"
     },
     {
       "url": "/admin/siswa",
       "icon": "menu-icon icon-base ti tabler-users",
-      "name": "Data Siswa",
+      "name": "Database Siswa",
       "slug": "admin.siswa"
     },
     {
-      "menuHeader": "Pengaturan"
+      "url": "/admin/pengaturan/lembaga",
+      "icon": "menu-icon icon-base ti tabler-building-community",
+      "name": "Profil Lembaga",
+      "slug": "admin.pengaturan.lembaga"
+    },
+    {
+      "menuHeader": "KONFIGURASI"
     },
     {
       "url": "/admin/pengaturan/umum",
       "icon": "menu-icon icon-base ti tabler-settings-2",
-      "name": "Umum",
+      "name": "Pengaturan Umum",
       "slug": "admin.pengaturan.umum"
     }
   ]

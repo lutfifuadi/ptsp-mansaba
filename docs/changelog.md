@@ -23,3 +23,13 @@
 [2026-05-12] Fitur Edit NIS & Kelas oleh Siswa di Halaman Konfirmasi Surat — input editable di step konfirmasi, auto-save ke tabel siswa
 [2026-05-12] Hapus deskripsi quick menu di halaman beranda PTSP
 [2026-05-12] Feat: sinkronisasi versi aplikasi dengan GitHub release tag — command `php artisan version:sync` + auto-sync di deploy.sh
+[2026-05-12] Penyelarasan UI Dashboard dengan tema Beranda — dark theme emerald/gold, glassmorphism, konsisten dengan portal publik PTSP
+[2026-05-12] Perbaiki error `Helper::greeting()` tidak ditemukan di halaman /dashboard — tambah method greeting() di Helpers.php
+[2026-05-12] Ubah border-radius halaman beranda (dashboard) dari 16px menjadi maksimal 5px — CSS .card, .btn, .badge, .avatar-initial, .quick-action-box, .stat-icon-wrapper, .premium-banner, .rounded, .time-badge
+[2026-05-12] Rapikan posisi icon di beranda — tambah flexbox centering pada .stat-icon-wrapper dan .banner-icon-box agar icon tepat di tengah card
+[2026-05-12] Implementasi UI Admin Premium untuk modul: Legalisir Ijazah, Buku Tamu, Pengambilan Ijazah, Pembuatan Surat, Legalisir, dan Semua Data.
+[2026-05-12] Restrukturisasi Admin Dashboard: Penggunaan AdminPermohonanController untuk manajemen data per layanan yang lebih teratur.
+[2026-05-12] Integrasi Menu Sidebar Admin: Penambahan link akses langsung ke tiap kategori layanan PTSP di menu navigasi utama.
+[2026-05-12] Dokumentasi API Admin: Penambahan referensi endpoint administratif di docs/api/admin-ptsp.md.
+[2026-05-12] Proporsionalitas font dashboard: perbesar font stat, heading, tabel; perkecil font quick menu.
+[2026-05-12] Perkecil font form secara global (form-control, form-label, dll) via app.css + form surat publik.

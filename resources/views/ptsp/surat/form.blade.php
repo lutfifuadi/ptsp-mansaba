@@ -208,11 +208,11 @@
     .form-label span.req { color: var(--error); margin-left: 2px; }
 
     .form-select {
-      width: 100%; padding: 14px 16px;
+      width: 100%; padding: 12px 14px;
       background: rgba(15, 23, 42, 0.8);
       border: 1px solid var(--glass-border);
       border-radius: 4px;
-      color: var(--text-main); font-size: 1rem;
+      color: var(--text-main); font-size: 0.88rem;
       font-family: 'Plus Jakarta Sans', sans-serif;
       transition: var(--transition); outline: none;
       appearance: none; cursor: pointer;
@@ -233,11 +233,11 @@
     .form-select.is-invalid { border-color: var(--error) !important; }
 
     .form-textarea {
-      width: 100%; padding: 14px 16px;
+      width: 100%; padding: 12px 14px;
       background: rgba(15, 23, 42, 0.8);
       border: 1px solid var(--glass-border);
       border-radius: 4px;
-      color: var(--text-main); font-size: 1rem;
+      color: var(--text-main); font-size: 0.88rem;
       font-family: 'Plus Jakarta Sans', sans-serif;
       transition: var(--transition); outline: none;
       resize: vertical; min-height: 100px; line-height: 1.6;

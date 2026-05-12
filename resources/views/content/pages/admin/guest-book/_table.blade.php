@@ -1,20 +1,21 @@
 @php use Illuminate\Support\Str; @endphp
 
-<div class="card-header d-flex justify-content-between align-items-center py-3">
-  <h6 class="mb-0 fw-semibold">Daftar Kunjungan</h6>
-  <span class="badge bg-label-primary">{{ $guestBooks->total() }} Total</span>
+<div class="card-header d-flex justify-content-between align-items-center py-4 px-4">
+  <h6 class="mb-0 fw-bold d-flex align-items-center gap-2">
+    <i class="ti tabler-list text-primary"></i> Daftar Kunjungan
+  </h6>
+  <span class="badge bg-label-primary rounded-pill px-3">{{ $guestBooks->total() }} Total Record</span>
 </div>
 
-<div class="table-responsive text-nowrap">
-  <table class="table table-hover align-middle mb-0">
-    <thead class="table-light">
+<div class="table-responsive">
+  <table class="table table-hover align-middle mb-0 premium-table">
+    <thead>
       <tr>
-        <th style="width:40px">#</th>
+        <th width="50">#</th>
         <th>Waktu</th>
         <th>Nama Tamu</th>
-        <th>Kontak & Alamat</th>
         <th>Instansi</th>
-        <th>Tujuan & Keperluan</th>
+        <th>Keperluan</th>
         <th class="text-center">Aksi</th>
       </tr>
     </thead>
@@ -22,41 +23,45 @@
       @forelse($guestBooks as $index => $gb)
       <tr>
         <td class="text-muted small">{{ $guestBooks->firstItem() + $index }}</td>
-        <td class="small">
-          <div class="fw-semibold text-dark">{{ $gb->created_at->format('d/m/Y') }}</div>
-          <div class="text-muted" style="font-size: 0.75rem;">{{ $gb->created_at->format('H:i') }} WIB</div>
+        <td>
+          <div class="fw-bold text-dark" style="font-size: 0.9rem;">{{ $gb->created_at->format('d M Y') }}</div>
+          <div class="text-muted small d-flex align-items-center gap-1">
+            <i class="ti tabler-clock fs-6"></i> {{ $gb->created_at->format('H:i') }} WIB
+          </div>
         </td>
         <td>
-          <div class="fw-semibold text-primary">{{ $gb->nama_lengkap }}</div>
+          <div class="fw-bold text-primary">{{ $gb->nama_lengkap }}</div>
+          <div class="text-muted small d-flex align-items-center gap-1">
+            <i class="ti tabler-brand-whatsapp fs-6 text-success"></i> {{ $gb->no_whatsapp }}
+          </div>
         </td>
         <td>
-          <div class="small fw-semibold"><i class="icon-base ti tabler-brand-whatsapp text-success me-1"></i>{{ $gb->no_whatsapp }}</div>
-          <div class="small text-muted text-truncate" style="max-width: 150px;" title="{{ $gb->alamat }}">{{ $gb->alamat }}</div>
+          <div class="badge bg-label-info mb-1" style="font-size: 0.7rem;">{{ $gb->jenis_instansi }}</div>
+          <div class="text-muted small text-truncate" style="max-width: 150px;">{{ $gb->nama_instansi ?: '-' }}</div>
         </td>
         <td>
-          <div class="badge bg-label-info mb-1">{{ $gb->jenis_instansi }}</div>
-          <div class="small text-muted text-truncate" style="max-width: 150px;" title="{{ $gb->nama_instansi ?: '-' }}">{{ $gb->nama_instansi ?: '-' }}</div>
-        </td>
-        <td>
-          <div class="fw-semibold small text-truncate" style="max-width: 150px;" title="{{ $gb->tujuan }}">{{ $gb->tujuan }}</div>
-          <div class="text-muted small text-truncate" style="max-width: 150px;" title="{{ $gb->keperluan }}">{{ $gb->keperluan }}</div>
+          <div class="fw-bold text-dark small text-truncate" style="max-width: 200px;">{{ $gb->tujuan }}</div>
+          <div class="text-muted small text-truncate" style="max-width: 200px;">{{ $gb->keperluan }}</div>
         </td>
         <td class="text-center">
-          <div class="d-flex justify-content-center gap-1">
-            <button type="button" class="btn btn-sm btn-icon btn-outline-primary btn-detail" data-id="{{ $gb->id }}" title="Detail">
-              <i class="icon-base ti tabler-eye"></i>
+          <div class="d-flex justify-content-center gap-2">
+            <button type="button" class="btn btn-icon btn-label-primary rounded-3 btn-detail" data-id="{{ $gb->id }}" title="Detail">
+              <i class="ti tabler-eye"></i>
             </button>
-            <button type="button" class="btn btn-sm btn-icon btn-outline-danger btn-delete" data-id="{{ $gb->id }}" title="Hapus">
-              <i class="icon-base ti tabler-trash"></i>
+            <button type="button" class="btn btn-icon btn-label-danger rounded-3 btn-delete" data-id="{{ $gb->id }}" title="Hapus">
+              <i class="ti tabler-trash"></i>
             </button>
           </div>
         </td>
       </tr>
       @empty
       <tr>
-        <td colspan="7" class="text-center py-5 text-muted">
-          <i class="icon-base ti tabler-book-off fs-1 d-block mb-2"></i>
-          Belum ada data buku tamu.
+        <td colspan="6" class="text-center py-5">
+          <div class="mb-3 opacity-20">
+            <i class="ti tabler-book-off fs-1"></i>
+          </div>
+          <h5 class="text-muted">Belum ada kunjungan</h5>
+          <p class="text-muted small mb-0">Data tamu akan muncul di sini setelah ada yang mengisi formulir.</p>
         </td>
       </tr>
       @endforelse
@@ -65,7 +70,7 @@
 </div>
 
 @if($guestBooks->hasPages())
-<div class="card-footer d-flex justify-content-center py-3">
+<div class="card-footer border-top d-flex justify-content-center py-4">
   {{ $guestBooks->links() }}
 </div>
 @endif

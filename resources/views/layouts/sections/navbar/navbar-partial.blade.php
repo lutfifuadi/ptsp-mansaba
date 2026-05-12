@@ -141,13 +141,13 @@ use Illuminate\Support\Facades\Route;
         <li>
           <a class="dropdown-item"
             href="{{ Auth::user() ? route('teams.show', Auth::user()->currentTeam->id) : 'javascript:void(0)' }}">
-            <i class="icon-base bx bx-cog icon-md me-3"></i><span>Team Settings</span>
+            <i class="icon-base ti tabler-settings icon-md me-3"></i><span>Team Settings</span>
           </a>
         </li>
         @can('create', Laravel\Jetstream\Jetstream::newTeamModel())
         <li>
           <a class="dropdown-item" href="{{ route('teams.create') }}">
-            <i class="icon-base bx bx-user icon-md me-3"></i><span>Create New Team</span>
+            <i class="icon-base ti tabler-user icon-md me-3"></i><span>Create New Team</span>
           </a>
         </li>
         @endcan
@@ -177,7 +177,7 @@ use Illuminate\Support\Facades\Route;
         <li>
           <a class="dropdown-item" href="{{ route('logout') }}"
             onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-            <i class="icon-base bx bx-power-off icon-md me-3"></i><span>Logout</span>
+            <i class="icon-base ti tabler-power icon-md me-3"></i><span>Logout</span>
           </a>
         </li>
         <form method="POST" id="logout-form" action="{{ route('logout') }}">
