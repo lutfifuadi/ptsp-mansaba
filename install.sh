@@ -103,17 +103,10 @@ fi
 
 if [ -n "$LATEST_URL" ]; then
     echo "[INFO] Mengunduh: $LATEST_URL"
-    if [ -n "$GITHUB_TOKEN" ]; then
-        # Mengambil Asset ID dengan cara yang lebih kuat
-        ASSET_ID=$(echo "$RELEASE_JSON" | sed 's/[()]/ /g; s/"/\n"/g' | grep -B 10 "aplikasi.zip" | grep "\"id\":" | head -n 1 | sed 's/[^0-9]//g')
-        
-        wget "${WGET_OPTS[@]}" --header="Accept: application/octet-stream" \
-            -O /tmp/aplikasi.zip \
-            "https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/releases/assets/$ASSET_ID"
-    else
-        wget -q -O /tmp/aplikasi.zip "$LATEST_URL"
-    fi
-
+    
+    # Coba unduh menggunakan wget. Jika ada GITHUB_TOKEN, sertakan dalam header.
+    wget "${WGET_OPTS[@]}" -L -O /tmp/aplikasi.zip "$LATEST_URL" 2>/tmp/wget_error.txt
+    
     if [ $? -eq 0 ]; then
         echo "[INFO] Mengekstrak build asset..."
         mkdir -p /tmp/build_extract
@@ -129,8 +122,12 @@ if [ -n "$LATEST_URL" ]; then
         rm -rf /tmp/build_extract
         rm /tmp/aplikasi.zip
     else
-        echo "[WARN] Gagal mengunduh build asset. Lanjutkan instalasi, tapi tampilan mungkin rusak."
-        echo "[WARN] Hubungi developer untuk mengirim build asset manual."
+        echo "[WARN] Gagal mengunduh build asset."
+        if [ -f /tmp/wget_error.txt ]; then
+            echo "[DEBUG] Wget Error: $(cat /tmp/wget_error.txt)"
+        fi
+        echo "[INFO] Lanjutkan instalasi, tapi tampilan mungkin rusak."
+        echo "[INFO] Hubungi developer untuk mengirim build asset manual."
     fi
 else
     echo "[WARN] Tidak ada asset 'aplikasi.zip' ditemukan di release terbaru atau tidak ada release di GitHub."
