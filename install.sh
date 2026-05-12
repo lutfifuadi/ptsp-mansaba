@@ -77,41 +77,83 @@ echo "[OK] GITHUB_REPO_OWNER=$GITHUB_OWNER, GITHUB_REPO_NAME=$GITHUB_REPO dituli
 echo ""
 echo "[4/6] Download public/build dari GitHub Release..."
 
-CURL_OPTS=("-sLf")
-WGET_OPTS=("-q")
-
+API_CURL_OPTS=("-sL")
 if [ -n "$GITHUB_TOKEN" ]; then
-    CURL_OPTS+=("-H" "Authorization: token $GITHUB_TOKEN")
-    WGET_OPTS+=("--header=Authorization: token $GITHUB_TOKEN")
-    echo "[INFO] Menggunakan GITHUB_TOKEN untuk autentikasi."
+    API_CURL_OPTS+=("-H" "Authorization: Bearer $GITHUB_TOKEN")
+    echo "[INFO] Menggunakan GITHUB_TOKEN untuk autentikasi API."
 fi
 
-RELEASE_JSON=$(curl "${CURL_OPTS[@]}" "https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/releases/latest" 2>/tmp/github_api_error.txt)
-CURL_EXIT_CODE=$?
+API_URL="https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/releases/latest"
+RELEASE_JSON=$(curl "${API_CURL_OPTS[@]}" "$API_URL" 2>/tmp/github_api_error.txt)
+API_HTTP_CODE=$(curl "${API_CURL_OPTS[@]}" -o /dev/null -w "%{http_code}" "$API_URL" 2>/dev/null)
 
-if [ $CURL_EXIT_CODE -ne 0 ] || [ -z "$RELEASE_JSON" ]; then
-    echo "[WARN] Gagal mengambil data release dari GitHub API."
-    if [ -f /tmp/github_api_error.txt ]; then
+if [ "$API_HTTP_CODE" != "200" ] || [ -z "$RELEASE_JSON" ]; then
+    echo "[WARN] Gagal mengambil data release dari GitHub API (HTTP $API_HTTP_CODE)."
+    if [ -f /tmp/github_api_error.txt ] && [ -s /tmp/github_api_error.txt ]; then
         echo "[DEBUG] Curl Error: $(cat /tmp/github_api_error.txt)"
     fi
-    echo "[INFO] Cek koneksi, GITHUB_TOKEN (jika ada), atau rate limit API GitHub."
+    if [ "$API_HTTP_CODE" == "401" ] || [ "$API_HTTP_CODE" == "403" ]; then
+        echo "[ERROR] Autentikasi GitHub gagal. Pastikan GITHUB_TOKEN valid dan memiliki scope 'repo'."
+    elif [ "$API_HTTP_CODE" == "404" ]; then
+        echo "[ERROR] Release tidak ditemukan. Pastikan ada release yang dipublish di repository."
+    elif [ "$API_HTTP_CODE" == "000" ]; then
+        echo "[ERROR] Tidak dapat terhubung ke api.github.com. Periksa koneksi internet atau DNS server."
+    fi
     LATEST_URL=""
 else
-    # Mencari URL download dengan cara yang lebih kuat terhadap format JSON (single line atau pretty print)
-    LATEST_URL=$(echo "$RELEASE_JSON" | sed 's/[()]/ /g; s/"/\n"/g' | grep "https" | grep "aplikasi.zip" | head -n 1 | tr -d '"')
+    if command -v php &> /dev/null; then
+        LATEST_URL=$(echo "$RELEASE_JSON" | php -r '
+            if (!$data = json_decode(file_get_contents("php://stdin"), true)) exit(1);
+            foreach ($data["assets"] ?? [] as $asset) {
+                if ($asset["name"] === "aplikasi.zip") {
+                    echo $asset["browser_download_url"];
+                    break;
+                }
+            }
+        ')
+        if [ $? -ne 0 ] || [ -z "$LATEST_URL" ]; then
+            LATEST_URL=$(echo "$RELEASE_JSON" | sed 's/[()]/ /g; s/"/\n"/g' | grep "https" | grep "aplikasi.zip" | head -n 1 | tr -d '"')
+        fi
+    else
+        LATEST_URL=$(echo "$RELEASE_JSON" | sed 's/[()]/ /g; s/"/\n"/g' | grep "https" | grep "aplikasi.zip" | head -n 1 | tr -d '"')
+    fi
 fi
 
+DOWNLOAD_SUCCESS=false
 if [ -n "$LATEST_URL" ]; then
-    echo "[INFO] Mengunduh: $LATEST_URL"
-    
-    # Coba unduh menggunakan wget. Jika ada GITHUB_TOKEN, sertakan dalam header.
-    wget "${WGET_OPTS[@]}" -L -O /tmp/aplikasi.zip "$LATEST_URL" 2>/tmp/wget_error.txt
-    
-    if [ $? -eq 0 ]; then
+    echo "[INFO] URL asset ditemukan: $LATEST_URL"
+
+    # Coba unduh menggunakan wget tanpa auth header
+    echo "[INFO] Mengunduh (tanpa auth header)..."
+    if command -v wget &> /dev/null; then
+        wget -q -L -O /tmp/aplikasi.zip "$LATEST_URL" 2>/tmp/wget_error.txt
+        WGET_EXIT=$?
+        if [ $WGET_EXIT -eq 0 ]; then
+            DOWNLOAD_SUCCESS=true
+        else
+            # coba dengan auth header jika ada token
+            if [ -n "$GITHUB_TOKEN" ]; then
+                wget -q -L --header="Authorization: Bearer $GITHUB_TOKEN" -O /tmp/aplikasi.zip "$LATEST_URL" 2>/tmp/wget_error.txt
+                WGET_EXIT=$?
+                [ $WGET_EXIT -eq 0 ] && DOWNLOAD_SUCCESS=true
+            fi
+        fi
+    fi
+
+    # Fallback ke curl jika wget tidak ada atau gagal
+    if [ "$DOWNLOAD_SUCCESS" != "true" ] && command -v curl &> /dev/null; then
+        HTTP_CODE=$(curl -sL -o /tmp/aplikasi.zip -w "%{http_code}" "$LATEST_URL" 2>/tmp/download_error.txt)
+        if [ "$HTTP_CODE" != "200" ] && [ -n "$GITHUB_TOKEN" ]; then
+            HTTP_CODE=$(curl -sL -H "Authorization: Bearer $GITHUB_TOKEN" -o /tmp/aplikasi.zip -w "%{http_code}" "$LATEST_URL" 2>/tmp/download_error.txt)
+        fi
+        [ "$HTTP_CODE" == "200" ] && DOWNLOAD_SUCCESS=true
+    fi
+
+    if [ "$DOWNLOAD_SUCCESS" == "true" ] && [ -f /tmp/aplikasi.zip ] && [ -s /tmp/aplikasi.zip ]; then
         echo "[INFO] Mengekstrak build asset..."
         mkdir -p /tmp/build_extract
         unzip -o /tmp/aplikasi.zip 'public/build/*' -d /tmp/build_extract/ > /dev/null
-        
+
         if [ -d "/tmp/build_extract/public/build" ]; then
             rm -rf public/build
             mv /tmp/build_extract/public/build public/
@@ -120,11 +162,21 @@ if [ -n "$LATEST_URL" ]; then
             echo "[ERROR] Folder public/build tidak ditemukan dalam zip!"
         fi
         rm -rf /tmp/build_extract
-        rm /tmp/aplikasi.zip
+        rm -f /tmp/aplikasi.zip
     else
         echo "[WARN] Gagal mengunduh build asset."
-        if [ -f /tmp/wget_error.txt ]; then
+        if [ -f /tmp/wget_error.txt ] && [ -s /tmp/wget_error.txt ]; then
             echo "[DEBUG] Wget Error: $(cat /tmp/wget_error.txt)"
+        fi
+        if [ -f /tmp/download_error.txt ] && [ -s /tmp/download_error.txt ]; then
+            echo "[DEBUG] Curl Error: $(cat /tmp/download_error.txt)"
+        fi
+        if [ "$HTTP_CODE" == "401" ] || [ "$HTTP_CODE" == "403" ]; then
+            echo "[ERROR] Akses ditolak. Jika repository private, pastikan GITHUB_TOKEN valid (PAT dengan scope 'repo')."
+        elif [ "$HTTP_CODE" == "404" ]; then
+            echo "[ERROR] File aplikasi.zip tidak ditemukan di release."
+        elif [ "$HTTP_CODE" == "000" ]; then
+            echo "[ERROR] Tidak dapat terhubung ke GitHub. Periksa koneksi internet, firewall, atau DNS."
         fi
         echo "[INFO] Lanjutkan instalasi, tapi tampilan mungkin rusak."
         echo "[INFO] Hubungi developer untuk mengirim build asset manual."
