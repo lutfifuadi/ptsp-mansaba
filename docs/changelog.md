@@ -22,3 +22,4 @@
 [2026-05-12] Fitur Legalisir Ijazah Alumni — layanan umum tanpa validasi NISN, form terpisah dari surat siswa
 [2026-05-12] Fitur Edit NIS & Kelas oleh Siswa di Halaman Konfirmasi Surat — input editable di step konfirmasi, auto-save ke tabel siswa
 [2026-05-12] Hapus deskripsi quick menu di halaman beranda PTSP
+[2026-05-12] Feat: sinkronisasi versi aplikasi dengan GitHub release tag — command `php artisan version:sync` + auto-sync di deploy.sh

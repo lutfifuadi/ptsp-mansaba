@@ -149,6 +149,13 @@ echo "[6/8] Migrasi database..."
 php artisan migrate --force
 
 # ----------------------------------------------------------
+# 5a. Sinkronisasi versi aplikasi dengan tag release
+# ----------------------------------------------------------
+echo ""
+echo "[5a/8] Sinkronisasi versi aplikasi..."
+php artisan version:sync --force
+
+# ----------------------------------------------------------
 # 5b. Publish Livewire assets & pastikan storage symlink ada
 # ----------------------------------------------------------
 echo ""
