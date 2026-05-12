@@ -77,18 +77,24 @@ echo "[OK] GITHUB_REPO_OWNER=$GITHUB_OWNER, GITHUB_REPO_NAME=$GITHUB_REPO dituli
 echo ""
 echo "[4/6] Download public/build dari GitHub Release..."
 
-AUTH_HEADER=""
-WGET_HEADER=""
+CURL_OPTS=("-sLf")
+WGET_OPTS=("-q")
+
 if [ -n "$GITHUB_TOKEN" ]; then
-    AUTH_HEADER="-H \"Authorization: token $GITHUB_TOKEN\""
-    WGET_HEADER="--header=\"Authorization: token $GITHUB_TOKEN\""
+    CURL_OPTS+=("-H" "Authorization: token $GITHUB_TOKEN")
+    WGET_OPTS+=("--header=Authorization: token $GITHUB_TOKEN")
     echo "[INFO] Menggunakan GITHUB_TOKEN untuk autentikasi."
 fi
 
-RELEASE_JSON=$(curl -sLf $AUTH_HEADER "https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/releases/latest")
+RELEASE_JSON=$(curl "${CURL_OPTS[@]}" "https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/releases/latest" 2>/tmp/github_api_error.txt)
+CURL_EXIT_CODE=$?
 
-if [ $? -ne 0 ] || [ -z "$RELEASE_JSON" ]; then
-    echo "[WARN] Gagal mengambil data release dari GitHub API. Cek koneksi, token, atau rate limit."
+if [ $CURL_EXIT_CODE -ne 0 ] || [ -z "$RELEASE_JSON" ]; then
+    echo "[WARN] Gagal mengambil data release dari GitHub API."
+    if [ -f /tmp/github_api_error.txt ]; then
+        echo "[DEBUG] Curl Error: $(cat /tmp/github_api_error.txt)"
+    fi
+    echo "[INFO] Cek koneksi, GITHUB_TOKEN (jika ada), atau rate limit API GitHub."
     LATEST_URL=""
 else
     # Mencari URL download dengan cara yang lebih kuat terhadap format JSON (single line atau pretty print)
@@ -101,7 +107,7 @@ if [ -n "$LATEST_URL" ]; then
         # Mengambil Asset ID dengan cara yang lebih kuat
         ASSET_ID=$(echo "$RELEASE_JSON" | sed 's/[()]/ /g; s/"/\n"/g' | grep -B 10 "aplikasi.zip" | grep "\"id\":" | head -n 1 | sed 's/[^0-9]//g')
         
-        wget -q $WGET_HEADER --header="Accept: application/octet-stream" \
+        wget "${WGET_OPTS[@]}" --header="Accept: application/octet-stream" \
             -O /tmp/aplikasi.zip \
             "https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/releases/assets/$ASSET_ID"
     else
