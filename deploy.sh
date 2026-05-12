@@ -94,10 +94,10 @@ fi
 if [ -n "$LATEST_URL" ]; then
     echo "[INFO] Mengunduh: $LATEST_URL"
     
-    # Coba unduh menggunakan wget. Jika ada GITHUB_TOKEN, sertakan dalam header.
-    wget "${WGET_OPTS[@]}" -L -O /tmp/aplikasi.zip "$LATEST_URL" 2>/tmp/wget_error.txt
+    # Gunakan curl untuk mengunduh agar konsisten dengan pengambilan data release
+    curl "${CURL_OPTS[@]}" -L -o /tmp/aplikasi.zip "$LATEST_URL" 2>/tmp/download_error.txt
     
-    if [ $? -eq 0 ]; then
+    if [ $? -eq 0 ] && [ -f /tmp/aplikasi.zip ]; then
         echo "[INFO] Mengekstrak build asset..."
         mkdir -p /tmp/build_extract
         unzip -o /tmp/aplikasi.zip 'public/build/*' -d /tmp/build_extract/ > /dev/null
@@ -113,10 +113,27 @@ if [ -n "$LATEST_URL" ]; then
         rm /tmp/aplikasi.zip
     else
         echo "[WARN] Gagal mengunduh build asset."
-        if [ -f /tmp/wget_error.txt ]; then
-            echo "[DEBUG] Wget Error: $(cat /tmp/wget_error.txt)"
+        if [ -f /tmp/download_error.txt ]; then
+            echo "[DEBUG] Download Error: $(cat /tmp/download_error.txt)"
         fi
-        echo "[INFO] public/build tetap menggunakan versi sebelumnya."
+        echo "[INFO] Mencoba mengunduh tanpa token..."
+        curl -sLf -L -o /tmp/aplikasi.zip "$LATEST_URL"
+        if [ $? -eq 0 ] && [ -f /tmp/aplikasi.zip ]; then
+             echo "[INFO] Berhasil mengunduh tanpa token. Mengekstrak..."
+             # ... (logic pengulangan ekstraksi)
+             mkdir -p /tmp/build_extract
+             unzip -o /tmp/aplikasi.zip 'public/build/*' -d /tmp/build_extract/ > /dev/null
+             if [ -d "/tmp/build_extract/public/build" ]; then
+                 rm -rf public/build
+                 mv /tmp/build_extract/public/build public/
+                 echo "[OK] public/build berhasil diperbarui."
+             fi
+             rm -rf /tmp/build_extract
+             rm /tmp/aplikasi.zip
+        else
+             echo "[ERROR] Tetap gagal mengunduh meskipun tanpa token."
+             echo "[INFO] public/build tetap menggunakan versi sebelumnya."
+        fi
     fi
 else
     echo "[WARN] Tidak ada asset 'aplikasi.zip' ditemukan di release terbaru."
