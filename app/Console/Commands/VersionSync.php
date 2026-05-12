@@ -14,7 +14,15 @@ class VersionSync extends Command
     {
         $version = null;
 
-        exec('git describe --tags --abbrev=0 2>nul', $output, $exitCode);
+        // Deteksi OS untuk pengalihan error
+        $redirection = DIRECTORY_SEPARATOR === '\\' ? '2>nul' : '2>/dev/null';
+
+        // Pastikan tag terbaru sudah di-fetch jika memungkinkan
+        if (is_dir(base_path('.git'))) {
+            exec("git fetch --tags {$redirection}");
+        }
+
+        exec("git describe --tags --abbrev=0 {$redirection}", $output, $exitCode);
 
         if ($exitCode === 0 && !empty($output[0])) {
             $tag = trim($output[0]);

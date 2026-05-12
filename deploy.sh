@@ -46,7 +46,8 @@ if [ -n "$GITHUB_TOKEN" ]; then
     fi
 fi
 
-git pull origin main
+git fetch --tags
+git pull origin main --tags
 if [ $? -ne 0 ]; then
     echo "[ERROR] Git pull gagal. Periksa koneksi, token, atau konflik."
     exit 1
@@ -73,20 +74,19 @@ if [ -n "$GITHUB_TOKEN" ]; then
     echo "[INFO] Menggunakan GITHUB_TOKEN untuk autentikasi API."
 fi
 
-LATEST_URL=$(curl -s $AUTH_HEADER "https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/releases/latest" \
-    | grep "browser_download_url" \
-    | grep "aplikasi.zip" \
-    | cut -d '"' -f 4)
+RELEASE_JSON=$(curl -sLf $AUTH_HEADER "https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/releases/latest")
+
+if [ $? -ne 0 ] || [ -z "$RELEASE_JSON" ]; then
+    echo "[WARN] Gagal mengambil data release dari GitHub API. Cek koneksi atau rate limit."
+    LATEST_URL=""
+else
+    LATEST_URL=$(echo "$RELEASE_JSON" | grep "browser_download_url" | grep "aplikasi.zip" | cut -d '"' -f 4 | head -n 1)
+fi
 
 if [ -n "$LATEST_URL" ]; then
     echo "[INFO] Mengunduh: $LATEST_URL"
     if [ -n "$GITHUB_TOKEN" ]; then
-        ASSET_ID=$(curl -s $AUTH_HEADER "https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/releases/latest" \
-            | grep -B 1 "aplikasi.zip" \
-            | grep "\"id\":" \
-            | head -n 1 \
-            | cut -d ':' -f 2 \
-            | tr -d ' ,')
+        ASSET_ID=$(echo "$RELEASE_JSON" | grep -B 1 "aplikasi.zip" | grep "\"id\":" | head -n 1 | cut -d ':' -f 2 | tr -d ' ,')
         
         wget -q $WGET_HEADER --header="Accept: application/octet-stream" \
             -O /tmp/aplikasi.zip \
@@ -113,7 +113,7 @@ if [ -n "$LATEST_URL" ]; then
         echo "[WARN] Gagal mengunduh build asset. public/build tetap menggunakan versi sebelumnya."
     fi
 else
-    echo "[WARN] Tidak ada release ditemukan, public/build tetap menggunakan versi sebelumnya."
+    echo "[WARN] Tidak ada asset 'aplikasi.zip' ditemukan di release terbaru."
 fi
 
 # ----------------------------------------------------------

@@ -85,22 +85,19 @@ if [ -n "$GITHUB_TOKEN" ]; then
     echo "[INFO] Menggunakan GITHUB_TOKEN untuk autentikasi."
 fi
 
-LATEST_URL=$(curl -s $AUTH_HEADER "https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/releases/latest" \
-    | grep "browser_download_url" \
-    | grep "aplikasi.zip" \
-    | cut -d '"' -f 4)
+RELEASE_JSON=$(curl -sLf $AUTH_HEADER "https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/releases/latest")
+
+if [ $? -ne 0 ] || [ -z "$RELEASE_JSON" ]; then
+    echo "[WARN] Gagal mengambil data release dari GitHub API. Cek koneksi atau rate limit."
+    LATEST_URL=""
+else
+    LATEST_URL=$(echo "$RELEASE_JSON" | grep "browser_download_url" | grep "aplikasi.zip" | cut -d '"' -f 4 | head -n 1)
+fi
 
 if [ -n "$LATEST_URL" ]; then
     echo "[INFO] Mengunduh: $LATEST_URL"
     if [ -n "$GITHUB_TOKEN" ]; then
-        # Jika private repo, asset download juga butuh header Authorization: token ...
-        # Dan URL asset biasanya berbeda (api.github.com) untuk download file
-        ASSET_ID=$(curl -s $AUTH_HEADER "https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/releases/latest" \
-            | grep -B 1 "aplikasi.zip" \
-            | grep "\"id\":" \
-            | head -n 1 \
-            | cut -d ':' -f 2 \
-            | tr -d ' ,')
+        ASSET_ID=$(echo "$RELEASE_JSON" | grep -B 1 "aplikasi.zip" | grep "\"id\":" | head -n 1 | cut -d ':' -f 2 | tr -d ' ,')
         
         wget -q $WGET_HEADER --header="Accept: application/octet-stream" \
             -O /tmp/aplikasi.zip \
@@ -128,7 +125,7 @@ if [ -n "$LATEST_URL" ]; then
         echo "[WARN] Hubungi developer untuk mengirim build asset manual."
     fi
 else
-    echo "[WARN] Tidak ada release di GitHub. Hubungi developer untuk membuat release terlebih dahulu."
+    echo "[WARN] Tidak ada asset 'aplikasi.zip' ditemukan di release terbaru atau tidak ada release di GitHub."
 fi
 
 # ----------------------------------------------------------
