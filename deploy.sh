@@ -151,7 +151,7 @@ php artisan migrate --force
 # ----------------------------------------------------------
 echo ""
 echo "[5b] Publish Livewire assets..."
-php artisan livewire:publish --assets --force
+php artisan livewire:publish --assets
 
 if [ ! -L "public/storage" ]; then
     echo "[INFO] Membuat symlink storage..."
