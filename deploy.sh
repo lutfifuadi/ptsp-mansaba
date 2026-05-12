@@ -113,16 +113,38 @@ fi
 if [ -n "$LATEST_URL" ]; then
     echo "[INFO] URL asset ditemukan: $LATEST_URL"
 
-    # Ronde 1: Coba unduh TANPA header auth (untuk repo public / menghindari masalah redirect S3)
-    echo "[INFO] Mengunduh (tanpa auth header)..."
-    HTTP_CODE=$(curl -sL -o /tmp/aplikasi.zip -w "%{http_code}" "$LATEST_URL" 2>/tmp/download_error.txt)
+    # Coba unduh dengan wget (lebih handal menangani redirect GitHub S3/CDN)
+    DOWNLOAD_SUCCESS=false
+    if command -v wget &> /dev/null; then
+        echo "[INFO] Mengunduh dengan wget..."
+        if [ -n "$GITHUB_TOKEN" ]; then
+            wget --timeout=120 -q -L -O /tmp/aplikasi.zip \
+                --header="Authorization: Bearer $GITHUB_TOKEN" \
+                "$LATEST_URL" 2>/tmp/wget_error.txt
+        else
+            wget --timeout=120 -q -L -O /tmp/aplikasi.zip "$LATEST_URL" 2>/tmp/wget_error.txt
+        fi
 
-    if [ "$HTTP_CODE" != "200" ] && [ -n "$GITHUB_TOKEN" ]; then
-        echo "[INFO] Gagal tanpa auth (HTTP $HTTP_CODE). Mencoba dengan GITHUB_TOKEN..."
-        HTTP_CODE=$(curl -sL -H "Authorization: Bearer $GITHUB_TOKEN" -o /tmp/aplikasi.zip -w "%{http_code}" "$LATEST_URL" 2>/tmp/download_error.txt)
+        if [ $? -eq 0 ] && [ -f /tmp/aplikasi.zip ] && [ -s /tmp/aplikasi.zip ]; then
+            DOWNLOAD_SUCCESS=true
+        elif [ -f /tmp/wget_error.txt ] && [ -s /tmp/wget_error.txt ]; then
+            echo "[DEBUG] Wget Error: $(cat /tmp/wget_error.txt)"
+        fi
     fi
 
-    if [ "$HTTP_CODE" == "200" ] && [ -f /tmp/aplikasi.zip ] && [ -s /tmp/aplikasi.zip ]; then
+    # Fallback ke curl jika wget gagal atau tidak ada
+    if [ "$DOWNLOAD_SUCCESS" != "true" ] && command -v curl &> /dev/null; then
+        echo "[INFO] Mengunduh dengan curl..."
+        curl --max-time 120 -sL -f -o /tmp/aplikasi.zip "$LATEST_URL" 2>/tmp/curl_error.txt
+        CURL_EXIT=$?
+        if [ $CURL_EXIT -eq 0 ] && [ -f /tmp/aplikasi.zip ] && [ -s /tmp/aplikasi.zip ]; then
+            DOWNLOAD_SUCCESS=true
+        elif [ -f /tmp/curl_error.txt ] && [ -s /tmp/curl_error.txt ]; then
+            echo "[DEBUG] Curl Error: $(cat /tmp/curl_error.txt)"
+        fi
+    fi
+
+    if [ "$DOWNLOAD_SUCCESS" == "true" ]; then
         echo "[INFO] Mengekstrak build asset..."
         mkdir -p /tmp/build_extract
         unzip -o /tmp/aplikasi.zip 'public/build/*' -d /tmp/build_extract/ > /dev/null
@@ -137,20 +159,18 @@ if [ -n "$LATEST_URL" ]; then
         rm -rf /tmp/build_extract
         rm -f /tmp/aplikasi.zip
     else
-        echo "[WARN] Gagal mengunduh build asset (HTTP $HTTP_CODE)."
-        if [ -f /tmp/download_error.txt ] && [ -s /tmp/download_error.txt ]; then
-            echo "[DEBUG] Download Error: $(cat /tmp/download_error.txt)"
+        echo "[WARN] Gagal mengunduh build asset."
+        if [ -f /tmp/wget_error.txt ] && [ -s /tmp/wget_error.txt ]; then
+            echo "[DEBUG] Wget Error: $(cat /tmp/wget_error.txt)"
         fi
-        if [ "$HTTP_CODE" == "401" ] || [ "$HTTP_CODE" == "403" ]; then
-            echo "[ERROR] Akses ditolak. Jika repository private, pastikan GITHUB_TOKEN valid (PAT dengan scope 'repo')."
-            echo "[ERROR] Jika repository public, pastikan asset sudah dipublish."
-        elif [ "$HTTP_CODE" == "404" ]; then
-            echo "[ERROR] File aplikasi.zip tidak ditemukan di release. Cek kembali tag release dan workflow."
-        elif [ "$HTTP_CODE" == "000" ]; then
-            echo "[ERROR] Tidak dapat terhubung ke GitHub. Periksa koneksi internet, firewall, atau DNS."
-        elif [ "$HTTP_CODE" == "400" ]; then
-            echo "[ERROR] Bad Request (400). Jika menggunakan token, kemungkinan token crash dengan redirect S3. Coba update curl atau hapus GITHUB_TOKEN jika repo public."
+        if [ -f /tmp/curl_error.txt ] && [ -s /tmp/curl_error.txt ]; then
+            echo "[DEBUG] Curl Error: $(cat /tmp/curl_error.txt)"
         fi
+        echo "[ERROR] Kemungkinan penyebab:"
+        echo "  1. File aplikasi.zip tidak ada/dihapus dari release v1.1.3"
+        echo "  2. Rate limit GitHub (60 request/jam untuk IP publik)"
+        echo "  3. Koneksi internet server terbatas/diblokir"
+        echo "  4. Repository diblokir oleh firewall/DNS server di Indonesia"
         echo "[INFO] public/build tetap menggunakan versi sebelumnya."
         rm -f /tmp/aplikasi.zip
     fi
