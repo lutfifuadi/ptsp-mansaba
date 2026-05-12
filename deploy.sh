@@ -74,10 +74,16 @@ if [ -n "$GITHUB_TOKEN" ]; then
     echo "[INFO] Menggunakan GITHUB_TOKEN untuk autentikasi API."
 fi
 
-RELEASE_JSON=$(curl -sLf $AUTH_HEADER "https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/releases/latest")
+# Coba ambil data release dan simpan error jika ada
+RELEASE_JSON=$(curl -sLf $AUTH_HEADER "https://api.github.com/repos/$GITHUB_OWNER/$GITHUB_REPO/releases/latest" 2>/tmp/github_api_error.txt)
+CURL_EXIT_CODE=$?
 
-if [ $? -ne 0 ] || [ -z "$RELEASE_JSON" ]; then
-    echo "[WARN] Gagal mengambil data release dari GitHub API. Cek koneksi, token, atau rate limit."
+if [ $CURL_EXIT_CODE -ne 0 ] || [ -z "$RELEASE_JSON" ]; then
+    echo "[WARN] Gagal mengambil data release dari GitHub API."
+    if [ -f /tmp/github_api_error.txt ]; then
+        echo "[DEBUG] Curl Error: $(cat /tmp/github_api_error.txt)"
+    fi
+    echo "[INFO] Cek koneksi, GITHUB_TOKEN (jika ada), atau rate limit API GitHub."
     LATEST_URL=""
 else
     # Mencari URL download dengan cara yang lebih kuat terhadap format JSON (single line atau pretty print)
