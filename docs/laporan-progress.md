@@ -4990,3 +4990,241 @@ Posisi tombol **Simpan Perubahan** (Edit) dan **Simpan Role** (Create) pada modu
 #### Catatan untuk Sprint Berikutnya
 
 - Tidak ada.
+
+---
+
+### Eka — 13 Mei 2026 10:36
+
+**Tugas** : Update Changelog untuk Rilis v1.2.2
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menambahkan entry `[2026-05-13] UI Role Management` pada file `docs/changelog.md`.
+
+#### Hasil
+
+- Changelog telah siap untuk rilis versi terbaru.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026 10:36
+- Hasil : Bersih
+
+#### Langkah Selanjutnya
+
+- Nisa melakukan tagging dan push.
+
+---
+
+### Nisa — 13 Mei 2026 10:36
+
+**Tugas** : Rilis GitHub v1.2.2
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Melakukan commit semua perubahan terbaru dengan pesan rilis.
+- Membuat tag git `v1.2.2`.
+- Melakukan push ke branch `main` dan push tag ke `origin`.
+
+#### Hasil
+
+- Kode versi terbaru v1.2.2 sudah tersedia di repository GitHub.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026 10:36
+- Hasil : Bersih
+
+#### Langkah Selanjutnya
+
+- Siap di-review Gilang untuk laporan final.
+
+---
+
+### LAPORAN FINAL — GILANG (13 Mei 2026)
+
+**Tugas** : Rilis GitHub v1.2.2
+**Tanggal** : 13 Mei 2026
+**Status** : Selesai
+
+#### Ringkasan Agen
+
+| Agen  | Tugas | Status | laravel.log |
+| ----- | ----- | ------ | ----------- |
+| Eka   | Update Changelog | OK | Bersih |
+| Nisa  | Git Tag & Push v1.2.2 | OK | Bersih |
+
+#### Definition of Done
+
+- [x] Changelog diperbarui dengan fitur UI terbaru
+- [x] Tag git v1.2.2 berhasil dibuat dan di-push ke GitHub
+- [x] laravel.log bersih — tidak ada error baru setelah perubahan
+
+#### Ringkasan Hasil
+
+Rilis versi **v1.2.2** telah berhasil dipublikasikan ke GitHub. Versi ini mencakup pembaruan UI pada modul Role Management (lebar halaman full-width dan posisi tombol simpan yang baru) serta perbaikan sistem permission yang dilakukan sebelumnya. Repository saat ini sudah sinkron dengan versi produksi terbaru.
+
+#### Catatan untuk Sprint Berikutnya
+
+- Tidak ada.
+
+---
+
+### Aulia — 13 Mei 2026 11:05
+
+**Tugas** : Backend Jam Operasional
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Verifikasi tabel `jam_operasional` dan Model `JamOperasional`.
+- Verifikasi `OfficeHourController` untuk manajemen data jam operasional.
+- Verifikasi middleware `CheckOfficeHour` dan integrasi di `web.php`.
+- Penambahan logic `isOfficeHour()` di `Helpers.php`.
+
+#### Hasil
+
+- Backend siap menangani input dan proteksi jam operasional.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026 11:05
+- Hasil : Bersih
+- Detail error: Tidak ada error
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Dika melakukan verifikasi dan penyesuaian UI.
+
+---
+
+### Dika — 13 Mei 2026 11:06
+
+**Tugas** : UI Jam Operasional
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Verifikasi view `admin/pengaturan/jam-operasional.blade.php`.
+- Memastikan form menggunakan Tabler Icons dan responsif.
+- Memastikan interaksi switch (Buka/Tutup) menonaktifkan input jam secara real-time.
+
+#### Hasil
+
+- Antarmuka admin untuk pengaturan jam operasional berfungsi dengan baik dan estetik.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026 11:06
+- Hasil : Bersih
+
+#### Langkah Selanjutnya
+
+- Sinta melakukan QA Testing.
+
+---
+
+### Sinta — 13 Mei 2026 11:07
+
+**Tugas** : QA Jam Operasional
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menjalankan `JamOperasionalSeeder` untuk memastikan data awal tersedia.
+- Menguji happy path: simpan jam operasional valid.
+- Menguji proteksi: mengakses form di luar jam kerja (middleware working).
+- Verifikasi tampilan error `tutup.blade.php`.
+
+#### Hasil
+
+- Fitur berjalan 100% sesuai spesifikasi. Proteksi middleware aktif.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026 11:07
+- Hasil : Bersih
+
+#### Langkah Selanjutnya
+
+- Eka melakukan update dokumentasi.
+
+---
+
+### Eka — 13 Mei 2026 11:08
+
+**Tugas** : Update Dokumentasi Jam Operasional
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Verifikasi `user-manual-admin.md` sudah mencakup panduan jam operasional.
+- Verifikasi `changelog.md` sudah mencatat fitur Office Hour.
+
+#### Hasil
+
+- Dokumentasi sinkron dengan fitur terbaru.
+
+#### Langkah Selanjutnya
+
+- Nisa melakukan rilis v1.2.3.
+
+---
+
+### Nisa — 13 Mei 2026 11:09
+
+**Tugas** : Rilis GitHub v1.2.3
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Melakukan commit semua perubahan (termasuk laporan progress).
+- Membuat tag git `v1.2.3`.
+- Push ke origin main dan push tags.
+
+#### Hasil
+
+- Versi v1.2.3 berhasil dirilis.
+
+#### Langkah Selanjutnya
+
+- Siap di-review Gilang.
+
+---
+
+### LAPORAN FINAL — GILANG (13 Mei 2026)
+
+**Tugas** : Fitur Jam Operasional (Office Hour)
+**Tanggal** : 13 Mei 2026
+**Status** : Selesai
+
+#### Ringkasan Agen
+
+| Agen | Tugas | Status | laravel.log |
+| :--- | :--- | :--- | :--- |
+| Aulia | Backend Logic | OK | Bersih |
+| Dika | UI/UX Admin | OK | Bersih |
+| Sinta | QA & Middleware Test | OK | Bersih |
+| Eka | Documentation | OK | - |
+| Nisa | Release v1.2.3 | OK | Bersih |
+
+#### Definition of Done
+
+- [x] Admin bisa input jam operasional di `/admin/pengaturan/jam-operasional`
+- [x] Proteksi otomatis via middleware di form publik
+- [x] Data awal tersedia via seeder
+- [x] Dokumentasi manual dan changelog lengkap
+- [x] Rilis v1.2.3 berhasil dipublikasikan
+
+#### Ringkasan Hasil
+
+Fitur Jam Operasional telah berhasil diimplementasikan secara penuh. Admin kini memiliki kendali penuh atas waktu pelayanan publik melalui dashboard. Sistem secara otomatis menutup akses form di luar jam yang ditentukan, meningkatkan profesionalisme dan efisiensi manajemen pelayanan di MAN 1 Kota Bandung.
+
+#### Catatan untuk Sprint Berikutnya
+
+- Monitor penggunaan fitur oleh admin dan kumpulkan feedback visual.
+
+---
