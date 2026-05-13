@@ -380,5 +380,6 @@
       btn.innerHTML = '<i class="ti ti-loader ti-spin"></i> Memverifikasi...';
     });
   </script>
+  @include('components.closed-service-modal')
 </body>
 </html>

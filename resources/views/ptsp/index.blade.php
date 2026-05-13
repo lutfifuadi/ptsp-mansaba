@@ -54,12 +54,12 @@
       }
 
       .container {
-        height: 100vh;
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
         justify-content: center;
-        padding-top: 20px;
-        padding-bottom: 20px;
+        padding-top: 40px;
+        padding-bottom: 40px;
       }
     }
 
@@ -415,40 +415,101 @@
       }
     }
 
-    /* Mobile Responsive */
+    /* Mobile Responsive Redesign */
     @media (max-width: 768px) {
-      .header h1 {
-        font-size: 2rem;
+      .container {
+        padding: 30px 20px;
       }
 
-      .header h2 {
-        font-size: 1.5rem;
+      .header {
+        margin-bottom: 40px;
+      }
+
+      .header h1 {
+        font-size: 1.8rem;
+        line-height: 1.2;
+        margin-bottom: 16px;
+      }
+
+      .office-status {
+        font-size: 0.8rem;
+        padding: 5px 12px;
+        margin-bottom: 24px;
+      }
+
+      .header p {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        padding: 0 10px;
+      }
+
+      .hero-actions {
+        margin-top: 28px;
+        width: 100%;
+      }
+
+      .btn-track {
+        width: 100%;
+        justify-content: center;
+        padding: 14px;
+        font-size: 1rem;
+      }
+
+      .services-layout {
+        gap: 45px;
+        padding: 0;
+      }
+
+      .section-title {
+        margin-bottom: 20px;
+      }
+
+      .section-title h3 {
+        font-size: 0.9rem;
+        letter-spacing: 3px;
+      }
+
+      .section-title::before,
+      .section-title::after {
+        width: 40px;
       }
 
       .quick-menu-grid {
-        flex-wrap: wrap;
-        gap: 10px;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        width: 100%;
       }
 
       .menu-item {
-        width: 140px;
-        min-height: 140px;
-        padding: 15px;
+        width: 100%;
+        min-height: 125px;
+        padding: 22px 10px;
+        gap: 12px;
+        background: rgba(30, 41, 59, 0.5);
+        border: 1px solid rgba(52, 211, 153, 0.15);
       }
 
       .icon-wrapper {
-        width: 38px;
-        height: 38px;
-        font-size: 18px;
+        width: 42px;
+        height: 42px;
+        font-size: 20px;
       }
 
       .menu-content h4 {
-        font-size: 0.8rem;
-        margin-bottom: 0;
+        font-size: 0.85rem;
+        font-weight: 700;
+        line-height: 1.4;
       }
 
       .menu-content p {
         display: none;
+      }
+
+      .footer {
+        margin-top: 40px;
+        font-size: 0.8rem;
+        opacity: 0.7;
       }
     }
 

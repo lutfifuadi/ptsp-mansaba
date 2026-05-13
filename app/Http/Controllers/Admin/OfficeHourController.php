@@ -18,7 +18,6 @@ class OfficeHourController extends Controller
     {
         $data = $request->validate([
             'jam' => 'required|array',
-            'jam.*.hari' => 'required|integer',
             'jam.*.is_aktif' => 'nullable|boolean',
             'jam.*.jam_buka' => 'nullable|date_format:H:i',
             'jam.*.jam_tutup' => 'nullable|date_format:H:i',
@@ -26,7 +25,7 @@ class OfficeHourController extends Controller
 
         foreach ($request->jam as $hari => $config) {
             JamOperasional::where('hari', $hari)->update([
-                'is_aktif' => isset($config['is_aktif']),
+                'is_aktif' => ($config['is_aktif'] ?? '0') === '1',
                 'jam_buka' => $config['jam_buka'] ?? null,
                 'jam_tutup' => $config['jam_tutup'] ?? null,
             ]);

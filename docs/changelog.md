@@ -1,3 +1,14 @@
+[2026-05-13] Fix: Modal Buku Tamu — Penambahan middleware `office.hour` pada rute GET `/buku-tamu` agar modal layanan tutup dapat terpicu dengan benar.
+
+#### Yang Sudah Dilakukan
+- Modifikasi `app/Http/Middleware/CheckOfficeHour.php` untuk mendukung sharing variabel `$is_office_closed` ke view.
+- Menambahkan middleware `office.hour` pada rute publik Buku Tamu di `web.php`.
+- Memastikan request non-GET tetap diblokir saat jam tutup.
+
+[2026-05-13] Final UI Standard: Modal Layanan Tutup — Penyesuaian ukuran font lebih proporsional dan standarisasi border-radius maksimal 5px sesuai feedback user untuk tampilan yang lebih clean dan profesional.
+[2026-05-13] Final UI Polish: Modal Layanan Tutup Landscape — Transformasi total modal menjadi layout landscape split-view yang ultra-premium. Perbaikan presisi padding, tipografi modern, dan animasi transisi yang lebih halus.
+[2026-05-13] Fitur Modal Layanan Tutup Premium — Implementasi popup modal dengan desain premium (backdrop-blur, Tabler Icons, animasi smooth) yang muncul otomatis di halaman form (Surat, Buku Tamu, Permohonan) saat di luar jam operasional. Middleware diperbarui agar mengizinkan akses GET namun memblokir interaksi dan submission.
+[2026-05-13] Fix Jam Operasional Tidak Bisa Disimpan — Perbaikan validasi `jam.*.hari` di `OfficeHourController@update` yang memblokir request karena field `hari` tidak pernah dikirim form. Ditambah hidden input `is_aktif=0` dan `hari` di blade agar form robust untuk semua skenario (termasuk toggle semua non-aktif).
 [2026-05-13] Fix Duplikasi Konten Guru — Perbaikan bug di `AdminGuruController` yang menyebabkan seluruh halaman ter-render ulang di dalam tabel saat melakukan pencarian (AJAX).
 [2026-05-13] Fitur Lihat Password di Manajemen Pengguna — Penambahan tombol toggle (ikon mata) pada field password di halaman Tambah & Edit Pengguna (`/admin/role`). Memudahkan admin memverifikasi password yang diketik.
 [2026-05-13] Standarisasi Pagination Guru — Perbaikan styling pagination pada halaman Data Guru agar selaras dengan Data Siswa, mencakup penambahan informasi "Halaman X dari Y" dan padding yang konsisten.
@@ -45,7 +56,7 @@
 [2026-05-12] Integrasi Menu Sidebar Admin: Penambahan link akses langsung ke tiap kategori layanan PTSP di menu navigasi utama.
 [2026-05-12] Dokumentasi API Admin: Penambahan referensi endpoint administratif di docs/api/admin-ptsp.md.
 [2026-05-12] Proporsionalitas font dashboard: perbesar font stat, heading, tabel; perkecil font quick menu.
-[2026-05-12] Perkecil font form secara global (form-control, form-label, dll) via app.css + form surat publik.
+[2026-05-12] Perkecil font form secara global (form-control, font-label, dll) via app.css + form surat publik.
 [2026-05-12] Sinkronisasi UI Admin dengan Dashboard — shared CSS partial, stat-card, tbl, st-badge pattern di 12 halaman admin
 [2026-05-12] Fitur Dropdown Kelas — input kelas di konfirmasi surat siswa & admin create/edit berubah dari text menjadi select dengan 36 opsi kelas (X.E-1 s/d XII.F-12). Validasi backend menggunakan config('kelas').
 [2026-05-12] Hapus field 'Nomor Peserta' dari data siswa — Model, Controller (validasi + search), Import/Export, Migration drop column, View edit/create/index. UI Cleanup form edit & create siswa mengikuti gaya halaman pengaturan lembaga (form-actions, btn-primary).

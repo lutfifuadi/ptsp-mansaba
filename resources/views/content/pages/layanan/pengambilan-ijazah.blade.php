@@ -554,6 +554,7 @@
       });
     });
   </script>
+  @include('components.closed-service-modal')
 </body>
 
 </html>

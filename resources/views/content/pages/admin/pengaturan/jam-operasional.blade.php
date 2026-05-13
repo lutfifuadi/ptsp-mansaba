@@ -77,7 +77,9 @@ $configData = Helper::appClasses();
                 <tr>
                   <td class="fw-bold">{{ $jam->nama_hari }}</td>
                   <td>
+                    <input type="hidden" name="jam[{{ $jam->hari }}][hari]" value="{{ $jam->hari }}">
                     <div class="form-check form-switch">
+                      <input type="hidden" name="jam[{{ $jam->hari }}][is_aktif]" value="0">
                       <input class="form-check-input" type="checkbox" name="jam[{{ $jam->hari }}][is_aktif]" value="1" {{ $jam->is_aktif ? 'checked' : '' }}>
                       <label class="form-check-label">{{ $jam->is_aktif ? 'Buka' : 'Tutup' }}</label>
                     </div>

@@ -53,7 +53,7 @@ Route::prefix('ptsp')->name('ptsp.')->group(function () {
 Route::get('/', [PermohonanController::class, 'index'])->name('home');
 
 // Guest Book Routes
-Route::get('/buku-tamu', [GuestBookController::class, 'index'])->name('buku-tamu.index');
+Route::get('/buku-tamu', [GuestBookController::class, 'index'])->name('buku-tamu.index')->middleware('office.hour');
 Route::post('/buku-tamu', [GuestBookController::class, 'store'])->name('buku-tamu.store')->middleware('office.hour');
 
 // Public Guru API
