@@ -594,6 +594,14 @@
     .stat-card:nth-child(6) {
       animation-delay: 0.30s;
     }
+
+    .stat-card:nth-child(7) {
+      animation-delay: 0.35s;
+    }
+
+    .stat-card:nth-child(8) {
+      animation-delay: 0.40s;
+    }
   </style>
 @endsection
 
@@ -751,6 +759,43 @@
       </div>
     </div>
 
+    {{-- Total Tamu --}}
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card stat-card h-100" style="--accent-color: #7c3aed; --icon-bg: #f3e8ff;">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-2">
+            <div class="flex-grow-1">
+              <p class="stat-label">Total Tamu</p>
+              <div class="stat-value">{{ number_format($totalTamu) }}</div>
+            </div>
+            <div class="stat-icon"><i class="ti tabler-users"></i></div>
+          </div>
+          <div class="mt-3" style="font-size:0.75rem; color:var(--muted);">
+            <span class="today-chip">+{{ $tamuHariIni }} hari ini</span>
+            &middot; {{ $tamuMingguIni }} minggu ini
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{-- Tamu Hari Ini --}}
+    <div class="col-lg-3 col-md-6 col-sm-6">
+      <div class="card stat-card h-100" style="--accent-color: #0891b2; --icon-bg: #cffafe;">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-2">
+            <div class="flex-grow-1">
+              <p class="stat-label">Tamu Hari Ini</p>
+              <div class="stat-value">{{ number_format($tamuHariIni) }}</div>
+            </div>
+            <div class="stat-icon"><i class="ti tabler-user-check"></i></div>
+          </div>
+          <div class="mt-3" style="font-size:0.75rem; color:var(--muted);">
+            {{ $tamuBulanIni }} tamu bulan {{ \Carbon\Carbon::now()->locale('id')->isoFormat('MMMM') }}
+          </div>
+        </div>
+      </div>
+    </div>
+
     {{-- ── PERMOHONAN TERBARU ──────────────────────────── --}}
     <div class="col-12 col-xl-8">
       <div class="panel h-100">
@@ -875,6 +920,65 @@
             </div>
           </div>
 
+        </div>
+      </div>
+    </div>
+
+    {{-- ── BUKU TAMU TERBARU ────────────────────────────── --}}
+    <div class="col-12">
+      <div class="panel">
+        <div class="section-head">
+          <div class="section-head-title">
+            <span class="dot" style="background:#7c3aed"></span>
+            Buku Tamu Terbaru
+          </div>
+          <a href="{{ route('admin.guest-book.index') }}" class="btn-view">Lihat Semua →</a>
+        </div>
+        <div class="table-responsive">
+          <table class="table tbl mb-0">
+            <thead>
+              <tr>
+                <th class="ps-4">Nama</th>
+                <th>Instansi</th>
+                <th>Tujuan</th>
+                <th class="text-end pe-4">Waktu</th>
+              </tr>
+            </thead>
+            <tbody>
+              @forelse($tamuTerbaru as $t)
+                <tr>
+                  <td class="ps-4">
+                    <div class="d-flex align-items-center gap-2">
+                      <div class="av" style="background:#7c3aed;">{{ substr($t->nama_lengkap, 0, 1) }}</div>
+                      <div>
+                        <div style="font-weight:700; font-size:0.88rem;">{{ $t->nama_lengkap }}</div>
+                        <div style="font-size:0.75rem; color:var(--muted);">{{ $t->no_whatsapp }}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div style="font-weight:600; font-size:0.85rem;">{{ $t->nama_instansi ?? '—' }}</div>
+                    <div style="font-size:0.7rem; color:var(--muted);">{{ $t->jenis_instansi ?? '—' }}</div>
+                  </td>
+                  <td>
+                    <span style="font-size:0.85rem;">{{ $t->tujuan }}</span>
+                  </td>
+                  <td class="text-end pe-4" style="font-size:0.78rem; color:var(--muted); white-space:nowrap;">
+                    {{ $t->created_at->diffForHumans() }}
+                  </td>
+                </tr>
+              @empty
+                <tr>
+                  <td colspan="4" class="p-0">
+                    <div class="empty-state">
+                      <i class="ti tabler-book-off"></i>
+                      <p>Belum ada tamu yang berkunjung.</p>
+                    </div>
+                  </td>
+                </tr>
+              @endforelse
+            </tbody>
+          </table>
         </div>
       </div>
     </div>

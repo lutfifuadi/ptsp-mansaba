@@ -5228,3 +5228,258 @@ Fitur Jam Operasional telah berhasil diimplementasikan secara penuh. Admin kini 
 - Monitor penggunaan fitur oleh admin dan kumpulkan feedback visual.
 
 ---
+
+### Aulia — 13 Mei 2026
+
+**Tugas** : Backend — Update Dashboard dengan Data Buku Tamu
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menambahkan `use App\Models\GuestBook;` di `HomePage.php`
+- Menambahkan 5 query di `HomePage::index()`: `$totalTamu`, `$tamuHariIni`, `$tamuMingguIni`, `$tamuBulanIni`, `$tamuTerbaru`
+- Mengirim semua variabel baru ke view via `compact()`
+- PHP syntax OK, tidak ada error
+
+#### Hasil
+
+- Controller dashboard mengirim data buku tamu ke view: total, hari ini, minggu ini, bulan ini, 5 tamu terbaru
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026
+- Hasil : Bersih
+- Detail error: Tidak ada error baru
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Dika mengerjakan frontend
+
+---
+
+### Dika — 13 Mei 2026
+
+**Tugas** : Frontend — Tampilkan Data Buku Tamu di Dashboard
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menambahkan 2 kartu stat baru: "Total Tamu" (ungu, `tabler-users`) dan "Tamu Hari Ini" (cyan, `tabler-user-check`)
+- Menambahkan animasi fadeUp untuk stat card ke-7 dan ke-8
+- Menambahkan tabel "Buku Tamu Terbaru" (full-width) setelah Akses Cepat
+- Tabel: kolom Nama, Instansi, Tujuan, Waktu + empty state `tabler-book-off`
+- Link "Lihat Semua" mengarah ke `route('admin.guest-book.index')`
+- Semua icon menggunakan Tabler Icons
+
+#### Hasil
+
+- Dashboard menampilkan 8 stat cards (6 permohonan + 2 buku tamu) + tabel buku tamu terbaru
+- UI konsisten dengan tema dashboard yang sudah ada
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026
+- Hasil : Bersih
+- Detail error: Tidak ada error baru
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Tio dokumentasi API
+
+---
+
+### Tio — 13 Mei 2026
+
+**Tugas** : Dokumentasi API Dashboard
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Membuat `docs/api/dashboard.md` — dokumentasi endpoint `/dashboard`
+- Mencantumkan semua variable yang dikirim ke view beserta sumbernya
+
+#### Hasil
+
+- Dokumentasi API dashboard tersedia di `docs/api/dashboard.md`
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Ayu security review
+
+---
+
+### Ayu — 13 Mei 2026
+
+**Tugas** : Security Review — Data Buku Tamu di Dashboard
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Verifikasi middleware dashboard: `auth:sanctum`, `verified` — tetap aktif
+- Verifikasi data buku tamu yang ditampilkan: hanya data non-sensitif (nama, instansi, tujuan, waktu)
+- Verifikasi tidak ada celah IDOR (data aggregate dari query, tidak ada parameter user)
+- Verifikasi tidak ada perubahan pada route atau controller lain
+
+#### Hasil
+
+- Tidak ada celah keamanan. Data buku tamu di dashboard aman untuk ditampilkan ke admin yang terautentikasi.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Sinta QA testing
+
+---
+
+### Sinta — 13 Mei 2026
+
+**Tugas** : QA — Data Buku Tamu di Dashboard
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+**Happy Path Testing:**
+- ✅ Route `/dashboard` aktif dan menampilkan 8 stat cards
+- ✅ Kartu "Total Tamu" menampilkan angka yang sesuai dengan database
+- ✅ Kartu "Tamu Hari Ini" menampilkan angka yang sesuai
+- ✅ Tabel "Buku Tamu Terbaru" menampilkan 5 data terbaru dengan kolom lengkap
+- ✅ Link "Lihat Semua" mengarah ke `/admin/buku-tamu`
+
+**Edge Case Testing:**
+- ✅ Empty state: tabel menampilkan "Belum ada tamu yang berkunjung" ketika data kosong
+- ✅ Data null: instansi menampilkan "—" ketika kosong
+- ✅ Statistik 0: kartu menampilkan 0 ketika belum ada data
+
+#### Hasil
+
+- Semua test case lulus. Dashboard menampilkan data buku tamu dengan benar.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026
+- Hasil : Bersih
+- Detail error: Tidak ada error baru saat fitur digunakan
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Eka update dokumentasi
+
+---
+
+### Eka — 13 Mei 2026
+
+**Tugas** : Update Dokumentasi — Data Buku Tamu di Dashboard
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menambahkan entry di `docs/changelog.md` terkait penambahan data buku tamu di dashboard
+- Memverifikasi laporan semua agen sudah tercatat di `docs/laporan-progress.md`
+
+#### Hasil
+
+- Changelog telah diperbarui dengan fitur baru
+- Progress report lengkap untuk semua agen
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Nisa release checklist
+
+---
+
+### Nisa — 13 Mei 2026
+
+**Tugas** : Release Checklist — Data Buku Tamu di Dashboard
+**Status** : Selesai
+
+#### Release Checklist
+
+| Item | Status | Keterangan |
+|------|--------|------------|
+| Backend: HomePage controller | ✅ | 5 query GuestBook + compact |
+| Frontend: 2 stat cards + tabel | ✅ | Tabler Icons, empty state |
+| API Documentation | ✅ | docs/api/dashboard.md |
+| Security Review | ✅ | Ayu: tidak ada celah |
+| QA Testing | ✅ | Sinta: happy + edge case, log bersih |
+| Changelog | ✅ | docs/changelog.md diupdate |
+| laravel.log | ✅ Bersih | Diverifikasi semua agen |
+| Konflik dengan fitur existing | ✅ | Tidak ada — hanya tambah data |
+
+**Rekomendasi: GO — Fitur siap untuk production.**
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk Gilang verifikasi final
+
+---
+
+### LAPORAN FINAL — GILANG
+
+**Tugas** : Tampilkan Data Buku Tamu di Dashboard
+**Tanggal** : 13 Mei 2026
+**Status** : Selesai
+
+#### Ringkasan Agen
+
+| Agen  | Tugas | Status | laravel.log |
+| ----- | ----- | ------ | ----------- |
+| Aulia | Backend — Query GuestBook di HomePage controller | OK | Bersih |
+| Dika  | Frontend — 2 stat cards + tabel buku tamu terbaru | OK | Bersih |
+| Tio   | API Docs — docs/api/dashboard.md | OK | Bersih |
+| Ayu   | Security — Auth middleware, data non-sensitif | OK | Bersih |
+| Sinta | QA — Happy path + edge case, log monitoring | OK | Bersih |
+| Eka   | Docs — Update changelog & progress report | OK | Bersih |
+| Nisa  | Release — Checklist lengkap, GO | OK | Bersih |
+
+#### Definition of Done
+
+- [x] Aulia konfirmasi: backend jalan, tidak ada error laravel.log
+- [x] Aulia konfirmasi: hasil pengecekan laravel.log dilampirkan
+- [x] Dika konfirmasi: UI responsif, tidak ada error console browser
+- [x] Tio konfirmasi: endpoint baru terdokumentasi di docs/api/
+- [x] Ayu konfirmasi: tidak ada celah keamanan
+- [x] Sinta konfirmasi: QA sign-off, min. 1 happy path + 1 edge case
+- [x] Sinta konfirmasi: pengujian sambil memantau laravel.log, tidak ada error baru saat fitur digunakan
+- [x] Eka konfirmasi: dokumentasi diupdate di docs/
+- [x] Nisa konfirmasi: release checklist lengkap
+
+#### Ringkasan Hasil
+
+Fitur **Data Buku Tamu di Dashboard** telah berhasil diimplementasikan. Halaman `/dashboard` kini menampilkan:
+1. **2 Kartu Stat Baru**: "Total Tamu" (total seluruh kunjungan) dan "Tamu Hari Ini" (kunjungan hari ini) — melengkapi 6 kartu stat permohonan yang sudah ada
+2. **Tabel Buku Tamu Terbaru**: 5 data kunjungan terbaru dengan kolom Nama, Instansi, Tujuan, dan Waktu — tampil full-width setelah panel Akses Cepat
+3. **Empty State**: Tabel menampilkan pesan "Belum ada tamu yang berkunjung" jika data kosong
+
+Perubahan hanya pada layer Controller (`HomePage.php`) dan View (`pages-home.blade.php`) — tanpa migrasi database atau perubahan struktur data.
+
+#### Catatan untuk Sprint Berikutnya
+
+- Tidak ada
+
+---

@@ -1,3 +1,4 @@
+[2026-05-13] Dashboard Buku Tamu — Halaman `/dashboard` kini menampilkan 2 kartu statistik baru (Total Tamu, Tamu Hari Ini) dan tabel 5 buku tamu terbaru. Data diambil dari model GuestBook. Backend: HomePage controller, Frontend: 2 stat cards + tabel, API docs diperbarui.
 [2026-05-13] UI Role Management — Penyesuaian lebar halaman Edit & Tambah menjadi full width (col-12) dan pemindahan tombol simpan ke posisi kanan bawah form untuk meningkatkan UX.
 [2026-05-13] Fix Delete Role — Route parameter mismatch pada resource `role-management` diperbaiki. Role `admin` dan `operator` diproteksi dari penghapusan. Validasi user terdampak sebelum hapus role. Dokumentasi endpoint dan security review selesai.
 [2026-05-13] Permission System — 24 permission dibuat dan di-assign ke 5 role (admin, operator, mitra, staff, user). Middleware `can:permission-name` ditambahkan ke seluruh route admin. Role & permission mapping terdokumentasi.
