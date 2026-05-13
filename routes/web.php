@@ -22,6 +22,17 @@ use App\Http\Controllers\Admin\AdminPermohonanController;
 use App\Http\Controllers\Admin\AdminRoleController;
 use App\Http\Controllers\Admin\RoleManagementController;
 use App\Http\Controllers\Admin\OfficeHourController;
+use App\Http\Controllers\ChatController;
+use App\Http\Controllers\PwaController;
+
+// PWA Routes
+Route::get('/manifest.json', [PwaController::class, 'manifest']);
+Route::get('/sw.js', [PwaController::class, 'serviceWorker']);
+
+// AI Chat Route
+Route::post('/api/chat', [ChatController::class, 'chat'])
+  ->middleware('throttle:ai_chat')
+  ->name('api.chat');
 
 
 // PTSP Routes

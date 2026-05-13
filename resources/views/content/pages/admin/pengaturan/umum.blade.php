@@ -129,6 +129,57 @@ $configData = Helper::appClasses();
             </div>
           </div>
         </div>
+        
+        {{-- Integrasi AI Chat --}}
+        <div class="col-12 col-md-6 col-lg-6">
+          <div class="panel shadow-sm h-100">
+            <div class="section-head">
+              <h5 class="section-head-title"><span class="dot"></span> Integrasi AI Chat (Gemini)</h5>
+            </div>
+            <div class="panel-body">
+              <div class="mb-0">
+                <label class="form-label fw-bold">
+                  <i class="ti tabler-key me-1 text-primary"></i> Gemini API Keys (Round Robin)
+                </label>
+                <textarea name="gemini_api_keys" class="form-control" rows="5" placeholder="Masukkan API Key Gemini, pisahkan dengan koma atau baris baru">{{ old('gemini_api_keys', $pengaturan['gemini_api_keys']) }}</textarea>
+                <div class="form-text">Sistem akan menggunakan API Key ini secara bergantian (Round Robin) untuk menghindari limitasi.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {{-- Pengaturan PWA --}}
+        <div class="col-12 col-md-6 col-lg-6">
+          <div class="panel shadow-sm h-100">
+            <div class="section-head">
+              <h5 class="section-head-title"><span class="dot"></span> Pengaturan PWA (Progressive Web App)</h5>
+            </div>
+            <div class="panel-body">
+              <div class="row g-3">
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-bold">Nama PWA</label>
+                  <input type="text" name="pwa_name" class="form-control" value="{{ old('pwa_name', $pengaturan['pwa_name']) }}" placeholder="Aplikasi PTSP">
+                </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-bold">Nama Singkat (Short Name)</label>
+                  <input type="text" name="pwa_short_name" class="form-control" value="{{ old('pwa_short_name', $pengaturan['pwa_short_name']) }}" placeholder="PTSP">
+                </div>
+                <div class="col-12">
+                  <label class="form-label fw-bold">Deskripsi PWA</label>
+                  <input type="text" name="pwa_description" class="form-control" value="{{ old('pwa_description', $pengaturan['pwa_description']) }}" placeholder="Deskripsi sistem">
+                </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-bold">Warna Latar (Background)</label>
+                  <input type="color" name="pwa_background_color" class="form-control form-control-color w-100" value="{{ old('pwa_background_color', $pengaturan['pwa_background_color']) }}">
+                </div>
+                <div class="col-12 col-md-6">
+                  <label class="form-label fw-bold">Warna Tema (Theme)</label>
+                  <input type="color" name="pwa_theme_color" class="form-control form-control-color w-100" value="{{ old('pwa_theme_color', $pengaturan['pwa_theme_color']) }}">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       
       {{-- Redaksi Notifikasi WhatsApp --}}

@@ -1,3 +1,6 @@
+[2026-05-14] Fitur PWA & AI Chat Round Robin — Implementasi fitur Progressive Web App yang dapat dikonfigurasi sepenuhnya melalui dashboard admin (nama, warna, deskripsi). Peningkatan AI Chat Assistant dengan dukungan multiple API Key menggunakan logika Round Robin dan enkripsi otomatis untuk keamanan kunci. UI Chat diperbarui dengan estetika premium glassmorphism.
+
+
 [2026-05-13] Fix: Modal Buku Tamu — Penambahan middleware `office.hour` pada rute GET `/buku-tamu` agar modal layanan tutup dapat terpicu dengan benar.
 
 #### Yang Sudah Dilakukan

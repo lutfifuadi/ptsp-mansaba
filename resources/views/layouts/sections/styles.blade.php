@@ -1,4 +1,6 @@
 <!-- BEGIN: Theme CSS-->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="{{ \App\Models\Pengaturan::get('pwa_theme_color', '#7367f0') }}">
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

@@ -100,6 +100,7 @@
   <!-- $isFront is used to append the front layout scripts only on the front layout otherwise the variable will be blank -->
   @include('layouts/sections/scripts' . $isFront)
   @include('components.closed-service-modal')
+  @include('components.ai-chat-widget')
 </body>
 
 </html>

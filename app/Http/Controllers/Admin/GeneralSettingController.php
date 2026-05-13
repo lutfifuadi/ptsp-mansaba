@@ -27,6 +27,14 @@ class GeneralSettingController extends Controller
             'footer_made_by' => Pengaturan::get('footer_made_by', 'Pixinvent'),
             'footer_made_by_url' => Pengaturan::get('footer_made_by_url', 'https://pixinvent.com'),
             'footer_show_links' => Pengaturan::get('footer_show_links', '1'),
+            // PWA Settings
+            'pwa_name'          => Pengaturan::get('pwa_name', 'Aplikasi PTSP'),
+            'pwa_short_name'    => Pengaturan::get('pwa_short_name', 'PTSP'),
+            'pwa_description'   => Pengaturan::get('pwa_description', 'Sistem Informasi Pelayanan Terpadu Satu Pintu MAN 1 Kota Bandung'),
+            'pwa_background_color' => Pengaturan::get('pwa_background_color', '#ffffff'),
+            'pwa_theme_color'   => Pengaturan::get('pwa_theme_color', '#7367f0'),
+            // AI Chat Settings
+            'gemini_api_keys'   => Pengaturan::get('gemini_api_keys', ''),
         ];
 
         foreach ($wa->getAllTemplates() as $key => $value) {
@@ -54,6 +62,12 @@ class GeneralSettingController extends Controller
             'footer_made_by' => ['nullable', 'string', 'max:100'],
             'footer_made_by_url' => ['nullable', 'url', 'max:255'],
             'footer_show_links' => ['nullable', 'boolean'],
+            'pwa_name'          => ['nullable', 'string', 'max:100'],
+            'pwa_short_name'    => ['nullable', 'string', 'max:20'],
+            'pwa_description'   => ['nullable', 'string', 'max:255'],
+            'pwa_background_color' => ['nullable', 'string', 'max:20'],
+            'pwa_theme_color'   => ['nullable', 'string', 'max:20'],
+            'gemini_api_keys'   => ['nullable', 'string'],
         ];
 
         $templateKeys = [
@@ -84,6 +98,12 @@ class GeneralSettingController extends Controller
         Pengaturan::set('footer_made_by', $request->footer_made_by);
         Pengaturan::set('footer_made_by_url', $request->footer_made_by_url);
         Pengaturan::set('footer_show_links', $request->has('footer_show_links') ? '1' : '0');
+        Pengaturan::set('pwa_name', $request->pwa_name);
+        Pengaturan::set('pwa_short_name', $request->pwa_short_name);
+        Pengaturan::set('pwa_description', $request->pwa_description);
+        Pengaturan::set('pwa_background_color', $request->pwa_background_color);
+        Pengaturan::set('pwa_theme_color', $request->pwa_theme_color);
+        Pengaturan::set('gemini_api_keys', $request->gemini_api_keys);
 
         foreach ($templateKeys as $key) {
             if ($request->has($key)) {

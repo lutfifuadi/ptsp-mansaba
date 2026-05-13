@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Lacak Permohonan - PTSP MAN 1 Kota Bandung</title>
   <link rel="icon" type="image/png"
     href="{{ \App\Models\Pengaturan::get('logo_kanan') ?: asset('assets/img/favicon/favicon.ico') }}" />
@@ -462,6 +463,7 @@
       <p>&copy; {{ date('Y') }} MAN 1 KOTA BANDUNG. Dikelola oleh Tim IT.</p>
     </footer>
   </div>
+  @include('components.ai-chat-widget')
 </body>
 
 </html>

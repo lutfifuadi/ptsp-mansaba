@@ -741,6 +741,7 @@
     });
   </script>
   @include('components.closed-service-modal')
+  @include('components.ai-chat-widget')
 </body>
 
 </html>
