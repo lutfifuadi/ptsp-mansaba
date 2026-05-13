@@ -92,9 +92,12 @@ $configData = Helper::appClasses();
           </div>
           <div class="col-md-6 mb-3">
             <label class="form-label fw-bold">Password <small class="text-muted">(Kosongkan jika tidak diubah)</small></label>
-            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
-              placeholder="Minimal 8 karakter">
-            @error('password')<div class="invalid-feedback">{{ $message }}</div>@enderror
+            <div class="input-group input-group-merge">
+              <input type="password" name="password" id="password" class="form-control @error('password') is-invalid @enderror"
+                placeholder="Minimal 8 karakter">
+              <span class="input-group-text cursor-pointer" id="togglePassword"><i class="ti tabler-eye"></i></span>
+            </div>
+            @error('password')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
           </div>
         </div>
 
@@ -148,5 +151,28 @@ function selectRole(el) {
   el.classList.add('active');
   document.getElementById('roleInput').value = el.dataset.value;
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  const togglePassword = document.getElementById('togglePassword');
+  const password = document.getElementById('password');
+
+  if (togglePassword && password) {
+    togglePassword.addEventListener('click', function() {
+      // Toggle the type attribute
+      const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+      password.setAttribute('type', type);
+      
+      // Toggle the eye / eye-off icon
+      const icon = this.querySelector('i');
+      if (type === 'text') {
+        icon.classList.remove('tabler-eye');
+        icon.classList.add('tabler-eye-off');
+      } else {
+        icon.classList.remove('tabler-eye-off');
+        icon.classList.add('tabler-eye');
+      }
+    });
+  }
+});
 </script>
 @endsection

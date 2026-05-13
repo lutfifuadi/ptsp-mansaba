@@ -71,8 +71,13 @@
   </table>
 </div>
 
-<div class="border-top py-3">
-  <div class="d-flex justify-content-end">
+@if($gurus->hasPages())
+<div class="border-top d-flex align-items-center justify-content-between px-3 py-3">
+  <div class="text-muted small d-none d-md-block">
+    Halaman {{ $gurus->currentPage() }} dari {{ $gurus->lastPage() }}
+  </div>
+  <div class="d-flex justify-content-center justify-content-md-end flex-grow-1">
     {{ $gurus->links() }}
   </div>
 </div>
+@endif

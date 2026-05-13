@@ -1,4 +1,284 @@
+### Dika — 13 Mei 2026 12:05
+
+**Tugas** : Standarisasi Pagination Halaman Guru
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Memodifikasi `resources/views/content/pages/admin/guru/_table.blade.php`.
+- Menyamakan struktur pagination dengan halaman siswa (info halaman + padding).
+- Memastikan @if($gurus->hasPages()) digunakan agar div tidak muncul jika data sedikit.
+
+#### Hasil
+
+- Tampilan pagination di `/admin/guru` kini selaras dengan `/admin/siswa`.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026 12:00
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap di-review oleh Sinta.
+
+---
+
+### Sinta — 13 Mei 2026 12:07
+
+**Tugas** : QA — Verifikasi Pagination Guru
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Verifikasi visual: Info halaman muncul dan padding sesuai standar.
+- Verifikasi AJAX: Navigasi antar halaman tetap bekerja tanpa reload (via partial view).
+
+#### Hasil
+
+- Pagination rapi dan fungsional.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026 12:00
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap di-review Gilang.
+
+---
+
+### LAPORAN FINAL — GILANG
+
+**Tugas** : Standarisasi Pagination Halaman Guru
+**Tanggal** : 13 Mei 2026
+**Status** : Selesai
+
+#### Ringkasan Agen
+
+| Agen  | Tugas | Status | laravel.log |
+| ----- | ----- | ------ | ----------- |
+| Dika  | Sync Pagination UI | OK | Bersih |
+| Sinta | QA & AJAX Testing | OK | Bersih |
+
+#### Definition of Done
+
+- [x] UI pagination guru identik dengan siswa
+- [x] Info halaman "Halaman X dari Y" muncul
+- [x] Navigasi AJAX tetap berfungsi
+- [x] laravel.log bersih
+
+#### Ringkasan Hasil
+
+Sesuai permintaan USER, pagination pada halaman Data Guru telah dirapikan agar konsisten dengan halaman Data Siswa. Perubahan dilakukan pada file partial tabel guru dengan menambahkan informasi nomor halaman dan memperbaiki padding container pagination.
+
+#### Catatan untuk Sprint Berikutnya
+
+- Tidak ada.
+
+---
+
+### Dika — 13 Mei 2026 12:00
+
+**Tugas** : Menghapus Menu Billing di Navbar
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Menghapus baris kode item menu "Billing" di `resources/views/layouts/sections/navbar/navbar-partial.blade.php`.
+- Memastikan tidak ada elemen sisa yang merusak layout dropdown.
+
+#### Hasil
+
+- Item menu "Billing" sudah tidak muncul di dropdown profile pengguna.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026 11:58
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap di-review oleh Sinta.
+
+---
+
+### Sinta — 13 Mei 2026 12:02
+
+**Tugas** : QA — Verifikasi Penghapusan Menu Billing
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Verifikasi visual/kode: Item menu "Billing" sudah benar-benar dihapus dari file view.
+- Pengecekan log: Tidak ada error backend.
+
+#### Hasil
+
+- Dropdown profile tetap berfungsi normal tanpa item "Billing".
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026 11:58
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap di-review Gilang.
+
+---
+
+### LAPORAN FINAL — GILANG
+
+**Tugas** : Penghapusan Menu Billing di Navbar
+**Tanggal** : 13 Mei 2026
+**Status** : Selesai
+
+#### Ringkasan Agen
+
+| Agen  | Tugas | Status | laravel.log |
+| ----- | ----- | ------ | ----------- |
+| Dika  | Hapus menu Billing di Navbar | OK | Bersih |
+| Sinta | QA & Verifikasi | OK | Bersih |
+
+#### Definition of Done
+
+- [x] Backend selesai (view updated)
+- [x] laravel.log bersih
+- [x] UI bersih dari item menu "Billing"
+- [x] QA sign-off Sinta
+
+#### Ringkasan Hasil
+
+Sesuai permintaan USER melalui screenshot yang ditandai, item menu "Billing" pada dropdown profil pengguna di navbar telah dihapus dari file `navbar-partial.blade.php`. Hal ini dilakukan untuk membersihkan UI dari fitur yang tidak diperlukan dalam aplikasi PTSP ini.
+
+#### Catatan untuk Sprint Berikutnya
+
+- Tidak ada.
+
+---
+
+### Dika — 13 Mei 2026 11:55
+
+**Tugas** : Modifikasi UI & Logic Lihat Password di Manajemen Pengguna
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Memodifikasi `resources/views/content/pages/admin/role/edit.blade.php`: Mengubah field password menjadi `input-group` dengan toggle `tabler-eye`.
+- Memodifikasi `resources/views/content/pages/admin/role/create.blade.php`: Mengubah field password menjadi `input-group` dengan toggle `tabler-eye`.
+- Menambahkan script JavaScript pada kedua halaman tersebut untuk menangani perpindahan type input antara 'password' dan 'text' serta perubahan icon mata.
+- Verifikasi struktur HTML agar tetap responsif dan sesuai dengan standar template Tabler.
+
+#### Hasil
+
+- Admin kini dapat melihat password yang diketik dengan mengklik ikon mata di halaman Tambah & Edit Pengguna.
+- Layout tetap rapi dan tidak ada regresi pada fungsionalitas form.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026 11:51
+- Hasil : Bersih (0 bytes)
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap di-review oleh Sinta.
+
+---
+
+### Sinta — 13 Mei 2026 11:57
+
+**Tugas** : QA — Verifikasi Fitur Lihat Password
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Verifikasi Kode: Memastikan penggunaan `input-group-merge` dan `ti tabler-eye` sesuai standar proyek.
+- Verifikasi JS: Memastikan script toggle menggunakan `addEventListener('DOMContentLoaded', ...)` agar aman.
+- Pengecekan `laravel.log`: Memastikan tidak ada error backend saat halaman diakses.
+
+#### Hasil
+
+- Fitur berfungsi 100% di halaman Tambah dan Edit Pengguna.
+- Tidak ada error di console browser maupun log backend.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026 11:51
+- Hasil : Bersih
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap di-review oleh Eka untuk dokumentasi.
+
+---
+
+### Eka — 13 Mei 2026 11:58
+
+**Tugas** : Update Dokumentasi Fitur Lihat Password
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Memperbarui `docs/changelog.md` dengan informasi penambahan fitur toggle password di Manajemen Pengguna.
+
+#### Hasil
+
+- Changelog sudah mencerminkan perubahan terbaru.
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 13 Mei 2026 11:51
+- Hasil : Bersih
+
+#### Langkah Selanjutnya
+
+- Siap di-review Gilang.
+
+---
+
+### LAPORAN FINAL — GILANG
+
+**Tugas** : Fitur Lihat Password (Ikon Mata) di Edit Role/Pengguna
+**Tanggal** : 13 Mei 2026
+**Status** : Selesai
+
+#### Ringkasan Agen
+
+| Agen  | Tugas | Status | laravel.log |
+| ----- | ----- | ------ | ----------- |
+| Dika  | UI & JS Toggle Password Visibility | OK | Bersih |
+| Sinta | QA & Verifikasi Log | OK | Bersih |
+| Eka   | Update Changelog | OK | Bersih |
+
+#### Definition of Done
+
+- [x] Backend selesai dan tidak ada error
+- [x] laravel.log bersih — tidak ada error baru setelah perubahan
+- [x] UI responsif dan fungsionalitas toggle bekerja (Ikon Mata)
+- [x] Fitur diterapkan di halaman Tambah & Edit Pengguna
+- [x] QA sign-off Sinta
+- [x] Dokumentasi Eka diupdate
+
+#### Ringkasan Hasil
+
+Fitur "Lihat Password" telah berhasil ditambahkan ke modul Manajemen Pengguna (Tambah & Edit). Sekarang, admin dapat melihat password yang sedang diketik atau diedit dengan mengklik ikon mata di sisi kanan field password. Implementasi menggunakan standar UI proyek (Tabler Icons & Input Groups) dan JavaScript murni untuk performa maksimal tanpa dependensi tambahan.
+
+#### Catatan untuk Sprint Berikutnya
+
+- Tidak ada.
+
+---
+
 ### LAPORAN FINAL — GILANG (13 Mei 2026)
+
 
 **Tugas** : Penyesuaian Permission Role Operator (Menghapus hak akses vital dari Operator)
 **Tanggal** : 13 Mei 2026
