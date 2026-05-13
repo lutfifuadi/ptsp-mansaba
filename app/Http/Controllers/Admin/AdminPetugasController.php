@@ -40,7 +40,7 @@ class AdminPetugasController extends Controller
     {
         $data = $request->validate([
             'nama_lengkap' => ['required', 'string', 'max:255'],
-            'no_whatsapp'  => ['required', 'string', 'max:20'],
+            'no_whatsapp'  => ['required', 'string', 'max:50'],
             'email'        => ['nullable', 'email', 'max:255'],
             'deskripsi'    => ['nullable', 'string', 'max:500'],
             'is_active'    => ['nullable', 'boolean'],
@@ -75,7 +75,7 @@ class AdminPetugasController extends Controller
     {
         $data = $request->validate([
             'nama_lengkap' => ['required', 'string', 'max:255'],
-            'no_whatsapp'  => ['required', 'string', 'max:20'],
+            'no_whatsapp'  => ['required', 'string', 'max:50'],
             'email'        => ['nullable', 'email', 'max:255'],
             'deskripsi'    => ['nullable', 'string', 'max:500'],
             'is_active'    => ['nullable', 'boolean'],
