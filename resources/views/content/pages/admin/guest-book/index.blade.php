@@ -267,6 +267,27 @@
   </div>
 </div>
 
+{{-- Modal Reset Konfirmasi --}}
+<div class="modal fade" id="modalReset" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 440px;">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
+      <div class="modal-body text-center p-4 pt-5 pb-4">
+        <div class="d-inline-flex align-items-center justify-content-center bg-danger bg-opacity-10 rounded-3 mb-3" style="width: 72px; height: 72px;">
+          <i class="ti tabler-alert-triangle text-danger" style="font-size: 2.2rem;"></i>
+        </div>
+        <h5 class="fw-bold mb-2">Reset Semua Data?</h5>
+        <p class="text-muted small mb-0" style="max-width: 320px; margin: 0 auto;">
+          Tindakan ini akan menghapus <strong>seluruh data buku tamu</strong> secara permanen. Data yang sudah dihapus <strong class="text-danger">tidak dapat dikembalikan</strong>.
+        </p>
+      </div>
+      <div class="d-flex border-top">
+        <button type="button" class="btn btn-lg flex-fill border-0 rounded-0 py-3 fw-semibold text-muted" data-bs-dismiss="modal" style="background: #f8fafc;">Batal</button>
+        <button type="button" class="btn btn-lg flex-fill border-0 rounded-0 py-3 fw-semibold text-white" id="btnResetConfirm" style="background: #dc2626;">Ya, Reset Semua</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {{-- Modal Detail --}}
 <div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" style="max-width: 560px;">
@@ -345,11 +366,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const btnReset = e.target.closest('.btn-reset-guest');
     if (btnReset) {
       e.preventDefault();
-      if (confirm('PENTING: Anda akan menghapus SELURUH data buku tamu. Lanjutkan?')) {
-        fetch(`{{ route('admin.guest-book.reset') }}`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' } })
-        .then(response => response.json())
-        .then(data => { if (data.success) { fetchGuestBooks(window.location.href); alert(data.message); } });
-      }
+      const modal = new bootstrap.Modal(document.getElementById('modalReset'));
+      modal.show();
     }
     const btnDelete = e.target.closest('.btn-delete');
     if (btnDelete) {
@@ -359,6 +377,22 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => { if (data.success) fetchGuestBooks(window.location.href); });
       }
     }
+  });
+
+  // --- Reset Handler ---
+  document.getElementById('btnResetConfirm').addEventListener('click', function() {
+    const btn = this;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Mereset...';
+    fetch(`{{ route('admin.guest-book.reset') }}`, { method: 'POST', headers: { 'X-CSRF-TOKEN': '{{ csrf_token() }}', 'Accept': 'application/json' } })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        bootstrap.Modal.getInstance(document.getElementById('modalReset')).hide();
+        fetchGuestBooks(window.location.href);
+      }
+    })
+    .finally(() => { btn.disabled = false; btn.textContent = 'Ya, Reset Semua'; });
   });
 
   // --- Polling Notifikasi ---
