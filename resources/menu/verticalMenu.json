@@ -90,6 +90,12 @@
       "icon": "menu-icon icon-base ti tabler-settings-2",
       "name": "Pengaturan Umum",
       "slug": "admin.pengaturan.umum"
+    },
+    {
+      "url": "/admin/pengaturan/jam-operasional",
+      "icon": "menu-icon icon-base ti tabler-clock",
+      "name": "Jam Operasional",
+      "slug": "admin.pengaturan.jam-operasional"
     }
   ]
 }

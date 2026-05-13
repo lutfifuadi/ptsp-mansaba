@@ -20,6 +20,8 @@ use App\Http\Controllers\GuruController;
 use App\Http\Controllers\Admin\AdminGuruController;
 use App\Http\Controllers\Admin\AdminPermohonanController;
 use App\Http\Controllers\Admin\AdminRoleController;
+use App\Http\Controllers\Admin\OfficeHourController;
+
 
 // PTSP Routes
 Route::prefix('ptsp')->name('ptsp.')->group(function () {
@@ -28,17 +30,21 @@ Route::prefix('ptsp')->name('ptsp.')->group(function () {
   Route::post('/tracking', [PermohonanController::class, 'track'])->name('track');
 
   Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::get('/permohonan/baru', [PermohonanController::class, 'create'])->name('create');
-    Route::post('/permohonan', [PermohonanController::class, 'store'])->name('store');
+    Route::middleware('office.hour')->group(function () {
+      Route::get('/permohonan/baru', [PermohonanController::class, 'create'])->name('create');
+      Route::post('/permohonan', [PermohonanController::class, 'store'])->name('store');
+    });
     Route::get('/permohonan/{permohonan}', [PermohonanController::class, 'show'])->name('show');
   });
 
   // Public: Pengajuan Surat berbasis NISN (tanpa login)
-  Route::get('/surat', [SuratSiswaController::class, 'formCek'])->name('surat.cek-form');
-  Route::post('/surat/cek', [SuratSiswaController::class, 'cekNisn'])->name('surat.cek');
-  Route::get('/surat/form', [SuratSiswaController::class, 'formPengajuan'])->name('surat.form');
-  Route::post('/surat/store', [SuratSiswaController::class, 'store'])->name('surat.store');
-  Route::post('/surat/konfirmasi', [SuratSiswaController::class, 'konfirmasiUpdate'])->name('surat.konfirmasi');
+  Route::middleware('office.hour')->group(function () {
+    Route::get('/surat', [SuratSiswaController::class, 'formCek'])->name('surat.cek-form');
+    Route::post('/surat/cek', [SuratSiswaController::class, 'cekNisn'])->name('surat.cek');
+    Route::get('/surat/form', [SuratSiswaController::class, 'formPengajuan'])->name('surat.form');
+    Route::post('/surat/store', [SuratSiswaController::class, 'store'])->name('surat.store');
+    Route::post('/surat/konfirmasi', [SuratSiswaController::class, 'konfirmasiUpdate'])->name('surat.konfirmasi');
+  });
   Route::get('/surat/sukses/{noTiket}', [SuratSiswaController::class, 'sukses'])->name('surat.sukses');
 });
 
@@ -47,18 +53,21 @@ Route::get('/', [PermohonanController::class, 'index'])->name('home');
 
 // Guest Book Routes
 Route::get('/buku-tamu', [GuestBookController::class, 'index'])->name('buku-tamu.index');
-Route::post('/buku-tamu', [GuestBookController::class, 'store'])->name('buku-tamu.store');
+Route::post('/buku-tamu', [GuestBookController::class, 'store'])->name('buku-tamu.store')->middleware('office.hour');
 
 // Public Guru API
 Route::get('/guru', [GuruController::class, 'index'])->name('guru.index');
 
-// Pengambilan Ijazah Routes (Public)
-Route::get('/ptsp/pengambilan-ijazah', [PermohonanController::class, 'pengambilanIjazah'])->name('ptsp.pengambilan-ijazah');
-Route::post('/ptsp/pengambilan-ijazah', [PermohonanController::class, 'storeIjazah'])->name('ptsp.pengambilan-ijazah.store');
+// Pengambilan Ijazah & Legalisir Routes (Public)
+Route::middleware('office.hour')->group(function () {
+  // Pengambilan Ijazah
+  Route::get('/ptsp/pengambilan-ijazah', [PermohonanController::class, 'pengambilanIjazah'])->name('ptsp.pengambilan-ijazah');
+  Route::post('/ptsp/pengambilan-ijazah', [PermohonanController::class, 'storeIjazah'])->name('ptsp.pengambilan-ijazah.store');
 
-// Legalisir Ijazah Routes (Public) — untuk alumni, tanpa validasi NISN
-Route::get('/ptsp/legalisir-ijazah', [PermohonanController::class, 'legalisirIjazah'])->name('ptsp.legalisir-ijazah');
-Route::post('/ptsp/legalisir-ijazah', [PermohonanController::class, 'storeLegalisirIjazah'])->name('ptsp.legalisir-ijazah.store');
+  // Legalisir Ijazah
+  Route::get('/ptsp/legalisir-ijazah', [PermohonanController::class, 'legalisirIjazah'])->name('ptsp.legalisir-ijazah');
+  Route::post('/ptsp/legalisir-ijazah', [PermohonanController::class, 'storeLegalisirIjazah'])->name('ptsp.legalisir-ijazah.store');
+});
 
 Route::get('/page-2', [Page2::class, 'index'])->name('pages-page-2');
 
@@ -151,6 +160,10 @@ Route::middleware([
       // Umum
       Route::get('/umum', [GeneralSettingController::class, 'index'])->name('umum');
       Route::put('/umum', [GeneralSettingController::class, 'update'])->name('umum.update');
+
+      // Jam Operasional
+      Route::get('/jam-operasional', [OfficeHourController::class, 'index'])->name('jam-operasional');
+      Route::put('/jam-operasional', [OfficeHourController::class, 'update'])->name('jam-operasional.update');
 
 
     });

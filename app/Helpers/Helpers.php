@@ -328,4 +328,40 @@ class Helpers
 }
 CSS;
   }
+
+  /**
+   * Cek apakah saat ini dalam jam operasional
+   *
+   * @return bool
+   */
+  public static function isOfficeHour()
+  {
+    $now = now();
+    $dayOfWeek = $now->dayOfWeek;
+
+    $config = \App\Models\JamOperasional::where('hari', $dayOfWeek)->first();
+
+    if (!$config || !$config->is_aktif) {
+      return false;
+    }
+
+    if ($config->jam_buka && $config->jam_tutup) {
+      $startTime = \Carbon\Carbon::createFromTimeString($config->jam_buka);
+      $endTime = \Carbon\Carbon::createFromTimeString($config->jam_tutup);
+
+      return $now->between($startTime, $endTime);
+    }
+
+    return true;
+  }
+
+  /**
+   * Ambil data jam operasional hari ini
+   *
+   * @return \App\Models\JamOperasional|null
+   */
+  public static function currentOfficeHour()
+  {
+    return \App\Models\JamOperasional::where('hari', now()->dayOfWeek)->first();
+  }
 }

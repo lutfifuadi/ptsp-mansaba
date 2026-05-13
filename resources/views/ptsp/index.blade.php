@@ -451,6 +451,32 @@
         display: none;
       }
     }
+
+    .office-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: fadeInDown 1s cubic-bezier(0.4, 0, 0.2, 1) 0.3s both;
+    }
+
+    .status-open {
+      background: rgba(5, 150, 105, 0.1);
+      color: var(--primary-light);
+      border-color: rgba(52, 211, 153, 0.2);
+    }
+
+    .status-closed {
+      background: rgba(239, 68, 68, 0.1);
+      color: #f87171;
+      border-color: rgba(248, 113, 113, 0.2);
+    }
   </style>
 </head>
 
@@ -464,6 +490,21 @@
     <header class="header">
 
       <h1>Portal Layanan Terpadu</h1>
+      @php
+        $isBuka = \App\Helpers\Helpers::isOfficeHour();
+        $configToday = \App\Helpers\Helpers::currentOfficeHour();
+      @endphp
+
+      <div class="office-status {{ $isBuka ? 'status-open' : 'status-closed' }}">
+        <i class="ti {{ $isBuka ? 'ti-clock-check' : 'ti-clock-x' }}"></i>
+        <span>
+          Layanan: {{ $isBuka ? 'Buka' : 'Tutup' }} 
+          @if($configToday && $configToday->is_aktif && $configToday->jam_buka)
+            ({{ \Carbon\Carbon::parse($configToday->jam_buka)->format('H:i') }} - {{ \Carbon\Carbon::parse($configToday->jam_tutup)->format('H:i') }})
+          @endif
+        </span>
+      </div>
+
       <p>Pelayanan Terpadu Satu Pintu (PTSP) MAN 1 Kota Bandung. Cepat.</p>
 
       <div class="hero-actions">

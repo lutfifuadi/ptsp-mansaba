@@ -1,3 +1,4 @@
+[2026-05-13] Fitur Office Hour (Jam Operasional) — Pengaturan jam kerja kantor di halaman admin, proteksi otomatis seluruh form pelayanan publik (surat, ijazah, buku tamu) via middleware, dan indikator status operasional real-time di halaman beranda.
 [2026-05-12] Notifikasi real-time buku tamu — toast popup otomatis untuk admin saat ada kunjungan baru + polling endpoint
 [2026-05-12] Tampilkan hanya nama guru di dropdown & detail admin buku tamu (hilangkan bidang studi)
 [2026-05-12] Perbaikan pagination & padding halaman admin siswa — kustomisasi view pagination dengan Tabler Icons, CSS tema emerald, padding konsisten 20px horizontal di tabel dan panel.
