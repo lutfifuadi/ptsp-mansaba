@@ -22,6 +22,10 @@ class AdminGuruController extends Controller
               ->orWhere('bidang_studi', 'like', "%{$search}%");
         })->orderBy('nama_lengkap')->paginate(10);
 
+        if ($request->ajax()) {
+            return view('content.pages.admin.guru._table', compact('gurus'))->render();
+        }
+
         return view('content.pages.admin.guru.index', compact('gurus'));
     }
 

@@ -1,3 +1,4 @@
+[2026-05-13] Fix Duplikasi Konten Guru — Perbaikan bug di `AdminGuruController` yang menyebabkan seluruh halaman ter-render ulang di dalam tabel saat melakukan pencarian (AJAX).
 [2026-05-13] Fitur Lihat Password di Manajemen Pengguna — Penambahan tombol toggle (ikon mata) pada field password di halaman Tambah & Edit Pengguna (`/admin/role`). Memudahkan admin memverifikasi password yang diketik.
 [2026-05-13] Standarisasi Pagination Guru — Perbaikan styling pagination pada halaman Data Guru agar selaras dengan Data Siswa, mencakup penambahan informasi "Halaman X dari Y" dan padding yang konsisten.
 [2026-05-13] UI Cleanup — Menghapus item menu "Billing" pada dropdown profile di navbar karena tidak digunakan.
