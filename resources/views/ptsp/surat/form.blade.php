@@ -560,6 +560,30 @@
         @endif
       </div>
 
+      <!-- No. WhatsApp -->
+      <div class="form-group">
+        <label for="no_wa" class="form-label">
+          No. WhatsApp <span class="req">*</span>
+        </label>
+        <input
+          type="text"
+          id="no_wa"
+          name="no_wa"
+          class="form-textarea {{ $errors->has('no_wa') ? 'is-invalid' : '' }}"
+          value="{{ old('no_wa') }}"
+          placeholder="Contoh: 628123456789"
+          required
+          style="min-height:unset;height:45px"
+        >
+        <div class="hint-text">Nomor untuk menerima notifikasi status permohonan via WhatsApp.</div>
+        @if ($errors->has('no_wa'))
+          <div class="error-msg">
+            <i class="ti ti-alert-circle"></i>
+            {{ $errors->first('no_wa') }}
+          </div>
+        @endif
+      </div>
+
       <button type="submit" class="btn-submit" id="btn-submit">
         <i class="ti ti-send"></i> Kirim Permohonan
       </button>

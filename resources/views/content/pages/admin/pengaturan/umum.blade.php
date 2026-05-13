@@ -111,12 +111,20 @@ $configData = Helper::appClasses();
                 <div class="form-text">API Key dari <code>https://wa.lutfifuadi.my.id</code></div>
               </div>
 
-              <div class="mb-0">
+              <div class="mb-3">
                 <label class="form-label fw-bold">
                   <i class="ti tabler-phone me-1 text-primary"></i> Nomor Pengirim (Sender)
                 </label>
                 <input type="text" name="wa_sender" class="form-control" value="{{ old('wa_sender', $pengaturan['wa_sender']) }}" placeholder="628xxxxxxx">
                 <div class="form-text">Nomor WhatsApp yang digunakan sebagai pengirim.</div>
+              </div>
+
+              <div class="mb-0">
+                <label class="form-label fw-bold">
+                  <i class="ti tabler-messages me-1 text-primary"></i> Group WA Notifikasi
+                </label>
+                <input type="text" name="wa_group_id" class="form-control" value="{{ old('wa_group_id', $pengaturan['wa_group_id'] ?? '') }}" placeholder="120363xxxxxx@g.us">
+                <div class="form-text">ID Group WhatsApp untuk notifikasi otomatis (opsional).</div>
               </div>
             </div>
           </div>

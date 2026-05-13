@@ -115,6 +115,19 @@ Route::middleware([
     });
     Route::put('/guru/{guru}', [AdminGuruController::class, 'update'])->name('guru.update')->middleware('can:edit-guru');
     Route::delete('/guru/{guru}', [AdminGuruController::class, 'destroy'])->name('guru.destroy')->middleware('can:hapus-guru');
+
+    // Data Petugas
+    Route::middleware('can:lihat-petugas')->group(function () {
+      Route::get('/petugas', [\App\Http\Controllers\Admin\AdminPetugasController::class, 'index'])->name('petugas.index');
+      Route::get('/petugas/{petugas}', [\App\Http\Controllers\Admin\AdminPetugasController::class, 'show'])->name('petugas.show');
+      Route::get('/petugas/{petugas}/edit', [\App\Http\Controllers\Admin\AdminPetugasController::class, 'edit'])->name('petugas.edit');
+    });
+    Route::middleware('can:tambah-petugas')->group(function () {
+      Route::get('/petugas/tambah', [\App\Http\Controllers\Admin\AdminPetugasController::class, 'create'])->name('petugas.create');
+      Route::post('/petugas', [\App\Http\Controllers\Admin\AdminPetugasController::class, 'store'])->name('petugas.store');
+    });
+    Route::put('/petugas/{petugas}', [\App\Http\Controllers\Admin\AdminPetugasController::class, 'update'])->name('petugas.update')->middleware('can:edit-petugas');
+    Route::delete('/petugas/{petugas}', [\App\Http\Controllers\Admin\AdminPetugasController::class, 'destroy'])->name('petugas.destroy')->middleware('can:hapus-petugas');
     Route::middleware('can:impor-guru')->group(function () {
       Route::post('/guru/import', [AdminGuruController::class, 'import'])->name('guru.import');
       Route::get('/guru/import/template', [AdminGuruController::class, 'downloadTemplate'])->name('guru.import.template');

@@ -16,6 +16,7 @@ class GeneralSettingController extends Controller
             'footer_teks'   => Pengaturan::get('footer_teks', 'Dokumen ini diterbitkan secara resmi oleh Sistem Informasi Kelulusan'),
             'wa_api_key'    => Pengaturan::get('wa_api_key', ''),
             'wa_sender'     => Pengaturan::get('wa_sender', ''),
+            'wa_group_id'   => Pengaturan::get('wa_group_id', ''),
             'app_name'      => Pengaturan::get('app_name', 'Aplikasi PTSP'),
             'app_version'   => Pengaturan::get('app_version', '1.0.0'),
             'app_timezone'  => Pengaturan::get('app_timezone', 'Asia/Jakarta'),
@@ -38,6 +39,7 @@ class GeneralSettingController extends Controller
             'footer_teks'   => ['nullable', 'string', 'max:255'],
             'wa_api_key'    => ['nullable', 'string', 'max:255'],
             'wa_sender'     => ['nullable', 'string', 'max:20'],
+            'wa_group_id'   => ['nullable', 'string', 'max:100'],
             'app_name'      => ['nullable', 'string', 'max:100'],
             'app_version'   => ['nullable', 'string', 'max:20'],
             'app_timezone'  => ['nullable', 'string', 'in:' . implode(',', $timezones)],
@@ -52,6 +54,7 @@ class GeneralSettingController extends Controller
         Pengaturan::set('footer_teks', $request->footer_teks);
         Pengaturan::set('wa_api_key', $request->wa_api_key);
         Pengaturan::set('wa_sender', $request->wa_sender);
+        Pengaturan::set('wa_group_id', $request->wa_group_id);
         Pengaturan::set('app_name', $request->app_name);
         Pengaturan::set('app_version', $request->app_version);
         Pengaturan::set('app_timezone', $request->app_timezone);

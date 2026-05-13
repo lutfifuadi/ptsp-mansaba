@@ -19,6 +19,7 @@ class RoleAndPermissionSeeder extends Seeder
         $allPermissions = [
             'lihat-siswa', 'tambah-siswa', 'edit-siswa', 'hapus-siswa', 'impor-siswa',
             'lihat-guru', 'tambah-guru', 'edit-guru', 'hapus-guru', 'impor-guru',
+            'lihat-petugas', 'tambah-petugas', 'edit-petugas', 'hapus-petugas',
             'lihat-ptsp', 'kelola-ptsp', 'export-ptsp',
             'lihat-buku-tamu', 'hapus-buku-tamu', 'export-buku-tamu', 'reset-buku-tamu',
             'lihat-user', 'tambah-user', 'edit-user', 'hapus-user',
@@ -42,6 +43,7 @@ class RoleAndPermissionSeeder extends Seeder
         $operator->syncPermissions([
             'lihat-siswa', 'tambah-siswa', 'edit-siswa', 'hapus-siswa', 'impor-siswa',
             'lihat-guru', 'tambah-guru', 'edit-guru', 'hapus-guru', 'impor-guru',
+            'lihat-petugas', 'tambah-petugas', 'edit-petugas', 'hapus-petugas',
             'lihat-ptsp', 'kelola-ptsp', 'export-ptsp',
             'lihat-buku-tamu', 'hapus-buku-tamu', 'export-buku-tamu', 'reset-buku-tamu',
         ]);

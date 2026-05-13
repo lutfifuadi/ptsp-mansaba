@@ -71,6 +71,13 @@
       "slug": "admin.guru"
     },
     {
+      "url": "/admin/petugas",
+      "icon": "menu-icon icon-base ti tabler-user-check",
+      "name": "Data Petugas",
+      "slug": "admin.petugas",
+      "can": "lihat-petugas"
+    },
+    {
       "url": "/admin/pengaturan/lembaga",
       "icon": "menu-icon icon-base ti tabler-building-community",
       "name": "Profil Lembaga",

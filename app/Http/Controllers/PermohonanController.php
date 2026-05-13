@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Layanan;
 use App\Models\Permohonan;
+use App\Services\WhatsappService;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 
@@ -60,6 +61,9 @@ class PermohonanController extends Controller
             'data_form' => $request->data_form,
         ]);
 
+        $permohonan->load('layanan.petugas');
+        app(WhatsappService::class)->sendPermohonanBaru($permohonan);
+
         return redirect()->route('ptsp.show', $permohonan->id)->with('success', 'Permohonan berhasil dikirim.');
     }
 
@@ -102,6 +106,9 @@ class PermohonanController extends Controller
                 'no_wa'         => $request->no_wa,
             ],
         ]);
+
+        $permohonan->load('layanan.petugas');
+        app(WhatsappService::class)->sendPermohonanBaru($permohonan);
 
         return response()->json([
             'success'  => true,
@@ -148,6 +155,9 @@ class PermohonanController extends Controller
                 'keperluan'     => $request->keperluan,
             ],
         ]);
+
+        $permohonan->load('layanan.petugas');
+        app(WhatsappService::class)->sendPermohonanBaru($permohonan);
 
         return response()->json([
             'success'  => true,
@@ -223,6 +233,9 @@ class PermohonanController extends Controller
             'status' => $request->status,
             'catatan_admin' => $request->catatan_admin,
         ]);
+
+        $permohonan->load('layanan.petugas');
+        app(WhatsappService::class)->sendStatusBerubah($permohonan);
 
         return back()->with('success', 'Status permohonan berhasil diperbarui.');
     }

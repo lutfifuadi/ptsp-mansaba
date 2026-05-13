@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Layanan;
 use App\Models\Permohonan;
 use App\Models\Siswa;
+use App\Services\WhatsappService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -112,9 +113,11 @@ class SuratSiswaController extends Controller
             'keperluan'   => ['required', 'string', 'max:1000'],
             'legalisir'   => ['nullable', 'array'],
             'legalisir.*' => ['string', 'in:Raport,SKKB'],
+            'no_wa'       => ['required', 'string', 'max:20'],
         ], [
             'jenis_surat.required' => 'Jenis surat wajib dipilih.',
             'keperluan.required'   => 'Keperluan wajib diisi.',
+            'no_wa.required'       => 'No. WhatsApp wajib diisi.',
         ]);
 
         $siswa = Siswa::where('nisn', $nisn)->first();
@@ -135,7 +138,7 @@ class SuratSiswaController extends Controller
 
         $noTiket = 'SURAT-' . strtoupper(Str::random(10));
 
-        Permohonan::create([
+        $permohonan = Permohonan::create([
             'nisn'       => $siswa->nisn,
             'user_id'    => null,
             'layanan_id' => $layanan->id,
@@ -150,8 +153,12 @@ class SuratSiswaController extends Controller
                 'jenis_surat'  => $request->jenis_surat,
                 'legalisir'    => $request->legalisir ?? [],
                 'keperluan'    => $request->keperluan,
+                'no_wa'        => $request->no_wa,
             ],
         ]);
+
+        $permohonan->load('layanan.petugas');
+        app(WhatsappService::class)->sendPermohonanBaru($permohonan);
 
         $submittedTickets = session('submitted_tickets', []);
         $submittedTickets[] = $noTiket;

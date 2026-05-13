@@ -25,4 +25,9 @@ class Layanan extends Model
     {
         return $this->hasMany(Permohonan::class);
     }
+
+    public function petugas()
+    {
+        return $this->belongsToMany(Petugas::class, 'petugas_layanan');
+    }
 }
