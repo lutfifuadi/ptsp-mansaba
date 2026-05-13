@@ -4,12 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pengaturan;
+use App\Services\WhatsappService;
 use Illuminate\Http\Request;
 
 class GeneralSettingController extends Controller
 {
     public function index()
     {
+        $wa = app(WhatsappService::class);
+
         $pengaturan = [
             'tahun_ajaran'  => Pengaturan::get('tahun_ajaran', '2025/2026'),
             'tanggal_surat' => Pengaturan::get('tanggal_surat', date('Y-m-d')),
@@ -26,6 +29,10 @@ class GeneralSettingController extends Controller
             'footer_show_links' => Pengaturan::get('footer_show_links', '1'),
         ];
 
+        foreach ($wa->getAllTemplates() as $key => $value) {
+            $pengaturan['wa_template_' . $key] = $value;
+        }
+
         return view('content.pages.admin.pengaturan.umum', compact('pengaturan'));
     }
 
@@ -33,7 +40,7 @@ class GeneralSettingController extends Controller
     {
         $timezones = timezone_identifiers_list();
 
-        $request->validate([
+        $rules = [
             'tahun_ajaran'  => ['required', 'string', 'max:20'],
             'tanggal_surat' => ['required', 'date'],
             'footer_teks'   => ['nullable', 'string', 'max:255'],
@@ -47,7 +54,22 @@ class GeneralSettingController extends Controller
             'footer_made_by' => ['nullable', 'string', 'max:100'],
             'footer_made_by_url' => ['nullable', 'url', 'max:255'],
             'footer_show_links' => ['nullable', 'boolean'],
-        ]);
+        ];
+
+        $templateKeys = [
+            'wa_template_baru_petugas',
+            'wa_template_baru_pemohon',
+            'wa_template_baru_group',
+            'wa_template_status_petugas',
+            'wa_template_status_pemohon',
+            'wa_template_status_group',
+        ];
+
+        foreach ($templateKeys as $key) {
+            $rules[$key] = ['nullable', 'string', 'max:2000'];
+        }
+
+        $request->validate($rules);
 
         Pengaturan::set('tahun_ajaran', $request->tahun_ajaran);
         Pengaturan::set('tanggal_surat', $request->tanggal_surat);
@@ -63,6 +85,41 @@ class GeneralSettingController extends Controller
         Pengaturan::set('footer_made_by_url', $request->footer_made_by_url);
         Pengaturan::set('footer_show_links', $request->has('footer_show_links') ? '1' : '0');
 
+        foreach ($templateKeys as $key) {
+            if ($request->has($key)) {
+                Pengaturan::set($key, $request->$key);
+            }
+        }
+
         return redirect()->back()->with('success', 'Pengaturan umum berhasil disimpan.');
+    }
+
+    /**
+     * Save only WhatsApp template redactions separately.
+     */
+    public function updateTemplates(Request $request)
+    {
+        $templateKeys = [
+            'wa_template_baru_petugas',
+            'wa_template_baru_pemohon',
+            'wa_template_baru_group',
+            'wa_template_status_petugas',
+            'wa_template_status_pemohon',
+            'wa_template_status_group',
+        ];
+
+        $rules = [];
+        foreach ($templateKeys as $key) {
+            $rules[$key] = ['nullable', 'string', 'max:2000'];
+        }
+
+        $request->validate($rules);
+
+        foreach ($templateKeys as $key) {
+            // Use null coalescing to allow emptying template
+            Pengaturan::set($key, $request->input($key, ''));
+        }
+
+        return redirect()->back()->with('success', 'Redaksi notifikasi WhatsApp berhasil disimpan.');
     }
 }

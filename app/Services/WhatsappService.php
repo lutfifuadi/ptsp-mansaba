@@ -13,12 +13,23 @@ class WhatsappService
     protected string $sender;
     protected ?string $waGroupId;
 
+    protected array $defaultTemplates;
+
     public function __construct()
     {
         $this->baseUrl = 'https://wa.lutfifuadi.my.id';
         $this->apiKey = Pengaturan::get('wa_api_key', '');
         $this->sender = Pengaturan::get('wa_sender', '');
         $this->waGroupId = Pengaturan::get('wa_group_id');
+
+        $this->defaultTemplates = [
+            'baru_petugas' => "\u{1F4CC} *Permohonan Baru!*\n\nLayanan: {layanan}\nNo. Tiket: {no_tiket}\nNama: {nama}\nStatus: {status_label}\nWaktu: {waktu}\n\nSilakan proses permohonan ini di sistem PTSP.",
+            'baru_pemohon' => "\u{2611} *Permohonan Diterima*\n\nHalo {nama},\n\nPermohonan Anda telah kami terima dengan detail:\nLayanan: {layanan}\nNo. Tiket: {no_tiket}\nStatus: {status_label}\nWaktu: {waktu}\n\nSimpan nomor tiket di atas untuk melacak status permohonan Anda.\nKami akan mengabari jika ada perubahan status.",
+            'baru_group' => "{no_tiket}\n\n\u{1F4CC} *Permohonan Baru!*\n\nLayanan: {layanan}\nNo. Tiket: {no_tiket}\nNama: {nama}\nStatus: {status_label}\nWaktu: {waktu}",
+            'status_petugas' => "\u{1F504} *Status Permohonan Diperbarui*\n\nLayanan: {layanan}\nNo. Tiket: {no_tiket}\nNama: {nama}\nStatus: {status_label}\n{catatan}",
+            'status_pemohon' => "\u{1F514} *Status Permohonan Anda*\n\nHalo {nama},\n\nStatus permohonan Anda telah diperbarui:\nLayanan: {layanan}\nNo. Tiket: {no_tiket}\nStatus: {status_label}\n{catatan}\n\nTerima kasih.",
+            'status_group' => "\u{1F504} *Status Permohonan*\n\nLayanan: {layanan}\nNo. Tiket: {no_tiket}\nNama: {nama}\nStatus: {status_label}\n{catatan}",
+        ];
     }
 
     public function send(string $to, string $message): bool
@@ -63,15 +74,27 @@ class WhatsappService
         $this->sendKeGroup($permohonan, 'status');
     }
 
+    public function getTemplate(string $key): string
+    {
+        return Pengaturan::get('wa_template_' . $key, $this->defaultTemplates[$key] ?? '');
+    }
+
+    public function getAllTemplates(): array
+    {
+        $templates = [];
+        foreach ($this->defaultTemplates as $key => $default) {
+            $templates[$key] = Pengaturan::get('wa_template_' . $key, $default);
+        }
+        return $templates;
+    }
+
     protected function sendKeGroup(object $permohonan, string $type): void
     {
         if (empty($this->waGroupId)) return;
 
-        $message = $type === 'baru'
-            ? $this->buildPermohonanBaruMessage($permohonan)
-            : $this->buildStatusBerubahMessage($permohonan);
-
-        $message = "*[NOTIFIKASI PTSP]*\n" . $message;
+        $data = $this->buildPlaceholders($permohonan);
+        $template = $this->getTemplate($type . '_group');
+        $message = $this->replacePlaceholders($template, $data);
 
         $this->send($this->waGroupId, $message);
     }
@@ -81,9 +104,9 @@ class WhatsappService
         $petugasList = $permohonan->layanan->petugas;
         if ($petugasList->isEmpty()) return;
 
-        $message = $type === 'baru'
-            ? $this->buildPermohonanBaruMessage($permohonan)
-            : $this->buildStatusBerubahMessage($permohonan);
+        $data = $this->buildPlaceholders($permohonan);
+        $template = $this->getTemplate($type . '_petugas');
+        $message = $this->replacePlaceholders($template, $data);
 
         foreach ($petugasList as $petugas) {
             if (empty($petugas->no_whatsapp)) continue;
@@ -96,11 +119,45 @@ class WhatsappService
         $noWa = $this->extractNoWa($permohonan);
         if (empty($noWa)) return;
 
-        $message = $type === 'baru'
-            ? $this->buildPemohonBaruMessage($permohonan)
-            : $this->buildPemohonStatusMessage($permohonan);
+        $data = $this->buildPlaceholders($permohonan);
+        $template = $this->getTemplate($type . '_pemohon');
+        $message = $this->replacePlaceholders($template, $data);
 
         $this->send($noWa, $message);
+    }
+
+    protected function buildPlaceholders(object $permohonan): array
+    {
+        $statusLabels = [
+            'pending' => "\u{23F3} Pending",
+            'proses'  => "\u{2699}\u{FE0F} Diproses",
+            'selesai' => "\u{2705} Selesai",
+            'ditolak' => "\u{274C} Ditolak",
+        ];
+
+        $nama = $permohonan->data_form['nama_lengkap']
+            ?? $permohonan->data_form['nama']
+            ?? $permohonan->siswa->nama_lengkap
+            ?? '-';
+
+        $catatan = $permohonan->catatan_admin
+            ? "Catatan: {$permohonan->catatan_admin}"
+            : '';
+
+        return [
+            '{no_tiket}'     => $permohonan->no_tiket,
+            '{layanan}'      => $permohonan->layanan->nama_layanan,
+            '{nama}'         => $nama,
+            '{status}'       => $permohonan->status,
+            '{status_label}' => $statusLabels[$permohonan->status] ?? $permohonan->status,
+            '{waktu}'        => $permohonan->created_at->format('d/m/Y H:i'),
+            '{catatan}'      => $catatan,
+        ];
+    }
+
+    protected function replacePlaceholders(string $template, array $data): string
+    {
+        return str_replace(array_keys($data), array_values($data), $template);
     }
 
     protected function extractNoWa(object $permohonan): ?string
@@ -114,92 +171,5 @@ class WhatsappService
         }
 
         return null;
-    }
-
-    protected function getNamaPemohon(object $permohonan): string
-    {
-        return $permohonan->data_form['nama_lengkap']
-            ?? $permohonan->data_form['nama']
-            ?? $permohonan->siswa->nama_lengkap
-            ?? '-';
-    }
-
-    protected function buildPermohonanBaruMessage(object $permohonan): string
-    {
-        $nama = $this->getNamaPemohon($permohonan);
-
-        return "📌 *Permohonan Baru!*\n\n" .
-            "Layanan: {$permohonan->layanan->nama_layanan}\n" .
-            "No. Tiket: {$permohonan->no_tiket}\n" .
-            "Nama: {$nama}\n" .
-            "Status: " . strtoupper($permohonan->status) . "\n" .
-            "Waktu: {$permohonan->created_at->format('d/m/Y H:i')}\n\n" .
-            "Silakan proses permohonan ini di sistem PTSP.";
-    }
-
-    protected function buildPemohonBaruMessage(object $permohonan): string
-    {
-        $nama = $this->getNamaPemohon($permohonan);
-
-        return "☑️ *Permohonan Diterima*\n\n" .
-            "Halo {$nama},\n\n" .
-            "Permohonan Anda telah kami terima dengan detail:\n" .
-            "Layanan: {$permohonan->layanan->nama_layanan}\n" .
-            "No. Tiket: {$permohonan->no_tiket}\n" .
-            "Status: ⏳ Pending\n" .
-            "Waktu: {$permohonan->created_at->format('d/m/Y H:i')}\n\n" .
-            "Simpan nomor tiket di atas untuk melacak status permohonan Anda.\n" .
-            "Kami akan mengabari jika ada perubahan status.";
-    }
-
-    protected function buildPemohonStatusMessage(object $permohonan): string
-    {
-        $nama = $this->getNamaPemohon($permohonan);
-
-        $statusLabels = [
-            'pending' => '⏳ Pending',
-            'proses'  => '⚙️ Diproses',
-            'selesai' => '✅ Selesai',
-            'ditolak' => '❌ Ditolak',
-        ];
-
-        $text = "🔔 *Status Permohonan Anda*\n\n" .
-            "Halo {$nama},\n\n" .
-            "Status permohonan Anda telah diperbarui:\n" .
-            "Layanan: {$permohonan->layanan->nama_layanan}\n" .
-            "No. Tiket: {$permohonan->no_tiket}\n" .
-            "Status: {$statusLabels[$permohonan->status]}\n";
-
-        if ($permohonan->catatan_admin) {
-            $text .= "Catatan: {$permohonan->catatan_admin}\n";
-        }
-
-        $text .= "\nTerima kasih.";
-        return $text;
-    }
-
-    protected function buildStatusBerubahMessage(object $permohonan): string
-    {
-        $nama = $this->getNamaPemohon($permohonan);
-
-        $statusLabels = [
-            'pending' => '⏳ Pending',
-            'proses'  => '⚙️ Diproses',
-            'selesai' => '✅ Selesai',
-            'ditolak' => '❌ Ditolak',
-        ];
-
-        $text = "🔄 *Status Permohonan Diperbarui*\n\n" .
-            "Layanan: {$permohonan->layanan->nama_layanan}\n" .
-            "No. Tiket: {$permohonan->no_tiket}\n" .
-            "Nama: {$nama}\n" .
-            "Status: {$statusLabels[$permohonan->status]}\n";
-
-        if ($permohonan->catatan_admin) {
-            $text .= "Catatan: {$permohonan->catatan_admin}\n";
-        }
-
-        $text .= "\nTerima kasih.";
-        return $text;
     }
 }

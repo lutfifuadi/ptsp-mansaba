@@ -188,7 +188,9 @@ Route::middleware([
       });
       Route::middleware('can:edit-pengaturan')->group(function () {
         Route::put('/lembaga', [LembagaSettingController::class, 'update'])->name('lembaga.update');
-        Route::put('/umum', [GeneralSettingController::class, 'update'])->name('umum.update');
+       Route::put('/umum', [GeneralSettingController::class, 'update'])->name('umum.update');
+        // Save only WhatsApp templates separately
+       Route::put('/umum/templates', [GeneralSettingController::class, 'updateTemplates'])->name('umum.templates.update');
         Route::put('/jam-operasional', [OfficeHourController::class, 'update'])->name('jam-operasional.update');
       });
     });

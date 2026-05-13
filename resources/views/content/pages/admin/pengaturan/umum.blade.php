@@ -130,6 +130,79 @@ $configData = Helper::appClasses();
           </div>
         </div>
       </div>
+      
+      {{-- Redaksi Notifikasi WhatsApp --}}
+      <div class="panel shadow-sm">
+        <div class="section-head">
+          <h5 class="section-head-title"><span class="dot"></span> Redaksi Notifikasi WhatsApp</h5>
+        </div>
+        <form method="POST" action="{{ route('admin.pengaturan.umum.templates.update') }}">
+          @csrf
+          @method('PUT')
+          <div class="panel-body">
+            <div class="mb-3">
+              <div class="form-text">Gunakan placeholder berikut di dalam redaksi: <code>{no_tiket}</code>, <code>{layanan}</code>, <code>{nama}</code>, <code>{status_label}</code>, <code>{waktu}</code>, <code>{catatan}</code>.</div>
+            </div>
+
+            <div class="mb-3 row g-2 align-items-center">
+              <label class="col-auto form-label fw-bold mb-0">Gaya Default</label>
+              <div class="col-auto">
+                <select id="wa_template_style" class="form-select">
+                  <option value="">-- Pilih gaya default --</option>
+                  <option value="formal">Formal</option>
+                  <option value="informatif">Informatif</option>
+                  <option value="lengkap">Lengkap</option>
+                  <option value="ramah">Ramah</option>
+                </select>
+              </div>
+              <div class="col-auto">
+                <button type="button" id="wa_apply_style" class="btn btn-outline-secondary">Terapkan ke semua template</button>
+              </div>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-12">
+                <label class="form-label fw-bold">Template - Permohonan Baru (Petugas)</label>
+                <textarea name="wa_template_baru_petugas" class="form-control" rows="4" placeholder="Template untuk notifikasi petugas">{{ old('wa_template_baru_petugas', $pengaturan['wa_template_baru_petugas'] ?? '') }}</textarea>
+                <div class="form-text">Contoh: <code>{layanan}</code>, <code>{no_tiket}</code>, <code>{nama}</code></div>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-bold">Template - Permohonan Baru (Pemohon)</label>
+                <textarea name="wa_template_baru_pemohon" class="form-control" rows="4" placeholder="Template untuk notifikasi pemohon">{{ old('wa_template_baru_pemohon', $pengaturan['wa_template_baru_pemohon'] ?? '') }}</textarea>
+                <div class="form-text">Pesan yang diterima pemohon setelah mengajukan permohonan.</div>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-bold">Template - Permohonan Baru (Group WA)</label>
+                <textarea name="wa_template_baru_group" class="form-control" rows="3" placeholder="Template untuk notifikasi group">{{ old('wa_template_baru_group', $pengaturan['wa_template_baru_group'] ?? '') }}</textarea>
+                <div class="form-text">Pesan yang dikirim ke group WA jika dikonfigurasi.</div>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-bold">Template - Perubahan Status (Petugas)</label>
+                <textarea name="wa_template_status_petugas" class="form-control" rows="3" placeholder="Template untuk notifikasi status ke petugas">{{ old('wa_template_status_petugas', $pengaturan['wa_template_status_petugas'] ?? '') }}</textarea>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-bold">Template - Perubahan Status (Pemohon)</label>
+                <textarea name="wa_template_status_pemohon" class="form-control" rows="4" placeholder="Template untuk notifikasi status ke pemohon">{{ old('wa_template_status_pemohon', $pengaturan['wa_template_status_pemohon'] ?? '') }}</textarea>
+                <div class="form-text">Sertakan <code>{catatan}</code> jika ingin menyampaikan keterangan tambahan.</div>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-bold">Template - Perubahan Status (Group WA)</label>
+                <textarea name="wa_template_status_group" class="form-control" rows="3" placeholder="Template untuk notifikasi status ke group">{{ old('wa_template_status_group', $pengaturan['wa_template_status_group'] ?? '') }}</textarea>
+              </div>
+            </div>
+          </div>
+          <div class="form-actions text-end px-4 pb-4">
+            <button type="submit" class="btn btn-primary">
+              <i class="ti tabler-device-floppy me-2"></i>Simpan Redaksi Notifikasi WA
+            </button>
+          </div>
+        </form>
+      </div>
 
       {{-- Pengaturan Dokumen --}}
       <div class="panel shadow-sm">
@@ -252,6 +325,66 @@ $configData = Helper::appClasses();
           this.classList.remove('is-invalid');
         }
       });
+    });
+  });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const styleSelect = document.getElementById('wa_template_style');
+    const applyBtn = document.getElementById('wa_apply_style');
+
+    // helper to get textarea elements
+    const getArea = (name) => document.querySelector(`[name="${name}"]`);
+
+    const styles = {
+      formal: {
+        baru_petugas: "📌 Pemberitahuan Permohonan Baru\n\nLayanan: {layanan}\nNo. Tiket: {no_tiket}\nNama: {nama}\nStatus: {status_label}\nWaktu: {waktu}\n\nMohon tindak lanjut sesuai prosedur.",
+        baru_pemohon: "Yth. {nama},\n\nPermohonan Anda untuk layanan {layanan} telah diterima dengan nomor tiket {no_tiket}.\nStatus saat ini: {status_label}.\n\nTerima kasih.\n{waktu}",
+        baru_group: "📌 Permohonan Baru - {no_tiket}\nLayanan: {layanan}\nNama: {nama}\nStatus: {status_label}\nWaktu: {waktu}",
+        status_petugas: "🔔 Pembaruan Status\n\nLayanan: {layanan}\nNo. Tiket: {no_tiket}\nNama: {nama}\nStatus: {status_label}\n{catatan}",
+        status_pemohon: "Halo {nama},\n\nStatus permohonan Anda (No. {no_tiket}) untuk layanan {layanan} telah diperbarui menjadi: {status_label}.\n{catatan}\n\nTerima kasih.",
+        status_group: "🔔 Status Permohonan - {no_tiket}\nLayanan: {layanan}\nNama: {nama}\nStatus: {status_label}\n{catatan}",
+      },
+      informatif: {
+        baru_petugas: "📣 Ada permohonan baru:\nLayanan: {layanan}\nNo. Tiket: {no_tiket}\nNama pemohon: {nama}\nWaktu: {waktu}\nSilakan cek sistem untuk detail.",
+        baru_pemohon: "Halo {nama},\nPermohonan Anda telah masuk (No. {no_tiket}) untuk layanan {layanan}.\nKami akan memberi kabar jika status berubah.",
+        baru_group: "Baru: {layanan} - {no_tiket} oleh {nama} pada {waktu}",
+        status_petugas: "Info: Status {no_tiket} berubah menjadi {status_label}. {catatan}",
+        status_pemohon: "Pemberitahuan: Permohonan {no_tiket} sekarang berstatus {status_label}. {catatan}",
+        status_group: "Status update: {no_tiket} -> {status_label}. {catatan}",
+      },
+      lengkap: {
+        baru_petugas: "📝 Permohonan Baru Diterima\n\nDetail:\n- Layanan: {layanan}\n- No. Tiket: {no_tiket}\n- Nama: {nama}\n- Status: {status_label}\n- Waktu: {waktu}\n\nSilakan buka panel permohonan untuk melihat formulir dan lampiran.",
+        baru_pemohon: "Terima kasih {nama},\nPermohonan Anda (No. {no_tiket}) untuk layanan {layanan} telah diterima pada {waktu}.\nKami akan memproses dan menginformasikan setiap perubahan status.\nJika perlu, hubungi petugas terkait.",
+        baru_group: "Permohonan Baru:\n- Layanan: {layanan}\n- No: {no_tiket}\n- Pemohon: {nama}\n- Waktu: {waktu}",
+        status_petugas: "🛠️ Perbaruan Status:\nLayanan: {layanan}\nNo. Tiket: {no_tiket}\nPemohon: {nama}\nStatus saat ini: {status_label}\n{catatan}\nMohon tindak lanjut jika diperlukan.",
+        status_pemohon: "Halo {nama},\nPerubahan status permohonan Anda (No. {no_tiket}) untuk {layanan}: {status_label}.\n{catatan}\nTerima kasih atas perhatian Anda.",
+        status_group: "Detail update:\nLayanan: {layanan}\nNo. {no_tiket}\nNama: {nama}\nStatus: {status_label}\n{catatan}",
+      },
+      ramah: {
+        baru_petugas: "Hai tim, ada permohonan baru nih! 😊\nLayanan: {layanan}\nNo. Tiket: {no_tiket}\nNama: {nama}\nWaktu: {waktu}\nTolong ditangani ya.",
+        baru_pemohon: "Halo {nama}! Terima kasih, permohonan Anda (No. {no_tiket}) untuk {layanan} sudah kami terima. Kami akan proses secepatnya.👍",
+        baru_group: "Yay! Permohonan baru: {layanan} - {no_tiket} oleh {nama} pada {waktu}",
+        status_petugas: "Update: Permohonan {no_tiket} sekarang {status_label}. {catatan}",
+        status_pemohon: "Halo {nama}, kabar baik! Status permohonan Anda (No. {no_tiket}) berubah menjadi {status_label}. {catatan}",
+        status_group: "Update status {no_tiket}: {status_label}. {catatan}",
+      }
+    };
+
+    applyBtn?.addEventListener('click', function() {
+      const v = styleSelect.value;
+      if (!v) return;
+
+      const s = styles[v];
+      if (!s) return;
+
+      // set values for each textarea
+      getArea('wa_template_baru_petugas').value = s['baru_petugas'];
+      getArea('wa_template_baru_pemohon').value = s['baru_pemohon'];
+      getArea('wa_template_baru_group').value = s['baru_group'];
+      getArea('wa_template_status_petugas').value = s['status_petugas'];
+      getArea('wa_template_status_pemohon').value = s['status_pemohon'];
+      getArea('wa_template_status_group').value = s['status_group'];
     });
   });
 </script>
