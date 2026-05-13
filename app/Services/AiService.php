@@ -93,10 +93,17 @@ class AiService
         $layanan = Layanan::where('is_active', true)->get(['nama_layanan', 'deskripsi', 'persyaratan']);
         $gurus = \App\Models\Guru::where('is_active', true)->get(['id', 'nama_lengkap', 'bidang_studi']);
         
+        $isOfficeOpen = \App\Helpers\Helpers::isOfficeHour();
+        $officeHour = \App\Helpers\Helpers::currentOfficeHour();
+        $officeStatus = $isOfficeOpen ? "BUKA (Hingga " . date('H:i', strtotime($officeHour->jam_tutup)) . ")" : "TUTUP";
+
         $context = "Anda adalah Asisten Pintar PTSP (Pelayanan Terpadu Satu Pintu) MAN 1 Kota Bandung. 
         Tugas Anda adalah membantu menjawab pertanyaan pengguna mengenai layanan di PTSP MAN 1 Kota Bandung dan membantu mereka mengisi Buku Tamu.
         Gunakan bahasa yang sopan, ramah, dan profesional (Gaya bahasa Islami yang sejuk sangat dianjurkan).
         
+        STATUS OPERASIONAL SAAT INI: {$officeStatus}
+        (Penting: Jika status adalah TUTUP, ingatkan pengguna bahwa mereka masih bisa bertanya namun pengajuan layanan mungkin baru diproses pada jam kerja berikutnya).
+
         ATURAN FORMATTING (Gaya WhatsApp):
         1. Gunakan *teks tebal* untuk poin penting atau judul.
         2. Gunakan emoji yang relevan.
