@@ -24,11 +24,6 @@
     color: #075985;
     border: 1px solid #7dd3fc;
   }
-  .role-user {
-    background: #f1f5f9;
-    color: #475569;
-    border: 1px solid #cbd5e1;
-  }
 </style>
 @endsection
 
@@ -42,6 +37,9 @@
         <p class="text-muted mb-0">Kelola pengguna dan hak akses sistem.</p>
       </div>
       <div>
+        <a href="{{ route('admin.role-management.index') }}" class="btn btn-outline-primary me-2">
+          <i class="ti tabler-settings me-1"></i> Kelola Role
+        </a>
         <a href="{{ route('admin.role.create') }}" class="btn btn-primary">
           <i class="ti tabler-plus me-1"></i> Tambah Pengguna
         </a>
@@ -77,45 +75,21 @@
           </div>
         </div>
       </div>
-      <div class="col-6 col-md-3">
-        <div class="card stat-card h-100" style="--accent-color: var(--red); --icon-bg: #fee2e2;">
-          <div class="card-body d-flex align-items-center gap-3">
-            <div class="stat-icon">
-              <i class="ti tabler-shield"></i>
-            </div>
-            <div>
-              <div class="stat-value">{{ $stats['admin'] }}</div>
-              <div class="stat-label">Admin</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      @foreach($roles as $role)
       <div class="col-6 col-md-3">
         <div class="card stat-card h-100" style="--accent-color: var(--sky); --icon-bg: #e0f2fe;">
           <div class="card-body d-flex align-items-center gap-3">
             <div class="stat-icon">
-              <i class="ti tabler-user-check"></i>
+              <i class="ti tabler-shield-check"></i>
             </div>
             <div>
-              <div class="stat-value">{{ $stats['staff'] }}</div>
-              <div class="stat-label">Staff</div>
+              <div class="stat-value">{{ $stats[$role->name] ?? 0 }}</div>
+              <div class="stat-label">{{ ucfirst($role->name) }}</div>
             </div>
           </div>
         </div>
       </div>
-      <div class="col-6 col-md-3">
-        <div class="card stat-card h-100" style="--accent-color: var(--muted); --icon-bg: #f1f5f9;">
-          <div class="card-body d-flex align-items-center gap-3">
-            <div class="stat-icon">
-              <i class="ti tabler-user"></i>
-            </div>
-            <div>
-              <div class="stat-value">{{ $stats['user'] }}</div>
-              <div class="stat-label">User</div>
-            </div>
-          </div>
-        </div>
-      </div>
+      @endforeach
     </div>
 
     {{-- Search --}}

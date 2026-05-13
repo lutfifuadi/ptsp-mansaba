@@ -10,20 +10,11 @@ use Illuminate\Support\Str;
 
 class SuratSiswaController extends Controller
 {
-    /**
-     * STEP 1: Form input NISN
-     * GET /ptsp/surat
-     */
     public function formCek()
     {
         return view('ptsp.surat.cek');
     }
 
-    /**
-     * STEP 2: Validasi NISN dan tampilkan konfirmasi identitas
-     * POST /ptsp/surat/cek
-     * Pola session: ikuti KelulusanController::cek()
-     */
     public function cekNisn(Request $request)
     {
         $request->validate([
@@ -41,19 +32,18 @@ class SuratSiswaController extends Controller
             ]);
         }
 
-        // Simpan NISN ke session untuk melindungi halaman form
-        session(['last_checked_nisn_surat' => $siswa->nisn]);
+        $token = (string) Str::uuid();
+        $sessions = session('surat_sessions', []);
+        $sessions[$token] = $siswa->nisn;
+        session(['surat_sessions' => $sessions]);
 
-        return view('ptsp.surat.konfirmasi', compact('siswa'));
+        return view('ptsp.surat.konfirmasi', compact('siswa', 'token'));
     }
 
-    /**
-     * STEP 2.5: Update NIS & Kelas dari halaman konfirmasi
-     * POST /ptsp/surat/konfirmasi
-     */
     public function konfirmasiUpdate(Request $request)
     {
-        $nisn = session('last_checked_nisn_surat');
+        $token = $request->input('session_token');
+        $nisn = $this->getNisnFromToken($token);
 
         if (!$nisn) {
             return redirect()->route('ptsp.surat.cek-form')->withErrors([
@@ -69,24 +59,26 @@ class SuratSiswaController extends Controller
             'kelas.in'       => 'Kelas yang dipilih tidak valid.',
         ]);
 
-        $siswa = Siswa::where('nisn', $nisn)->firstOrFail();
+        $siswa = Siswa::where('nisn', $nisn)->first();
+        if (!$siswa) {
+            return redirect()->route('ptsp.surat.cek-form')->withErrors([
+                'nisn' => 'Data siswa tidak ditemukan. Silakan mulai dari awal.',
+            ]);
+        }
+
         $siswa->update([
             'nis'   => $request->nis,
             'kelas' => $request->kelas,
         ]);
 
-        return redirect()->route('ptsp.surat.form')
+        return redirect()->route('ptsp.surat.form', ['session_token' => $token])
             ->with('success', 'Data berhasil diperbarui.');
     }
 
-    /**
-     * STEP 3: Form detail pengajuan surat
-     * GET /ptsp/surat/form
-     * Proteksi: harus ada session last_checked_nisn_surat
-     */
-    public function formPengajuan()
+    public function formPengajuan(Request $request)
     {
-        $nisn = session('last_checked_nisn_surat');
+        $token = $request->input('session_token');
+        $nisn = $this->getNisnFromToken($token);
 
         if (!$nisn) {
             return redirect()->route('ptsp.surat.cek-form')->withErrors([
@@ -94,20 +86,21 @@ class SuratSiswaController extends Controller
             ]);
         }
 
-        $siswa = Siswa::where('nisn', $nisn)->firstOrFail();
+        $siswa = Siswa::where('nisn', $nisn)->first();
+        if (!$siswa) {
+            return redirect()->route('ptsp.surat.cek-form')->withErrors([
+                'nisn' => 'Data siswa tidak ditemukan. Silakan mulai dari awal.',
+            ]);
+        }
 
-        return view('ptsp.surat.form', compact('siswa'));
+        return view('ptsp.surat.form', compact('siswa', 'token'));
     }
 
-    /**
-     * STEP 4: Simpan permohonan surat
-     * POST /ptsp/surat/store
-     */
     public function store(Request $request)
     {
-        $nisn = session('last_checked_nisn_surat');
+        $token = $request->input('session_token');
+        $nisn = $this->getNisnFromToken($token);
 
-        // Proteksi session
         if (!$nisn) {
             return redirect()->route('ptsp.surat.cek-form')->withErrors([
                 'nisn' => 'Sesi tidak valid. Silakan mulai dari awal.',
@@ -124,9 +117,13 @@ class SuratSiswaController extends Controller
             'keperluan.required'   => 'Keperluan wajib diisi.',
         ]);
 
-        $siswa = Siswa::where('nisn', $nisn)->firstOrFail();
+        $siswa = Siswa::where('nisn', $nisn)->first();
+        if (!$siswa) {
+            return redirect()->route('ptsp.surat.cek-form')->withErrors([
+                'nisn' => 'Data siswa tidak ditemukan. Silakan mulai dari awal.',
+            ]);
+        }
 
-        // Cari atau buat layanan Pembuatan Surat-Surat
         $layanan = Layanan::firstOrCreate(
             ['nama_layanan' => 'Pembuatan Surat-Surat'],
             [
@@ -136,12 +133,11 @@ class SuratSiswaController extends Controller
             ]
         );
 
-        // Generate nomor tiket
-        $noTiket = 'SURAT-' . strtoupper(Str::random(5));
+        $noTiket = 'SURAT-' . strtoupper(Str::random(10));
 
         Permohonan::create([
             'nisn'       => $siswa->nisn,
-            'user_id'    => null, // public, tanpa login
+            'user_id'    => null,
             'layanan_id' => $layanan->id,
             'no_tiket'   => $noTiket,
             'status'     => 'pending',
@@ -157,21 +153,44 @@ class SuratSiswaController extends Controller
             ],
         ]);
 
-        // Hapus session setelah submit berhasil
-        session()->forget('last_checked_nisn_surat');
+        $submittedTickets = session('submitted_tickets', []);
+        $submittedTickets[] = $noTiket;
+        session(['submitted_tickets' => $submittedTickets]);
+
+        $sessions = session('surat_sessions', []);
+        unset($sessions[$token]);
+        session(['surat_sessions' => $sessions]);
 
         return redirect()->route('ptsp.surat.sukses', $noTiket)
             ->with('success', 'Permohonan berhasil dikirim!');
     }
 
-    /**
-     * Halaman sukses setelah submit
-     * GET /ptsp/surat/sukses/{noTiket}
-     */
-    public function sukses(string $noTiket)
+    public function sukses(Request $request, string $noTiket)
     {
-        $permohonan = Permohonan::where('no_tiket', $noTiket)->firstOrFail();
+        $permohonan = Permohonan::where('no_tiket', $noTiket)->first();
+        if (!$permohonan) {
+            return redirect()->route('ptsp.surat.cek-form')->withErrors([
+                'nisn' => 'Permohonan tidak ditemukan.',
+            ]);
+        }
+
+        $submittedTickets = session('submitted_tickets', []);
+        if (!in_array($noTiket, $submittedTickets)) {
+            return redirect()->route('ptsp.surat.cek-form')->withErrors([
+                'nisn' => 'Anda tidak memiliki akses ke halaman ini.',
+            ]);
+        }
 
         return view('ptsp.surat.sukses', compact('permohonan', 'noTiket'));
+    }
+
+    private function getNisnFromToken(?string $token): ?string
+    {
+        if (!$token) {
+            return null;
+        }
+
+        $sessions = session('surat_sessions', []);
+        return $sessions[$token] ?? null;
     }
 }

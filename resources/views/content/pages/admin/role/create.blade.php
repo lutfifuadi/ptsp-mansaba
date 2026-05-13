@@ -101,29 +101,29 @@ $configData = Helper::appClasses();
         <div class="mb-4">
           <label class="form-label fw-bold mb-3">Hak Akses (Role) <span class="text-danger">*</span></label>
           <div class="row g-3">
+            @foreach($roles as $role)
             <div class="col-md-4">
-              <div class="role-select-card @if(old('role') === 'admin') active @endif" data-value="admin" onclick="selectRole(this)">
-                <div class="role-icon" style="color: var(--red);"><i class="ti tabler-shield"></i></div>
-                <div class="role-label">Admin</div>
-                <div class="role-desc">Akses penuh ke seluruh sistem</div>
+              <div class="role-select-card @if(old('role') === $role->name) active @endif" data-value="{{ $role->name }}" onclick="selectRole(this)">
+                @php
+                  $iconColor = match($role->name) {
+                    'admin' => 'var(--red)',
+                    'operator' => 'var(--p)',
+                    default => 'var(--muted)',
+                  };
+                  $icon = match($role->name) {
+                    'admin' => 'tabler-shield',
+                    'operator' => 'tabler-settings',
+                    default => 'tabler-user',
+                  };
+                @endphp
+                <div class="role-icon" style="color: {{ $iconColor }};"><i class="ti {{ $icon }}"></i></div>
+                <div class="role-label">{{ ucfirst($role->name) }}</div>
+                <div class="role-desc">Akses sebagai {{ $role->name }}</div>
               </div>
             </div>
-            <div class="col-md-4">
-              <div class="role-select-card @if(old('role') === 'staff') active @endif" data-value="staff" onclick="selectRole(this)">
-                <div class="role-icon" style="color: var(--sky);"><i class="ti tabler-user-check"></i></div>
-                <div class="role-label">Staff</div>
-                <div class="role-desc">Akses terbatas untuk operasional</div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="role-select-card @if(old('role') === 'user' || !old('role')) active @endif" data-value="user" onclick="selectRole(this)">
-                <div class="role-icon" style="color: var(--muted);"><i class="ti tabler-user"></i></div>
-                <div class="role-label">User</div>
-                <div class="role-desc">Akses dasar pengguna biasa</div>
-              </div>
-            </div>
+            @endforeach
           </div>
-          <input type="hidden" name="role" id="roleInput" value="{{ old('role', 'user') }}">
+          <input type="hidden" name="role" id="roleInput" value="{{ old('role', 'operator') }}">
           @error('role')<div class="invalid-feedback d-block">{{ $message }}</div>@enderror
         </div>
 

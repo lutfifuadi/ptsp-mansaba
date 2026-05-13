@@ -409,6 +409,7 @@
     <!-- Form Edit Data -->
     <form method="POST" action="{{ route('ptsp.surat.konfirmasi') }}" id="form-konfirmasi">
       @csrf
+      <input type="hidden" name="session_token" value="{{ $token }}">
 
       <!-- Data Grid -->
       <div class="data-grid">

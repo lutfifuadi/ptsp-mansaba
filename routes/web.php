@@ -20,6 +20,7 @@ use App\Http\Controllers\GuruController;
 use App\Http\Controllers\Admin\AdminGuruController;
 use App\Http\Controllers\Admin\AdminPermohonanController;
 use App\Http\Controllers\Admin\AdminRoleController;
+use App\Http\Controllers\Admin\RoleManagementController;
 use App\Http\Controllers\Admin\OfficeHourController;
 
 
@@ -86,65 +87,79 @@ Route::middleware([
 ])->group(function () {
   Route::get('/dashboard', [HomePage::class, 'index'])->name('dashboard');
 
-  Route::prefix('admin')->name('admin.')->group(function () {
+  Route::prefix('admin')->name('admin.')->middleware('role:admin|operator')->group(function () {
 
     // Data Siswa
-    Route::get('/siswa', [SiswaController::class, 'index'])->name('siswa.index');
-    Route::get('/siswa/tambah', [SiswaController::class, 'create'])->name('siswa.create');
-    Route::post('/siswa', [SiswaController::class, 'store'])->name('siswa.store');
-    Route::get('/siswa/{siswa}/edit', [SiswaController::class, 'edit'])->name('siswa.edit');
-    Route::put('/siswa/{siswa}', [SiswaController::class, 'update'])->name('siswa.update');
-    Route::delete('/siswa/{siswa}', [SiswaController::class, 'destroy'])->name('siswa.destroy');
-    Route::post('/siswa/import', [SiswaController::class, 'import'])->name('siswa.import');
-    Route::get('/siswa/import/template', [SiswaController::class, 'downloadTemplate'])->name('siswa.import.template');
-
-
-    // Data PTSP
-    // Data PTSP
-    Route::get('/ptsp', [AdminPermohonanController::class, 'semuaData'])->name('ptsp.index');
-    Route::get('/ptsp/semua-data', [AdminPermohonanController::class, 'semuaData'])->name('ptsp.semua-data');
-    Route::get('/ptsp/legalisir-ijazah', [AdminPermohonanController::class, 'legalisirIjazah'])->name('ptsp.legalisir-ijazah');
-    Route::get('/ptsp/pengambilan-ijazah', [AdminPermohonanController::class, 'pengambilanIjazah'])->name('ptsp.pengambilan-ijazah');
-    Route::get('/ptsp/pembuatan-surat', [AdminPermohonanController::class, 'pembuatanSurat'])->name('ptsp.pembuatan-surat');
-    Route::get('/ptsp/legalisir', [AdminPermohonanController::class, 'legalisir'])->name('ptsp.legalisir');
-    
-    Route::get('/ptsp/export/{format}', [ExportPermohonanController::class, 'export'])->name('ptsp.export');
-    Route::get('/ptsp/{permohonan}', [PermohonanController::class, 'adminShow'])->name('ptsp.show');
-    Route::put('/ptsp/{permohonan}/status', [PermohonanController::class, 'updateStatus'])->name('ptsp.status');
-    Route::post('/ptsp/reset/{layanan}', [PermohonanController::class, 'adminReset'])->name('ptsp.reset');
+    Route::middleware('can:lihat-siswa')->group(function () {
+      Route::get('/siswa', [SiswaController::class, 'index'])->name('siswa.index');
+      Route::get('/siswa/{siswa}/edit', [SiswaController::class, 'edit'])->name('siswa.edit');
+    });
+    Route::middleware('can:tambah-siswa')->group(function () {
+      Route::get('/siswa/tambah', [SiswaController::class, 'create'])->name('siswa.create');
+      Route::post('/siswa', [SiswaController::class, 'store'])->name('siswa.store');
+    });
+    Route::put('/siswa/{siswa}', [SiswaController::class, 'update'])->name('siswa.update')->middleware('can:edit-siswa');
+    Route::delete('/siswa/{siswa}', [SiswaController::class, 'destroy'])->name('siswa.destroy')->middleware('can:hapus-siswa');
+    Route::post('/siswa/import', [SiswaController::class, 'import'])->name('siswa.import')->middleware('can:impor-siswa');
+    Route::get('/siswa/import/template', [SiswaController::class, 'downloadTemplate'])->name('siswa.import.template')->middleware('can:impor-siswa');
 
     // Data Guru
-    Route::get('/guru', [AdminGuruController::class, 'index'])->name('guru.index');
-    Route::get('/guru/tambah', [AdminGuruController::class, 'create'])->name('guru.create');
-    Route::post('/guru', [AdminGuruController::class, 'store'])->name('guru.store');
-    Route::get('/guru/{guru}', [AdminGuruController::class, 'show'])->name('guru.show');
-    Route::get('/guru/{guru}/edit', [AdminGuruController::class, 'edit'])->name('guru.edit');
-    Route::put('/guru/{guru}', [AdminGuruController::class, 'update'])->name('guru.update');
-    Route::delete('/guru/{guru}', [AdminGuruController::class, 'destroy'])->name('guru.destroy');
-    Route::post('/guru/import', [AdminGuruController::class, 'import'])->name('guru.import');
-    Route::get('/guru/import/template', [AdminGuruController::class, 'downloadTemplate'])->name('guru.import.template');
+    Route::middleware('can:lihat-guru')->group(function () {
+      Route::get('/guru', [AdminGuruController::class, 'index'])->name('guru.index');
+      Route::get('/guru/{guru}', [AdminGuruController::class, 'show'])->name('guru.show');
+      Route::get('/guru/{guru}/edit', [AdminGuruController::class, 'edit'])->name('guru.edit');
+    });
+    Route::middleware('can:tambah-guru')->group(function () {
+      Route::get('/guru/tambah', [AdminGuruController::class, 'create'])->name('guru.create');
+      Route::post('/guru', [AdminGuruController::class, 'store'])->name('guru.store');
+    });
+    Route::put('/guru/{guru}', [AdminGuruController::class, 'update'])->name('guru.update')->middleware('can:edit-guru');
+    Route::delete('/guru/{guru}', [AdminGuruController::class, 'destroy'])->name('guru.destroy')->middleware('can:hapus-guru');
+    Route::middleware('can:impor-guru')->group(function () {
+      Route::post('/guru/import', [AdminGuruController::class, 'import'])->name('guru.import');
+      Route::get('/guru/import/template', [AdminGuruController::class, 'downloadTemplate'])->name('guru.import.template');
+    });
+
+    // Data PTSP
+    Route::middleware('can:lihat-ptsp')->group(function () {
+      Route::get('/ptsp', [AdminPermohonanController::class, 'semuaData'])->name('ptsp.index');
+      Route::get('/ptsp/semua-data', [AdminPermohonanController::class, 'semuaData'])->name('ptsp.semua-data');
+      Route::get('/ptsp/legalisir-ijazah', [AdminPermohonanController::class, 'legalisirIjazah'])->name('ptsp.legalisir-ijazah');
+      Route::get('/ptsp/pengambilan-ijazah', [AdminPermohonanController::class, 'pengambilanIjazah'])->name('ptsp.pengambilan-ijazah');
+      Route::get('/ptsp/pembuatan-surat', [AdminPermohonanController::class, 'pembuatanSurat'])->name('ptsp.pembuatan-surat');
+      Route::get('/ptsp/legalisir', [AdminPermohonanController::class, 'legalisir'])->name('ptsp.legalisir');
+      Route::get('/ptsp/{permohonan}', [PermohonanController::class, 'adminShow'])->name('ptsp.show');
+    });
+    Route::put('/ptsp/{permohonan}/status', [PermohonanController::class, 'updateStatus'])->name('ptsp.status')->middleware('can:kelola-ptsp');
+    Route::post('/ptsp/reset/{layanan}', [PermohonanController::class, 'adminReset'])->name('ptsp.reset')->middleware('can:kelola-ptsp');
+    Route::get('/ptsp/export/{format}', [ExportPermohonanController::class, 'export'])->name('ptsp.export')->middleware('can:export-ptsp');
 
     // Buku Tamu
-    Route::get('/buku-tamu', [AdminGuestBookController::class, 'index'])->name('guest-book.index');
-
-    // Buku Tamu - Notifikasi (HARUS sebelum {guestBook} wildcard)
-    Route::get('/buku-tamu/latest', [AdminGuestBookController::class, 'latest'])->name('guest-book.latest');
-
-    // Buku Tamu - Rekap & Export (HARUS sebelum {guestBook} wildcard)
-    Route::get('/buku-tamu/rekap', [ExportGuestBookController::class, 'rekap'])->name('guest-book.rekap');
-    Route::get('/buku-tamu/export/{format}', [ExportGuestBookController::class, 'export'])->name('guest-book.export');
-
-    Route::get('/buku-tamu/{guestBook}', [AdminGuestBookController::class, 'show'])->name('guest-book.show');
-    Route::delete('/buku-tamu/{guestBook}', [AdminGuestBookController::class, 'destroy'])->name('guest-book.destroy');
-    Route::post('/buku-tamu/reset', [AdminGuestBookController::class, 'reset'])->name('guest-book.reset');
+    Route::middleware('can:lihat-buku-tamu')->group(function () {
+      Route::get('/buku-tamu', [AdminGuestBookController::class, 'index'])->name('guest-book.index');
+      Route::get('/buku-tamu/latest', [AdminGuestBookController::class, 'latest'])->name('guest-book.latest');
+      Route::get('/buku-tamu/{guestBook}', [AdminGuestBookController::class, 'show'])->name('guest-book.show');
+    });
+    Route::delete('/buku-tamu/{guestBook}', [AdminGuestBookController::class, 'destroy'])->name('guest-book.destroy')->middleware('can:hapus-buku-tamu');
+    Route::middleware('can:export-buku-tamu')->group(function () {
+      Route::get('/buku-tamu/rekap', [ExportGuestBookController::class, 'rekap'])->name('guest-book.rekap');
+      Route::get('/buku-tamu/export/{format}', [ExportGuestBookController::class, 'export'])->name('guest-book.export');
+    });
+    Route::post('/buku-tamu/reset', [AdminGuestBookController::class, 'reset'])->name('guest-book.reset')->middleware('can:reset-buku-tamu');
 
     // Manajemen Pengguna & Role
-    Route::get('/role', [AdminRoleController::class, 'index'])->name('role.index');
-    Route::get('/role/tambah', [AdminRoleController::class, 'create'])->name('role.create');
-    Route::post('/role', [AdminRoleController::class, 'store'])->name('role.store');
-    Route::get('/role/{user}/edit', [AdminRoleController::class, 'edit'])->name('role.edit');
-    Route::put('/role/{user}', [AdminRoleController::class, 'update'])->name('role.update');
-    Route::delete('/role/{user}', [AdminRoleController::class, 'destroy'])->name('role.destroy');
+    Route::middleware('can:lihat-user')->group(function () {
+      Route::get('/role', [AdminRoleController::class, 'index'])->name('role.index');
+      Route::get('/role/{user}/edit', [AdminRoleController::class, 'edit'])->name('role.edit');
+    });
+    Route::middleware('can:tambah-user')->group(function () {
+      Route::get('/role/tambah', [AdminRoleController::class, 'create'])->name('role.create');
+      Route::post('/role', [AdminRoleController::class, 'store'])->name('role.store');
+    });
+    Route::put('/role/{user}', [AdminRoleController::class, 'update'])->name('role.update')->middleware('can:edit-user');
+    Route::delete('/role/{user}', [AdminRoleController::class, 'destroy'])->name('role.destroy')->middleware('can:hapus-user');
+
+    Route::resource('role-management', RoleManagementController::class)->parameters(['role-management' => 'role'])->names('role-management')->middleware(['role:admin', 'can:kelola-role']);
 
     // Form Elements
     Route::get('/form', function () {
@@ -153,19 +168,16 @@ Route::middleware([
 
     // Pengaturan
     Route::prefix('pengaturan')->name('pengaturan.')->group(function () {
-      // Lembaga
-      Route::get('/lembaga', [LembagaSettingController::class, 'index'])->name('lembaga');
-      Route::put('/lembaga', [LembagaSettingController::class, 'update'])->name('lembaga.update');
-
-      // Umum
-      Route::get('/umum', [GeneralSettingController::class, 'index'])->name('umum');
-      Route::put('/umum', [GeneralSettingController::class, 'update'])->name('umum.update');
-
-      // Jam Operasional
-      Route::get('/jam-operasional', [OfficeHourController::class, 'index'])->name('jam-operasional');
-      Route::put('/jam-operasional', [OfficeHourController::class, 'update'])->name('jam-operasional.update');
-
-
+      Route::middleware('can:lihat-pengaturan')->group(function () {
+        Route::get('/lembaga', [LembagaSettingController::class, 'index'])->name('lembaga');
+        Route::get('/umum', [GeneralSettingController::class, 'index'])->name('umum');
+        Route::get('/jam-operasional', [OfficeHourController::class, 'index'])->name('jam-operasional');
+      });
+      Route::middleware('can:edit-pengaturan')->group(function () {
+        Route::put('/lembaga', [LembagaSettingController::class, 'update'])->name('lembaga.update');
+        Route::put('/umum', [GeneralSettingController::class, 'update'])->name('umum.update');
+        Route::put('/jam-operasional', [OfficeHourController::class, 'update'])->name('jam-operasional.update');
+      });
     });
   });
 });

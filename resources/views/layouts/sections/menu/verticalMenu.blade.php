@@ -44,10 +44,19 @@ $configData = Helper::appClasses();
 
     {{-- menu headers --}}
     @if (isset($menu->menuHeader))
-    <li class="menu-header small">
-      <span class="menu-header-text">{{ __($menu->menuHeader) }}</span>
-    </li>
+      @php
+        $showSection = true;
+        // Logic to hide header if needed could be added here,
+        // but for now we just show it.
+      @endphp
+      @if($showSection)
+        <li class="menu-header small">
+          <span class="menu-header-text">{{ __($menu->menuHeader) }}</span>
+        </li>
+      @endif
     @else
+      {{-- permission check --}}
+      @if (!isset($menu->can) || (isset($menu->can) && auth()->user()->can($menu->can)))
     {{-- active menu method --}}
     @php
     $activeClass = null;
@@ -92,6 +101,7 @@ $configData = Helper::appClasses();
       @include('layouts.sections.menu.submenu', ['menu' => $menu->submenu])
       @endisset
     </li>
+    @endif
     @endif
     @endforeach
   </ul>

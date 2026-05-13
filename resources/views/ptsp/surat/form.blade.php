@@ -445,6 +445,7 @@
 
     <form method="POST" action="{{ route('ptsp.surat.store') }}" id="form-surat">
       @csrf
+      <input type="hidden" name="session_token" value="{{ $token }}">
 
       <!-- Data Siswa (read-only) -->
       <div class="section-title">Data Siswa</div>

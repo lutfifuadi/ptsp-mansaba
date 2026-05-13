@@ -32,14 +32,16 @@
           <span class="ticket-no">{{ $user->username }}</span>
         </td>
         <td>
-          @php
-            $roleClass = match($user->role) {
-              'admin' => 'role-admin',
-              'staff' => 'role-staff',
-              default => 'role-user',
-            };
-          @endphp
-          <span class="role-badge {{ $roleClass }}">{{ ucfirst($user->role) }}</span>
+          @foreach($user->getRoleNames() as $roleName)
+            @php
+              $roleClass = match($roleName) {
+                'admin' => 'role-admin',
+                'operator' => 'role-staff',
+                default => 'role-user',
+              };
+            @endphp
+            <span class="role-badge {{ $roleClass }}">{{ ucfirst($roleName) }}</span>
+          @endforeach
         </td>
         <td class="text-end pe-4">
           <div class="d-flex justify-content-end gap-1">

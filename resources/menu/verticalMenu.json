@@ -74,13 +74,15 @@
       "url": "/admin/pengaturan/lembaga",
       "icon": "menu-icon icon-base ti tabler-building-community",
       "name": "Profil Lembaga",
-      "slug": "admin.pengaturan.lembaga"
+      "slug": "admin.pengaturan.lembaga",
+      "can": "lihat-pengaturan"
     },
     {
       "url": "/admin/role",
       "icon": "menu-icon icon-base ti tabler-shield",
       "name": "Manajemen Pengguna",
-      "slug": "admin.role"
+      "slug": "admin.role",
+      "can": "lihat-user"
     },
     {
       "menuHeader": "KONFIGURASI"
@@ -89,13 +91,15 @@
       "url": "/admin/pengaturan/umum",
       "icon": "menu-icon icon-base ti tabler-settings-2",
       "name": "Pengaturan Umum",
-      "slug": "admin.pengaturan.umum"
+      "slug": "admin.pengaturan.umum",
+      "can": "lihat-pengaturan"
     },
     {
       "url": "/admin/pengaturan/jam-operasional",
       "icon": "menu-icon icon-base ti tabler-clock",
       "name": "Jam Operasional",
-      "slug": "admin.pengaturan.jam-operasional"
+      "slug": "admin.pengaturan.jam-operasional",
+      "can": "lihat-pengaturan"
     }
   ]
 }
