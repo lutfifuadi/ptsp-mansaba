@@ -269,20 +269,24 @@
 
 {{-- Modal Reset Konfirmasi --}}
 <div class="modal fade" id="modalReset" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog modal-dialog-centered" style="max-width: 440px;">
-    <div class="modal-content border-0 shadow-lg" style="border-radius: 12px; overflow: hidden;">
-      <div class="modal-body text-center p-4 pt-5 pb-4">
-        <div class="d-inline-flex align-items-center justify-content-center bg-danger bg-opacity-10 rounded-3 mb-3" style="width: 72px; height: 72px;">
-          <i class="ti tabler-alert-triangle text-danger" style="font-size: 2.2rem;"></i>
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 400px;">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 24px;">
+      <div class="modal-body text-center p-5">
+        <div class="d-inline-flex align-items-center justify-content-center bg-danger bg-opacity-10 rounded-circle mb-4" style="width: 80px; height: 80px;">
+          <i class="ti tabler-alert-triangle text-danger" style="font-size: 2.5rem;"></i>
         </div>
-        <h5 class="fw-bold mb-2">Reset Semua Data?</h5>
-        <p class="text-muted small mb-0" style="max-width: 320px; margin: 0 auto;">
+        <h4 class="fw-bold mb-2 text-dark">Reset Semua Data?</h4>
+        <p class="text-muted mb-4 px-2" style="font-size: 0.95rem; line-height: 1.6;">
           Tindakan ini akan menghapus <strong>seluruh data buku tamu</strong> secara permanen. Data yang sudah dihapus <strong class="text-danger">tidak dapat dikembalikan</strong>.
         </p>
-      </div>
-      <div class="d-flex border-top">
-        <button type="button" class="btn btn-lg flex-fill border-0 rounded-0 py-3 fw-semibold text-muted" data-bs-dismiss="modal" style="background: #f8fafc;">Batal</button>
-        <button type="button" class="btn btn-lg flex-fill border-0 rounded-0 py-3 fw-semibold text-white" id="btnResetConfirm" style="background: #dc2626;">Ya, Reset Semua</button>
+        <div class="d-flex gap-3">
+          <button type="button" class="btn btn-label-secondary btn-lg flex-fill py-3 fw-bold" data-bs-dismiss="modal" style="border-radius: 14px; font-size: 0.9rem; letter-spacing: 0.3px;">
+            Batal
+          </button>
+          <button type="button" class="btn btn-danger btn-lg flex-fill py-3 fw-bold shadow-sm" id="btnResetConfirm" style="border-radius: 14px; font-size: 0.9rem; letter-spacing: 0.3px;">
+            Ya, Reset Semua
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -291,19 +295,19 @@
 {{-- Modal Detail --}}
 <div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" style="max-width: 560px;">
-    <div class="modal-content border-0 shadow-lg" style="border-radius: 15px; overflow: hidden;">
-      <div class="modal-header p-4 border-bottom">
+    <div class="modal-content border-0 shadow-lg" style="border-radius: 20px;">
+      <div class="modal-header p-4 border-0 pb-0">
         <div class="d-flex align-items-center gap-3">
-          <div class="detail-avatar d-flex align-items-center justify-content-center bg-primary text-white fw-bold rounded-3" id="detailAvatar" style="width: 56px; height: 56px; font-size: 1.5rem;">T</div>
+          <div class="detail-avatar d-flex align-items-center justify-content-center bg-primary text-white fw-bold rounded-3 shadow-sm" id="detailAvatar" style="width: 56px; height: 56px; font-size: 1.5rem;">T</div>
           <div>
-            <h5 class="modal-title fw-bold mb-1" id="detailNama">-</h5>
-            <span class="badge bg-label-info" id="detailJenisInstansi" style="font-size: 0.7rem;">-</span>
+            <h5 class="modal-title fw-bold mb-1 text-dark" id="detailNama">-</h5>
+            <span class="badge bg-label-info rounded-pill px-3" id="detailJenisInstansi" style="font-size: 0.7rem;">-</span>
           </div>
         </div>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <button type="button" class="btn-close shadow-none" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body p-4">
-        <div id="modalDetailContent">
+        <div id="modalDetailContent" class="rounded-4 overflow-hidden">
           <div class="text-center py-5">
             <div class="spinner-border text-primary" role="status">
               <span class="visually-hidden">Memuat...</span>
@@ -312,10 +316,16 @@
           </div>
         </div>
       </div>
-      <div class="modal-footer border-top bg-light-subtle p-3">
-        <div class="d-flex gap-2 align-items-center w-100 justify-content-between">
-          <small class="text-muted ps-2" id="detailWaktu">-</small>
-          <button type="button" class="btn btn-label-secondary px-4 rounded-3" data-bs-dismiss="modal">
+      <div class="modal-footer border-0 p-4 pt-0">
+        <div class="d-flex gap-2 align-items-center w-100 justify-content-between bg-light rounded-4 p-3">
+          <div class="d-flex align-items-center gap-2">
+            <i class="ti tabler-calendar-time text-muted fs-4"></i>
+            <div>
+              <div class="text-muted" style="font-size: 0.7rem; line-height: 1;">Terdaftar pada</div>
+              <div class="fw-bold text-dark small" id="detailWaktu">-</div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-label-secondary px-4 py-2 rounded-3 fw-semibold" data-bs-dismiss="modal">
             Tutup
           </button>
         </div>
