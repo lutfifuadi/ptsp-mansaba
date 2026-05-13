@@ -18,9 +18,12 @@ class WhatsappService
     public function __construct()
     {
         $this->baseUrl = 'https://wa.lutfifuadi.my.id';
-        $this->apiKey = Pengaturan::get('wa_api_key', '');
-        $this->sender = Pengaturan::get('wa_sender', '');
-        $this->waGroupId = Pengaturan::get('wa_group_id');
+        // Pengaturan::get bisa mengembalikan null jika baris ada tetapi nilainya null.
+        // Cast eksplisit ke string untuk properti bertipe string agar tidak terjadi
+        // TypeError ketika nilai null tersimpan di DB pada live site.
+        $this->apiKey = (string) Pengaturan::get('wa_api_key', '');
+        $this->sender = (string) Pengaturan::get('wa_sender', '');
+        $this->waGroupId = Pengaturan::get('wa_group_id') ?: null;
 
         $this->defaultTemplates = [
             'baru_petugas' => "\u{1F4CC} *Permohonan Baru!*\n\nLayanan: {layanan}\nNo. Tiket: {no_tiket}\nNama: {nama}\nStatus: {status_label}\nWaktu: {waktu}\n\nSilakan proses permohonan ini di sistem PTSP.",
