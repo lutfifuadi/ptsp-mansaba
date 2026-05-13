@@ -29,7 +29,7 @@ class WhatsappService
         }
 
         try {
-            $response = Http::timeout(15)->post($this->baseUrl . '/send-message', [
+            $response = Http::timeout(15)->withoutVerifying()->post($this->baseUrl . '/send-message', [
                 'api_key' => $this->apiKey,
                 'sender'  => $this->sender,
                 'number'  => $to,
