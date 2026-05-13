@@ -204,11 +204,12 @@ else
 fi
 
 # ----------------------------------------------------------
-# 5. Jalankan migrasi database
+# 5. Jalankan migrasi database & seed permission
 # ----------------------------------------------------------
 echo ""
-echo "[6/8] Migrasi database..."
+echo "[6/8] Migrasi database & seed permission..."
 php artisan migrate --force
+php artisan db:seed --class=RoleAndPermissionSeeder --force
 
 # ----------------------------------------------------------
 # 5a. Sinkronisasi versi aplikasi dengan tag release
