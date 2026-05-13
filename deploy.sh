@@ -208,8 +208,8 @@ fi
 # ----------------------------------------------------------
 echo ""
 echo "[6/8] Migrasi database & seed permission..."
-php artisan migrate --force
-php artisan db:seed --class=RoleAndPermissionSeeder --force
+php artisan migrate
+php artisan db:seed --class=RoleAndPermissionSeeder
 
 # ----------------------------------------------------------
 # 5a. Sinkronisasi versi aplikasi dengan tag release
