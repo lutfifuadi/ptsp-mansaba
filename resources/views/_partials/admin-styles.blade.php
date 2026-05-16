@@ -1,19 +1,34 @@
 @once
+@php
+  $themePrimary = \App\Models\Pengaturan::get('theme_primary', '#059669');
+  $themePrimaryDark = \App\Models\Pengaturan::get('theme_primary_dark', '#047857');
+  $themePrimaryDarker = \App\Models\Pengaturan::get('theme_primary_darker', '#064e3b');
+  $themeAccent = \App\Models\Pengaturan::get('theme_accent', '#d97706');
+  $themeDanger = \App\Models\Pengaturan::get('theme_danger', '#dc2626');
+  $themeInfo = \App\Models\Pengaturan::get('theme_info', '#4f46e5');
+  $themeSuccess = \App\Models\Pengaturan::get('theme_success', '#0284c7');
+  $themeMuted = \App\Models\Pengaturan::get('theme_muted', '#64748b');
+  $themeText = \App\Models\Pengaturan::get('theme_text', '#0f172a');
+  $themeSurface = \App\Models\Pengaturan::get('theme_surface', '#ffffff');
+  $themeBackground = \App\Models\Pengaturan::get('theme_background', '#f1f5f9');
+  $themeBorder = \App\Models\Pengaturan::get('theme_border', '#e2e8f0');
+  $themeBorderLight = \App\Models\Pengaturan::get('theme_border_light', '#cbd5e1');
+@endphp
 <style>
   :root {
-    --p: #059669;
-    --p2: #047857;
-    --p3: #064e3b;
-    --amber: #d97706;
-    --red: #dc2626;
-    --indigo: #4f46e5;
-    --sky: #0284c7;
-    --muted: #64748b;
-    --text: #0f172a;
-    --surface: #ffffff;
-    --bg: #f1f5f9;
-    --border: #e2e8f0;
-    --border2: #cbd5e1;
+    --p: {{ $themePrimary }};
+    --p2: {{ $themePrimaryDark }};
+    --p3: {{ $themePrimaryDarker }};
+    --amber: {{ $themeAccent }};
+    --red: {{ $themeDanger }};
+    --indigo: {{ $themeInfo }};
+    --sky: {{ $themeSuccess }};
+    --muted: {{ $themeMuted }};
+    --text: {{ $themeText }};
+    --surface: {{ $themeSurface }};
+    --bg: {{ $themeBackground }};
+    --border: {{ $themeBorder }};
+    --border2: {{ $themeBorderLight }};
     --r: 4px;
     --r-sm: 3px;
     --r-lg: 5px;

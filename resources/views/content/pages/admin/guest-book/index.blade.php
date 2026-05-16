@@ -140,7 +140,7 @@
         <button type="button" class="btn btn-label-danger btn-reset-guest d-flex align-items-center gap-2">
           <i class="ti tabler-trash fs-4"></i> Reset Data
         </button>
-        <a href="{{ route('buku-tamu.index') }}" class="btn btn-outline-secondary d-flex align-items-center gap-2" target="_blank">
+        <a href="{{ route('buku-tamu.index') }}" class="btn btn-outline-secondary d-flex align-items-center gap-2">
           <i class="ti tabler-external-link fs-4"></i> Form
         </a>
       </div>

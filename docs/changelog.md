@@ -1,3 +1,5 @@
+[2026-05-16] Theme Color Settings — Penambahan panel pengaturan warna theme di halaman Admin/Pengaturan Umum. Admin dapat menyesuaikan 13 warna tema (Primary, Aksen, Base, Border) melalui color picker dengan preview realtime. CSS variables dinamis dari database memastikan konsistensi tampilan di seluruh halaman admin.
+
 [2026-05-14] Fitur PWA & AI Chat Round Robin — Implementasi fitur Progressive Web App yang dapat dikonfigurasi sepenuhnya melalui dashboard admin (nama, warna, deskripsi). Peningkatan AI Chat Assistant dengan dukungan multiple API Key menggunakan logika Round Robin dan enkripsi otomatis untuk keamanan kunci. UI Chat diperbarui dengan estetika premium glassmorphism.
 
 

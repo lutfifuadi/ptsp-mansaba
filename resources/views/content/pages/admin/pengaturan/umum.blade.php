@@ -23,6 +23,14 @@ $configData = Helper::appClasses();
       border-top: 1px solid var(--border);
       padding-top: 1rem;
     }
+    .color-hex-input {
+      font-family: monospace;
+      font-size: 0.85rem;
+      background: #f8fafc;
+    }
+    .theme-preview {
+      background: linear-gradient(135deg, var(--bg) 0%, var(--surface) 100%);
+    }
   </style>
 @endsection
 
@@ -182,6 +190,150 @@ $configData = Helper::appClasses();
         </div>
       </div>
       
+      {{-- Pengaturan Warna Theme --}}
+      <div class="panel shadow-sm">
+        <div class="section-head">
+          <h5 class="section-head-title"><span class="dot"></span> Pengaturan Warna Theme</h5>
+        </div>
+        <div class="panel-body">
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="form-text mb-3">Sesuaikan warna tema aplikasi. Perubahan akan langsung terlihat di seluruh halaman admin.</div>
+            </div>
+            
+            {{-- Warna Utama --}}
+            <div class="col-12">
+              <h6 class="fw-bold mb-2"><i class="ti tabler-palette me-1 text-primary"></i> Warna Utama (Primary)</h6>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label fw-bold">Primary</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" name="theme_primary" class="form-control form-control-color" value="{{ old('theme_primary', $pengaturan['theme_primary']) }}" style="width: 50px; height: 38px;">
+                <input type="text" class="form-control color-hex-input" value="{{ old('theme_primary', $pengaturan['theme_primary']) }}" readonly>
+              </div>
+              <div class="form-text">Warna utama tombol, link, dan aksen.</div>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label fw-bold">Primary Dark</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" name="theme_primary_dark" class="form-control form-control-color" value="{{ old('theme_primary_dark', $pengaturan['theme_primary_dark']) }}" style="width: 50px; height: 38px;">
+                <input type="text" class="form-control color-hex-input" value="{{ old('theme_primary_dark', $pengaturan['theme_primary_dark']) }}" readonly>
+              </div>
+              <div class="form-text">Warna hover dan elemen sekunder.</div>
+            </div>
+            <div class="col-12 col-md-4">
+              <label class="form-label fw-bold">Primary Darker</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" name="theme_primary_darker" class="form-control form-control-color" value="{{ old('theme_primary_darker', $pengaturan['theme_primary_darker']) }}" style="width: 50px; height: 38px;">
+                <input type="text" class="form-control color-hex-input" value="{{ old('theme_primary_darker', $pengaturan['theme_primary_darker']) }}" readonly>
+              </div>
+              <div class="form-text">Warna teks gelap dan background avatar.</div>
+            </div>
+
+            {{-- Warna Aksen --}}
+            <div class="col-12 mt-3">
+              <h6 class="fw-bold mb-2"><i class="ti tabler-color-swatch me-1 text-warning"></i> Warna Aksen</h6>
+            </div>
+            <div class="col-12 col-md-3">
+              <label class="form-label fw-bold">Accent (Amber)</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" name="theme_accent" class="form-control form-control-color" value="{{ old('theme_accent', $pengaturan['theme_accent']) }}" style="width: 50px; height: 38px;">
+                <input type="text" class="form-control color-hex-input" value="{{ old('theme_accent', $pengaturan['theme_accent']) }}" readonly>
+              </div>
+            </div>
+            <div class="col-12 col-md-3">
+              <label class="form-label fw-bold">Danger (Merah)</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" name="theme_danger" class="form-control form-control-color" value="{{ old('theme_danger', $pengaturan['theme_danger']) }}" style="width: 50px; height: 38px;">
+                <input type="text" class="form-control color-hex-input" value="{{ old('theme_danger', $pengaturan['theme_danger']) }}" readonly>
+              </div>
+            </div>
+            <div class="col-12 col-md-3">
+              <label class="form-label fw-bold">Info (Indigo)</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" name="theme_info" class="form-control form-control-color" value="{{ old('theme_info', $pengaturan['theme_info']) }}" style="width: 50px; height: 38px;">
+                <input type="text" class="form-control color-hex-input" value="{{ old('theme_info', $pengaturan['theme_info']) }}" readonly>
+              </div>
+            </div>
+            <div class="col-12 col-md-3">
+              <label class="form-label fw-bold">Success (Sky)</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" name="theme_success" class="form-control form-control-color" value="{{ old('theme_success', $pengaturan['theme_success']) }}" style="width: 50px; height: 38px;">
+                <input type="text" class="form-control color-hex-input" value="{{ old('theme_success', $pengaturan['theme_success']) }}" readonly>
+              </div>
+            </div>
+
+            {{-- Warna Dasar --}}
+            <div class="col-12 mt-3">
+              <h6 class="fw-bold mb-2"><i class="ti tabler-brush me-1 text-info"></i> Warna Dasar (Base)</h6>
+            </div>
+            <div class="col-12 col-md-3">
+              <label class="form-label fw-bold">Teks</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" name="theme_text" class="form-control form-control-color" value="{{ old('theme_text', $pengaturan['theme_text']) }}" style="width: 50px; height: 38px;">
+                <input type="text" class="form-control color-hex-input" value="{{ old('theme_text', $pengaturan['theme_text']) }}" readonly>
+              </div>
+            </div>
+            <div class="col-12 col-md-3">
+              <label class="form-label fw-bold">Surface (Panel)</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" name="theme_surface" class="form-control form-control-color" value="{{ old('theme_surface', $pengaturan['theme_surface']) }}" style="width: 50px; height: 38px;">
+                <input type="text" class="form-control color-hex-input" value="{{ old('theme_surface', $pengaturan['theme_surface']) }}" readonly>
+              </div>
+            </div>
+            <div class="col-12 col-md-3">
+              <label class="form-label fw-bold">Background</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" name="theme_background" class="form-control form-control-color" value="{{ old('theme_background', $pengaturan['theme_background']) }}" style="width: 50px; height: 38px;">
+                <input type="text" class="form-control color-hex-input" value="{{ old('theme_background', $pengaturan['theme_background']) }}" readonly>
+              </div>
+            </div>
+            <div class="col-12 col-md-3">
+              <label class="form-label fw-bold">Muted (Abu-abu)</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" name="theme_muted" class="form-control form-control-color" value="{{ old('theme_muted', $pengaturan['theme_muted']) }}" style="width: 50px; height: 38px;">
+                <input type="text" class="form-control color-hex-input" value="{{ old('theme_muted', $pengaturan['theme_muted']) }}" readonly>
+              </div>
+            </div>
+
+            {{-- Warna Border --}}
+            <div class="col-12 mt-3">
+              <h6 class="fw-bold mb-2"><i class="ti tabler-border-style me-1 text-secondary"></i> Warna Border</h6>
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-bold">Border Utama</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" name="theme_border" class="form-control form-control-color" value="{{ old('theme_border', $pengaturan['theme_border']) }}" style="width: 50px; height: 38px;">
+                <input type="text" class="form-control color-hex-input" value="{{ old('theme_border', $pengaturan['theme_border']) }}" readonly>
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <label class="form-label fw-bold">Border Light</label>
+              <div class="d-flex align-items-center gap-2">
+                <input type="color" name="theme_border_light" class="form-control form-control-color" value="{{ old('theme_border_light', $pengaturan['theme_border_light']) }}" style="width: 50px; height: 38px;">
+                <input type="text" class="form-control color-hex-input" value="{{ old('theme_border_light', $pengaturan['theme_border_light']) }}" readonly>
+              </div>
+            </div>
+
+            {{-- Preview --}}
+            <div class="col-12 mt-4">
+              <h6 class="fw-bold mb-3"><i class="ti tabler-eye me-1 text-success"></i> Preview</h6>
+              <div class="theme-preview p-3" style="background: var(--bg); border: 1px solid var(--border); border-radius: 5px;">
+                <div class="d-flex gap-2 flex-wrap">
+                  <span class="btn btn-sm" style="background: var(--p); color: #fff;">Primary</span>
+                  <span class="btn btn-sm" style="background: var(--p2); color: #fff;">Primary Dark</span>
+                  <span class="btn btn-sm" style="background: var(--p3); color: #fff;">Primary Darker</span>
+                  <span class="btn btn-sm" style="background: var(--amber); color: #fff;">Accent</span>
+                  <span class="btn btn-sm" style="background: var(--red); color: #fff;">Danger</span>
+                  <span class="btn btn-sm" style="background: var(--indigo); color: #fff;">Info</span>
+                  <span class="btn btn-sm" style="background: var(--sky); color: #fff;">Success</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {{-- Redaksi Notifikasi WhatsApp --}}
       <div class="panel shadow-sm">
         <div class="section-head">
@@ -377,6 +529,44 @@ $configData = Helper::appClasses();
         }
       });
     });
+
+    // Sync color picker with hex input
+    document.querySelectorAll('input[type="color"]').forEach(function(colorInput) {
+      const hexInput = colorInput.parentElement.querySelector('.color-hex-input');
+      if (hexInput) {
+        hexInput.value = colorInput.value;
+        colorInput.addEventListener('input', function() {
+          hexInput.value = this.value;
+          updateThemePreview();
+        });
+      }
+    });
+
+    function updateThemePreview() {
+      const root = document.documentElement;
+      const colorMap = {
+        'theme_primary': '--p',
+        'theme_primary_dark': '--p2',
+        'theme_primary_darker': '--p3',
+        'theme_accent': '--amber',
+        'theme_danger': '--red',
+        'theme_info': '--indigo',
+        'theme_success': '--sky',
+        'theme_muted': '--muted',
+        'theme_text': '--text',
+        'theme_surface': '--surface',
+        'theme_background': '--bg',
+        'theme_border': '--border',
+        'theme_border_light': '--border2'
+      };
+
+      Object.keys(colorMap).forEach(function(name) {
+        const input = document.querySelector(`[name="${name}"]`);
+        if (input && input.type === 'color') {
+          root.style.setProperty(colorMap[name], input.value);
+        }
+      });
+    }
   });
 </script>
 <script>

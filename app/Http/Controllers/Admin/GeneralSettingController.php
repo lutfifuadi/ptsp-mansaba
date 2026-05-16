@@ -35,6 +35,20 @@ class GeneralSettingController extends Controller
             'pwa_theme_color'   => Pengaturan::get('pwa_theme_color', '#7367f0'),
             // AI Chat Settings
             'gemini_api_keys'   => Pengaturan::get('gemini_api_keys', ''),
+            // Theme Color Settings
+            'theme_primary'         => Pengaturan::get('theme_primary', '#059669'),
+            'theme_primary_dark'    => Pengaturan::get('theme_primary_dark', '#047857'),
+            'theme_primary_darker'  => Pengaturan::get('theme_primary_darker', '#064e3b'),
+            'theme_accent'          => Pengaturan::get('theme_accent', '#d97706'),
+            'theme_danger'          => Pengaturan::get('theme_danger', '#dc2626'),
+            'theme_info'            => Pengaturan::get('theme_info', '#4f46e5'),
+            'theme_success'         => Pengaturan::get('theme_success', '#0284c7'),
+            'theme_muted'           => Pengaturan::get('theme_muted', '#64748b'),
+            'theme_text'            => Pengaturan::get('theme_text', '#0f172a'),
+            'theme_surface'         => Pengaturan::get('theme_surface', '#ffffff'),
+            'theme_background'      => Pengaturan::get('theme_background', '#f1f5f9'),
+            'theme_border'          => Pengaturan::get('theme_border', '#e2e8f0'),
+            'theme_border_light'    => Pengaturan::get('theme_border_light', '#cbd5e1'),
         ];
 
         foreach ($wa->getAllTemplates() as $key => $value) {
@@ -68,6 +82,20 @@ class GeneralSettingController extends Controller
             'pwa_background_color' => ['nullable', 'string', 'max:20'],
             'pwa_theme_color'   => ['nullable', 'string', 'max:20'],
             'gemini_api_keys'   => ['nullable', 'string'],
+            // Theme Colors - validasi format hex
+            'theme_primary'         => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_primary_dark'    => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_primary_darker'  => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_accent'          => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_danger'          => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_info'            => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_success'         => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_muted'           => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_text'            => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_surface'         => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_background'      => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_border'          => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
+            'theme_border_light'    => ['nullable', 'string', 'regex:/^#[0-9A-Fa-f]{6}$/'],
         ];
 
         $templateKeys = [
@@ -104,6 +132,21 @@ class GeneralSettingController extends Controller
         Pengaturan::set('pwa_background_color', $request->pwa_background_color);
         Pengaturan::set('pwa_theme_color', $request->pwa_theme_color);
         Pengaturan::set('gemini_api_keys', $request->gemini_api_keys);
+
+        // Theme Colors
+        Pengaturan::set('theme_primary', $request->theme_primary);
+        Pengaturan::set('theme_primary_dark', $request->theme_primary_dark);
+        Pengaturan::set('theme_primary_darker', $request->theme_primary_darker);
+        Pengaturan::set('theme_accent', $request->theme_accent);
+        Pengaturan::set('theme_danger', $request->theme_danger);
+        Pengaturan::set('theme_info', $request->theme_info);
+        Pengaturan::set('theme_success', $request->theme_success);
+        Pengaturan::set('theme_muted', $request->theme_muted);
+        Pengaturan::set('theme_text', $request->theme_text);
+        Pengaturan::set('theme_surface', $request->theme_surface);
+        Pengaturan::set('theme_background', $request->theme_background);
+        Pengaturan::set('theme_border', $request->theme_border);
+        Pengaturan::set('theme_border_light', $request->theme_border_light);
 
         foreach ($templateKeys as $key) {
             if ($request->has($key)) {
