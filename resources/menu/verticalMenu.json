@@ -107,6 +107,12 @@
       "name": "Jam Operasional",
       "slug": "admin.pengaturan.jam-operasional",
       "can": "lihat-pengaturan"
+    },
+    {
+      "url": "/admin/update",
+      "icon": "menu-icon icon-base ti tabler-refresh",
+      "name": "Update Aplikasi",
+      "slug": "admin.update"
     }
   ]
 }

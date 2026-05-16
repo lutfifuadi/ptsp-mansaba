@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\RoleManagementController;
 use App\Http\Controllers\Admin\OfficeHourController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PwaController;
+use App\Http\Controllers\Admin\UpdateController;
 
 // PWA Routes
 Route::get('/manifest.json', [PwaController::class, 'manifest']);
@@ -205,7 +206,14 @@ Route::middleware([
         // Save only WhatsApp templates separately
        Route::put('/umum/templates', [GeneralSettingController::class, 'updateTemplates'])->name('umum.templates.update');
         Route::put('/jam-operasional', [OfficeHourController::class, 'update'])->name('jam-operasional.update');
-      });
+        });
+    });
+
+    // Update Aplikasi
+    Route::middleware('role:admin')->group(function () {
+      Route::get('/update', [UpdateController::class, 'index'])->name('update.index');
+      Route::post('/update/check', [UpdateController::class, 'check'])->name('update.check');
+      Route::post('/update/run', [UpdateController::class, 'run'])->name('update.run');
     });
   });
 });

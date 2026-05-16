@@ -107,3 +107,37 @@ Berhasil memperbaiki error 404 pada halaman Rekap Buku Tamu Admin dengan mengatu
 #### Catatan untuk Sprint Berikutnya
 
 - Selalu pastikan route statis didefinisikan sebelum route dengan parameter dinamis dalam grup yang sama.
+
+---
+
+### Aulia — 16 Mei 2026 13:10
+
+**Tugas** : Backend Fitur Update Aplikasi dari Admin Panel
+**Status** : Selesai
+
+#### Yang Sudah Dilakukan
+
+- Membuat Artisan command `update:app` di `app/Console/Commands/AppUpdate.php` yang menjalankan: git fetch, git pull, migrate, cache clear, config/view/route clear, dan optimasi production.
+- Membuat `app/Http/Controllers/Admin/UpdateController.php` dengan method: `index` (info git), `check` (cek update remote), `run` (streaming output update).
+- Menambahkan 3 route di `routes/web.php`: `GET /admin/update`, `POST /admin/update/check`, `POST /admin/update/run` — semuanya dengan middleware `auth:sanctum`, `verified`, `role:admin`.
+- Menambahkan menu "Update Aplikasi" di `resources/menu/verticalMenu.json` di bawah grup KONFIGURASI.
+- Membuat halaman view `resources/views/content/pages/admin/update/index.blade.php` dengan info versi, branch, commit, dan console update real-time.
+- Menggunakan `Symfony Process` dengan timeout 300 detik untuk keamanan eksekusi command.
+
+#### Hasil
+
+- 3 endpoint API siap: `admin.update.index`, `admin.update.check`, `admin.update.run`
+- 1 Artisan command siap: `php artisan update:app`
+- Halaman admin update dengan UI premium (radius 5px, glassmorphism, Tabler icons)
+- Streaming output real-time dari proses update
+
+#### Pengecekan laravel.log
+
+- Waktu cek : 16 Mei 2026 13:10
+- Hasil : Bersih
+- Detail error: Tidak ada error
+- Tindakan : Tidak ada
+
+#### Langkah Selanjutnya
+
+- Siap untuk audit keamanan oleh Ayu
