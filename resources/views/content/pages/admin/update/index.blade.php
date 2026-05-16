@@ -118,6 +118,20 @@
     </nav>
   </div>
 
+  @php
+    $gitUnavailable = isset($info['git_available']) && !$info['git_available'];
+  @endphp
+
+  @if ($gitUnavailable)
+    <div class="alert alert-warning d-flex align-items-center gap-3" style="border-radius:var(--r-lg);background:rgba(251,191,36,0.12);border:1px solid rgba(251,191,36,0.3);color:#92400e;backdrop-filter:blur(4px)">
+      <i class="ti tabler-alert-triangle" style="font-size:1.3rem;flex-shrink:0"></i>
+      <div>
+        <strong>Git Tidak Tersedia</strong><br>
+        <small>{{ $info['error'] ?? 'Fungsi eksekusi perintah git tidak tersedia di server ini. Fitur update tidak dapat digunakan melalui panel admin.' }}</small>
+      </div>
+    </div>
+  @endif
+
   <div class="row g-3 mb-3">
     <div class="col-12 col-sm-6 col-lg-3">
       <div class="update-stat-card d-flex align-items-center gap-3">
@@ -152,7 +166,7 @@
         <div>
           <div class="update-stat-label">Commit Terakhir</div>
           <div class="update-stat-value">
-            <span class="commit-hash">{{ explode(' - ', $info['commit'])[0] }}</span>
+            <span class="commit-hash">{{ ($parts = explode(' - ', $info['commit'])) ? $parts[0] : '-' }}</span>
           </div>
         </div>
       </div>
@@ -165,7 +179,14 @@
         <div>
           <div class="update-stat-label">Tanggal Commit</div>
           <div class="update-stat-value" style="font-size:0.82rem">
-            {{ \Carbon\Carbon::parse($info['commit_date'])->format('d M Y H:i') }}
+            @php
+              $commitDate = $info['commit_date'] ?? '-';
+            @endphp
+            @if ($commitDate && $commitDate !== '-' && $commitDate !== 'N/A')
+              {{ \Carbon\Carbon::parse($commitDate)->format('d M Y H:i') }}
+            @else
+              {{ $commitDate }}
+            @endif
           </div>
         </div>
       </div>
@@ -181,7 +202,11 @@
     </div>
     <div class="panel-body">
       <div style="font-size:0.88rem;color:var(--text);font-family:monospace;background:#f8fafc;padding:10px 14px;border-radius:var(--r);border:1px solid var(--border)">
-        {{ $info['commit'] }}
+        @if (isset($info['commit']) && $info['commit'] !== 'N/A')
+          {{ $info['commit'] }}
+        @else
+          <span style="color:var(--muted)">Tidak tersedia</span>
+        @endif
       </div>
     </div>
   </div>
@@ -193,18 +218,20 @@
         Console Update
       </div>
       <div class="d-flex gap-2">
-        <button type="button" class="btn btn-view" id="btnCheck" onclick="checkUpdate()">
+        <button type="button" class="btn btn-view" id="btnCheck" onclick="checkUpdate()"
+          {{ $gitUnavailable ? 'disabled title="Git tidak tersedia"' : '' }}>
           <i class="ti tabler-search me-1"></i>Cek Update
         </button>
         <button type="button" class="btn btn-view" id="btnRun" onclick="confirmUpdate()" disabled
-          style="border-color:var(--amber);color:var(--amber)!important">
+          style="border-color:var(--amber);color:var(--amber)!important"
+          {{ $gitUnavailable ? 'title="Git tidak tersedia"' : '' }}>
           <i class="ti tabler-refresh me-1"></i>Jalankan Update
         </button>
       </div>
     </div>
     <div class="panel-body">
       <div class="log-container" id="logContainer">
-        <span class="log-info">[INFO]</span> Sistem siap. Klik "Cek Update" untuk memeriksa pembaruan.
+        <span class="log-info">[INFO]</span> {{ $gitUnavailable ? 'Git tidak tersedia. Fitur update tidak dapat digunakan.' : 'Sistem siap. Klik "Cek Update" untuk memeriksa pembaruan.' }}
       </div>
       <div class="mt-2 d-flex align-items-center gap-2" id="statusIndicator" style="display:none!important">
         <span class="st-badge st-default" id="statusBadge">Menunggu</span>

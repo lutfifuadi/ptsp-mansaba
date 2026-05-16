@@ -4,17 +4,23 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Pengaturan;
+use App\Services\GitService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
-use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class UpdateController extends Controller
 {
+    private GitService $git;
+
+    public function __construct(GitService $git)
+    {
+        $this->git = $git;
+    }
+
     public function index()
     {
-        $info = $this->getGitInfo();
+        $info = $this->git->getGitInfo();
         $appVersion = Pengaturan::get('app_version', '1.0.0');
 
         return view('content.pages.admin.update.index', compact('info', 'appVersion'));
@@ -23,20 +29,30 @@ class UpdateController extends Controller
     public function check(): JsonResponse
     {
         try {
-            $redirection = DIRECTORY_SEPARATOR === '\\' ? '2>nul' : '2>/dev/null';
+            if (!$this->git->isGitAvailable()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Fitur git tidak tersedia di server ini. Update tidak dapat dilakukan.',
+                    'git_available' => false,
+                ], 503);
+            }
 
-            exec("git fetch origin {$redirection}", $fetchOutput, $fetchCode);
+            if (!$this->git->isRepo()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Aplikasi bukan merupakan repository Git.',
+                    'git_available' => false,
+                ], 503);
+            }
 
-            $branch = trim(shell_exec('git rev-parse --abbrev-ref HEAD 2>nul') ?? 'main');
-            exec("git rev-parse HEAD {$redirection}", $localOutput);
-            exec("git rev-parse origin/{$branch} {$redirection}", $remoteOutput);
+            $this->git->fetchOrigin();
 
-            $localHash = $localOutput[0] ?? '';
-            $remoteHash = $remoteOutput[0] ?? '';
+            $branch = $this->git->getBranch();
+            $localHash = $this->git->getLocalHash();
+            $remoteHash = $this->git->getRemoteHash($branch);
 
             $hasUpdate = !empty($localHash) && !empty($remoteHash) && $localHash !== $remoteHash;
-
-            exec("git log HEAD..origin/{$branch} --oneline {$redirection}", $commitOutput);
+            $pendingCommits = $this->git->getPendingCommits($branch);
 
             return response()->json([
                 'success' => true,
@@ -44,7 +60,8 @@ class UpdateController extends Controller
                 'branch' => $branch,
                 'local_commit' => $localHash ? substr($localHash, 0, 7) : '-',
                 'remote_commit' => $remoteHash ? substr($remoteHash, 0, 7) : '-',
-                'pending_commits' => $commitOutput,
+                'pending_commits' => $pendingCommits,
+                'git_available' => true,
                 'message' => $hasUpdate
                     ? 'Pembaruan tersedia!'
                     : 'Aplikasi sudah yang terbaru.',
@@ -53,7 +70,8 @@ class UpdateController extends Controller
             Log::error('Update check gagal: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Gagal memeriksa pembaruan: ' . $e->getMessage(),
+                'message' => 'Gagal memeriksa pembaruan. Silakan coba lagi atau hubungi administrator.',
+                'git_available' => $this->git->isGitAvailable(),
             ], 500);
         }
     }
@@ -61,6 +79,13 @@ class UpdateController extends Controller
     public function run()
     {
         Log::info('Memulai proses update aplikasi oleh admin.');
+
+        if (!$this->git->isGitAvailable()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Fitur git tidak tersedia di server ini.',
+            ], 503);
+        }
 
         return response()->stream(function () {
             $this->streamOutput("[INFO] Memulai proses update...\n");
@@ -96,22 +121,5 @@ class UpdateController extends Controller
         echo $text;
         ob_flush();
         flush();
-    }
-
-    private function getGitInfo(): array
-    {
-        $redirection = DIRECTORY_SEPARATOR === '\\' ? '2>nul' : '2>/dev/null';
-        $branch = trim(shell_exec('git rev-parse --abbrev-ref HEAD 2>nul') ?? 'main');
-        $commit = trim(shell_exec('git log -1 --format="%h - %s" 2>nul') ?? '-');
-        $commitDate = trim(shell_exec('git log -1 --format="%ci" 2>nul') ?? '-');
-        exec("git describe --tags --abbrev=0 {$redirection}", $tagOutput, $tagCode);
-        $tag = ($tagCode === 0 && !empty($tagOutput[0])) ? trim($tagOutput[0]) : '-';
-
-        return [
-            'branch' => $branch,
-            'commit' => $commit,
-            'commit_date' => $commitDate,
-            'tag' => $tag,
-        ];
     }
 }

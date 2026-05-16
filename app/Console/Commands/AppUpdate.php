@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Models\Pengaturan;
+use App\Services\GitService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Process;
 
@@ -84,7 +84,8 @@ class AppUpdate extends Command
             return;
         }
 
-        $branch = trim(shell_exec('git rev-parse --abbrev-ref HEAD 2>nul') ?? 'main');
+        $git = new GitService();
+        $branch = $git->getBranch();
         $this->line("Branch aktif: {$branch}");
         $this->logOutput("Branch aktif: {$branch}");
 
@@ -113,16 +114,13 @@ class AppUpdate extends Command
 
     private function syncVersion(): void
     {
-        $redirection = DIRECTORY_SEPARATOR === '\\' ? '2>nul' : '2>/dev/null';
-        exec("git describe --tags --abbrev=0 {$redirection}", $output, $exitCode);
+        $git = new GitService();
+        $version = $git->getVersionTag();
 
-        if ($exitCode === 0 && !empty($output[0])) {
-            $tag = trim($output[0]);
-            if (preg_match('/^v?(\d+\.\d+\.\d+)/', $tag, $matches)) {
-                Pengaturan::set('app_version', $matches[1]);
-                $this->line("Versi: {$matches[1]}");
-                $this->logOutput("Versi: {$matches[1]}");
-            }
+        if (!empty($version)) {
+            Pengaturan::set('app_version', $version);
+            $this->line("Versi: {$version}");
+            $this->logOutput("Versi: {$version}");
         }
     }
 
