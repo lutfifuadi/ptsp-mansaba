@@ -59,8 +59,8 @@ class LembagaSettingController extends Controller
             'website'               => ['nullable', 'string', 'max:255'],
             'header_baris_1'        => ['nullable', 'string', 'max:255'],
             'header_baris_2'        => ['nullable', 'string', 'max:255'],
-            'logo_kiri'             => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:1024'],
-            'logo_kanan'            => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:1024'],
+            'logo_kiri'             => ['nullable'],
+            'logo_kanan'            => ['nullable'],
             'logo_kiri_url'         => ['nullable', 'string', 'max:500'],
             'logo_kanan_url'        => ['nullable', 'string', 'max:500'],
             'nama_kepala_sekolah'   => ['required', 'string', 'max:255'],
@@ -91,19 +91,24 @@ class LembagaSettingController extends Controller
         ];
 
         foreach ($imageFields as $key => $folder) {
-            if ($request->hasFile($key)) {
-                $oldPath = Pengaturan::get($key);
-                if ($oldPath && !str_starts_with($oldPath, 'http')) {
-                    Storage::disk('public')->delete($oldPath);
-                }
-                $path = $request->file($key)->store($folder, 'public');
-                Pengaturan::set($key, $path);
-            } elseif ($request->filled($key . '_url')) {
+            // Prioritaskan URL jika diisi (lebih fleksibel untuk favicon dll)
+            if ($request->filled($key . '_url')) {
                 $oldPath = Pengaturan::get($key);
                 if ($oldPath && !str_starts_with($oldPath, 'http')) {
                     Storage::disk('public')->delete($oldPath);
                 }
                 Pengaturan::set($key, $request->get($key . '_url'));
+            } elseif ($request->hasFile($key)) {
+                $file = $request->file($key);
+                if (!in_array($file->getClientOriginalExtension(), ['jpg','jpeg','png'])) {
+                    continue;
+                }
+                $oldPath = Pengaturan::get($key);
+                if ($oldPath && !str_starts_with($oldPath, 'http')) {
+                    Storage::disk('public')->delete($oldPath);
+                }
+                $path = $file->store($folder, 'public');
+                Pengaturan::set($key, $path);
             }
         }
 

@@ -231,7 +231,7 @@
                   <div>
                     <input type="text" name="logo_kiri_url" class="form-control url-input"
                       placeholder="Atau tempel URL gambar"
-                      value="{{ str_starts_with($pengaturan['logo_kiri'] ?? '', 'http') ? $pengaturan['logo_kiri'] : '' }}">
+                      value="{{ old('logo_kiri_url', str_starts_with($pengaturan['logo_kiri'] ?? '', 'http') ? $pengaturan['logo_kiri'] : '') }}">
                   </div>
                 </div>
               </div>
@@ -256,7 +256,7 @@
                   <div>
                     <input type="text" name="logo_kanan_url" class="form-control url-input"
                       placeholder="Atau tempel URL gambar"
-                      value="{{ str_starts_with($pengaturan['logo_kanan'] ?? '', 'http') ? $pengaturan['logo_kanan'] : '' }}">
+                      value="{{ old('logo_kanan_url', str_starts_with($pengaturan['logo_kanan'] ?? '', 'http') ? $pengaturan['logo_kanan'] : '') }}">
                   </div>
                 </div>
               </div>
@@ -320,7 +320,7 @@
                   <div>
                     <input type="text" name="ttd_kepala_sekolah_url" class="form-control url-input"
                       placeholder="Atau tempel URL gambar TTD"
-                      value="{{ str_starts_with($pengaturan['ttd_kepala_sekolah'] ?? '', 'http') ? $pengaturan['ttd_kepala_sekolah'] : '' }}">
+                      value="{{ old('ttd_kepala_sekolah_url', str_starts_with($pengaturan['ttd_kepala_sekolah'] ?? '', 'http') ? $pengaturan['ttd_kepala_sekolah'] : '') }}">
                   </div>
                 </div>
               </div>
@@ -345,7 +345,7 @@
                   <div>
                     <input type="text" name="stempel_sekolah_url" class="form-control url-input"
                       placeholder="Atau tempel URL gambar stempel"
-                      value="{{ str_starts_with($pengaturan['stempel_sekolah'] ?? '', 'http') ? $pengaturan['stempel_sekolah'] : '' }}">
+                      value="{{ old('stempel_sekolah_url', str_starts_with($pengaturan['stempel_sekolah'] ?? '', 'http') ? $pengaturan['stempel_sekolah'] : '') }}">
                   </div>
                 </div>
               </div>

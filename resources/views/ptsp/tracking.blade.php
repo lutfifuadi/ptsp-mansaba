@@ -6,8 +6,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <title>Lacak Permohonan - PTSP MAN 1 Kota Bandung</title>
-  <link rel="icon" type="image/png"
-    href="{{ \App\Models\Pengaturan::get('logo_kanan') ?: asset('assets/img/favicon/favicon.ico') }}" />
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ \App\Models\Pengaturan::get('logo_kanan') ?: asset('assets/img/favicon/favicon-32x32.png') }}" />
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ \App\Models\Pengaturan::get('logo_kanan') ?: asset('assets/img/favicon/favicon-16x16.png') }}" />
+  <link rel="icon" type="image/x-icon" href="{{ \App\Models\Pengaturan::get('logo_kanan') ?: asset('favicon.ico') }}" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
