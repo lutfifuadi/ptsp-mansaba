@@ -45,7 +45,7 @@ class UpdateController extends Controller
                 ], 503);
             }
 
-            $this->git->fetchOrigin();
+            $fetchOk = $this->git->fetchOrigin();
 
             $branch = $this->git->getBranch();
             $localHash = $this->git->getLocalHash();
@@ -53,6 +53,14 @@ class UpdateController extends Controller
 
             $hasUpdate = !empty($localHash) && !empty($remoteHash) && $localHash !== $remoteHash;
             $pendingCommits = $this->git->getPendingCommits($branch);
+
+            $message = $hasUpdate
+                ? 'Pembaruan tersedia!'
+                : 'Aplikasi sudah yang terbaru.';
+
+            if (!$fetchOk) {
+                $message = 'Tidak dapat terhubung ke remote. ' . $message;
+            }
 
             return response()->json([
                 'success' => true,
@@ -62,9 +70,8 @@ class UpdateController extends Controller
                 'remote_commit' => $remoteHash ? substr($remoteHash, 0, 7) : '-',
                 'pending_commits' => $pendingCommits,
                 'git_available' => true,
-                'message' => $hasUpdate
-                    ? 'Pembaruan tersedia!'
-                    : 'Aplikasi sudah yang terbaru.',
+                'fetch_warning' => !$fetchOk,
+                'message' => $message,
             ]);
         } catch (\Throwable $e) {
             Log::error('Update check gagal: ' . $e->getMessage());

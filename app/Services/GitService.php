@@ -98,8 +98,8 @@ class GitService
             $this->runProcess(['git', 'fetch', 'origin']);
             return true;
         } catch (\Throwable $e) {
-            Log::error('GitService: Gagal fetch origin', ['error' => $e->getMessage()]);
-            throw $e;
+            Log::warning('GitService: Gagal fetch origin (gunakan cache)', ['error' => $e->getMessage()]);
+            return false;
         }
     }
 

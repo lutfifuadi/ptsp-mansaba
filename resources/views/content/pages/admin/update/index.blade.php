@@ -291,6 +291,9 @@
     .then(res => res.json())
     .then(data => {
       if (data.success) {
+        if (data.fetch_warning) {
+          appendLog('Tidak dapat terhubung ke remote repository. Gunakan data cache.', 'warning');
+        }
         if (data.has_update) {
           updateAvailable = true;
           document.getElementById('btnRun').disabled = false;
