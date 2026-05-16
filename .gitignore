@@ -1,7 +1,8 @@
 /.phpunit.cache
 /node_modules
 /docs
-/.github
+/.github/agents
+/.github/instructions
 /public/build
 /public/hot
 public/vendor/
