@@ -162,13 +162,15 @@ Route::middleware([
     Route::middleware('can:lihat-buku-tamu')->group(function () {
       Route::get('/buku-tamu', [AdminGuestBookController::class, 'index'])->name('guest-book.index');
       Route::get('/buku-tamu/latest', [AdminGuestBookController::class, 'latest'])->name('guest-book.latest');
+      
+      Route::middleware('can:export-buku-tamu')->group(function () {
+        Route::get('/buku-tamu/rekap', [ExportGuestBookController::class, 'rekap'])->name('guest-book.rekap');
+        Route::get('/buku-tamu/export/{format}', [ExportGuestBookController::class, 'export'])->name('guest-book.export');
+      });
+
       Route::get('/buku-tamu/{guestBook}', [AdminGuestBookController::class, 'show'])->name('guest-book.show');
     });
     Route::delete('/buku-tamu/{guestBook}', [AdminGuestBookController::class, 'destroy'])->name('guest-book.destroy')->middleware('can:hapus-buku-tamu');
-    Route::middleware('can:export-buku-tamu')->group(function () {
-      Route::get('/buku-tamu/rekap', [ExportGuestBookController::class, 'rekap'])->name('guest-book.rekap');
-      Route::get('/buku-tamu/export/{format}', [ExportGuestBookController::class, 'export'])->name('guest-book.export');
-    });
     Route::post('/buku-tamu/reset', [AdminGuestBookController::class, 'reset'])->name('guest-book.reset')->middleware('can:reset-buku-tamu');
 
     // Manajemen Pengguna & Role
