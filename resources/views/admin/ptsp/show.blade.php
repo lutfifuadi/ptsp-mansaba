@@ -98,7 +98,7 @@
                   <span class="fw-bold">{{ mb_strtoupper(mb_substr($permohonan->user->name, 0, 1)) }}</span>
                 </div>
                 <div>
-                  <div class="fw-semibold">{{ $permohonan->user->name }}</div>
+                  <div class="fw-semibold">{{ mb_strtoupper($permohonan->user->name) }}</div>
                   <div class="text-muted small">{{ $permohonan->user->email }}</div>
                 </div>
               </div>
@@ -112,7 +112,7 @@
                   </span>
                 </div>
                 <div>
-                  <div class="fw-semibold">{{ $siswa->nama_lengkap ?? 'Siswa' }}</div>
+                  <div class="fw-semibold">{{ mb_strtoupper($siswa->nama_lengkap ?? 'SISWA') }}</div>
                   <div class="text-muted small">NISN: {{ $permohonan->nisn }}</div>
                 </div>
               </div>
@@ -139,6 +139,28 @@
                         , {{ \Carbon\Carbon::parse($siswa->tanggal_lahir)->locale('id')->translatedFormat('d F Y') }}
                       @endif
                     </div>
+                  </div>
+                </div>
+              </div>
+              @endif
+            @elseif($permohonan->data_form && ($permohonan->data_form['nama_lengkap'] ?? null))
+              {{-- Public form (no NISN) --}}
+              @php $nama = $permohonan->data_form['nama_lengkap']; @endphp
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="avatar bg-label-primary">
+                  <span class="fw-bold">{{ mb_strtoupper(mb_substr($nama, 0, 1)) }}</span>
+                </div>
+                <div>
+                  <div class="fw-semibold">{{ mb_strtoupper($nama) }}</div>
+                  <div class="text-muted small">Pengajuan Publik</div>
+                </div>
+              </div>
+              @if($permohonan->data_form['no_wa'] ?? null)
+              <div class="row g-2 small">
+                <div class="col-12">
+                  <div class="bg-light rounded p-2">
+                    <div class="text-muted mb-1">No. WhatsApp</div>
+                    <div class="fw-semibold">{{ $permohonan->data_form['no_wa'] }}</div>
                   </div>
                 </div>
               </div>

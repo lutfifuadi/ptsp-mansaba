@@ -170,9 +170,6 @@
               <td class="text-muted small">{{ $loop->iteration + ($permohonan->firstItem() - 1) }}</td>
               <td>
                 <span class="ticket-no">{{ $p->no_tiket }}</span>
-                <small class="text-muted d-flex align-items-center gap-1">
-                  @if($p->user_id) <i class="ti tabler-user-check fs-6 text-success"></i> Login @else <i class="ti tabler-world fs-6 text-info"></i> Publik @endif
-                </small>
               </td>
               <td>
                 <div class="d-flex align-items-center gap-3">
@@ -180,9 +177,11 @@
                     $initials = '';
                     $name = 'N/A';
                     if($p->user_id) {
-                      $name = $p->user->name ?? 'N/A';
+                      $name = strtoupper($p->user->name ?? 'N/A');
                     } elseif($p->nisn) {
-                      $name = $p->siswa->nama_lengkap ?? 'Pemohon ('.$p->nisn.')';
+                      $name = strtoupper($p->siswa->nama_lengkap ?? 'Pemohon ('.$p->nisn.')');
+                    } elseif($p->data_form && ($p->data_form['nama_lengkap'] ?? null)) {
+                      $name = strtoupper($p->data_form['nama_lengkap']);
                     }
                     $initials = collect(explode(' ', $name))->take(2)->map(fn($n) => strtoupper(substr($n, 0, 1)))->implode('');
                   @endphp
