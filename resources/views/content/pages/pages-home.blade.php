@@ -181,20 +181,18 @@
 
     /* ── STAT CARDS ───────────────────────────────── */
     .stat-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: linear-gradient(135deg, var(--gradient-start, var(--surface)) 0%, var(--gradient-end, var(--surface)) 100%) !important;
+      border: 1px solid var(--panel-border, var(--border)) !important;
       border-radius: var(--r-lg) !important;
-      border-top: 3px solid var(--accent-color, var(--p));
       transition: transform 0.18s, box-shadow 0.18s;
       position: relative;
       overflow: hidden;
+      color: var(--card-text, var(--text)) !important;
     }
 
     .stat-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-      border-color: var(--accent-color, var(--p));
-      border-top-color: var(--accent-color, var(--p));
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
     }
 
     /* Faint diagonal tint */
@@ -205,7 +203,7 @@
       right: -30px;
       width: 80px;
       height: 100%;
-      background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.015));
+      background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.08));
       transform: skewX(-15deg);
       pointer-events: none;
     }
@@ -219,14 +217,14 @@
       align-items: center;
       justify-content: center;
       font-size: 1.25rem;
-      color: var(--accent-color, var(--p));
+      color: var(--icon-color, var(--p));
       flex-shrink: 0;
       transition: background 0.2s, color 0.2s;
     }
 
     .stat-card:hover .stat-icon {
-      background: var(--accent-color, var(--p));
-      color: #fff;
+      background: #ffffff !important;
+      color: var(--gradient-end, var(--p)) !important;
     }
 
     .stat-label {
@@ -234,7 +232,7 @@
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: var(--muted);
+      color: var(--card-muted, var(--muted)) !important;
       margin-bottom: 3px;
     }
 
@@ -242,21 +240,31 @@
       font-size: 1.75rem;
       font-weight: 900;
       line-height: 1.1;
-      color: var(--accent-color, var(--text));
+      color: var(--card-text, var(--text)) !important;
     }
 
     .stat-progress {
-      height: 3px;
-      background: var(--border);
-      border-radius: 0;
+      height: 4px;
+      background: var(--progress-bg, var(--border)) !important;
+      border-radius: 2px;
       overflow: hidden;
       margin-top: 12px;
     }
 
     .stat-progress-bar {
       height: 100%;
-      background: var(--accent-color, var(--p));
+      background: var(--progress-bar-bg, var(--p)) !important;
       transition: width 1s ease;
+    }
+
+    .stat-card .today-chip {
+      background: var(--chip-bg, #ecfdf5) !important;
+      border: 1px solid var(--chip-border, #a7f3d0) !important;
+      color: var(--chip-color, var(--p2)) !important;
+    }
+
+    .stat-card .today-chip::before {
+      background: var(--chip-color, var(--p)) !important;
     }
 
     /* ── SECTION HEADER ───────────────────────────── */
@@ -265,8 +273,8 @@
       align-items: center;
       justify-content: space-between;
       padding: 14px 20px;
-      border-bottom: 1px solid var(--border);
-      background: #f8fafc;
+      border-bottom: 1px solid var(--panel-border, var(--border)) !important;
+      background: transparent !important;
     }
 
     .section-head-title {
@@ -290,21 +298,21 @@
 
     /* ── TABLE ────────────────────────────────────── */
     .tbl th {
-      background: #f8fafc !important;
+      background: rgba(0, 0, 0, 0.02) !important;
       color: var(--muted) !important;
       font-weight: 800;
       font-size: 0.7rem;
       text-transform: uppercase;
       letter-spacing: 1.2px;
       padding: 12px 16px !important;
-      border-bottom: 2px solid var(--border) !important;
+      border-bottom: 2px solid var(--panel-border, var(--border)) !important;
       border-top: none !important;
     }
 
     .tbl td {
       padding: 13px 16px !important;
       vertical-align: middle;
-      border-bottom: 1px solid #f1f5f9 !important;
+      border-bottom: 1px solid var(--panel-border, #f1f5f9) !important;
       font-size: 0.88rem;
       color: var(--text);
     }
@@ -314,7 +322,7 @@
     }
 
     .tbl tbody tr:hover td {
-      background: #f8fafc !important;
+      background: rgba(0, 0, 0, 0.015) !important;
     }
 
     /* Ticket number */
@@ -443,7 +451,7 @@
       padding: 16px 8px;
       border: 1px solid var(--border);
       border-radius: var(--r);
-      background: #f8fafc;
+      background: var(--surface);
       text-decoration: none !important;
       transition: background 0.15s, border-color 0.15s, transform 0.15s;
       text-align: center;
@@ -469,10 +477,11 @@
 
     /* ── CARD WRAPPER ─────────────────────────────── */
     .panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
+      background: var(--panel-bg, var(--surface)) !important;
+      border: 1px solid var(--panel-border, var(--border)) !important;
       border-radius: var(--r-lg) !important;
       overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
     }
 
     .panel-body {
@@ -652,9 +661,22 @@
 
     {{-- ── STAT CARDS ───────────────────────────────────── --}}
 
+    {{-- ── STAT CARDS ───────────────────────────────────── --}}
+
     {{-- Total Permohonan --}}
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card stat-card h-100" style="--accent-color: var(--p); --icon-bg: #ecfdf5;">
+      <div class="card stat-card h-100" style="
+        --gradient-start: #059669;
+        --gradient-end: #047857;
+        --card-text: #ffffff;
+        --card-muted: rgba(255,255,255,0.8);
+        --icon-bg: rgba(255,255,255,0.18);
+        --icon-color: #ffffff;
+        --chip-bg: rgba(255,255,255,0.2);
+        --chip-border: rgba(255,255,255,0.3);
+        --chip-color: #ffffff;
+        --panel-border: rgba(255,255,255,0.1);
+      ">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start gap-2">
             <div class="flex-grow-1">
@@ -672,7 +694,17 @@
 
     {{-- Pending --}}
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card stat-card h-100" style="--accent-color: #d97706; --icon-bg: #fef3c7;">
+      <div class="card stat-card h-100" style="
+        --gradient-start: #d97706;
+        --gradient-end: #b45309;
+        --card-text: #ffffff;
+        --card-muted: rgba(255,255,255,0.8);
+        --icon-bg: rgba(255,255,255,0.18);
+        --icon-color: #ffffff;
+        --progress-bg: rgba(255,255,255,0.2);
+        --progress-bar-bg: #ffffff;
+        --panel-border: rgba(255,255,255,0.1);
+      ">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start gap-2">
             <div class="flex-grow-1">
@@ -691,7 +723,17 @@
 
     {{-- Diproses --}}
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card stat-card h-100" style="--accent-color: #4f46e5; --icon-bg: #eef2ff;">
+      <div class="card stat-card h-100" style="
+        --gradient-start: #4f46e5;
+        --gradient-end: #3730a3;
+        --card-text: #ffffff;
+        --card-muted: rgba(255,255,255,0.8);
+        --icon-bg: rgba(255,255,255,0.18);
+        --icon-color: #ffffff;
+        --progress-bg: rgba(255,255,255,0.2);
+        --progress-bar-bg: #ffffff;
+        --panel-border: rgba(255,255,255,0.1);
+      ">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start gap-2">
             <div class="flex-grow-1">
@@ -710,7 +752,17 @@
 
     {{-- Selesai --}}
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card stat-card h-100" style="--accent-color: var(--p); --icon-bg: #ecfdf5;">
+      <div class="card stat-card h-100" style="
+        --gradient-start: #10b981;
+        --gradient-end: #059669;
+        --card-text: #ffffff;
+        --card-muted: rgba(255,255,255,0.8);
+        --icon-bg: rgba(255,255,255,0.18);
+        --icon-color: #ffffff;
+        --progress-bg: rgba(255,255,255,0.2);
+        --progress-bar-bg: #ffffff;
+        --panel-border: rgba(255,255,255,0.1);
+      ">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start gap-2">
             <div class="flex-grow-1">
@@ -729,7 +781,15 @@
 
     {{-- Akses Publik --}}
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card stat-card h-100" style="--accent-color: #dc2626; --icon-bg: #fee2e2;">
+      <div class="card stat-card h-100" style="
+        --gradient-start: #dc2626;
+        --gradient-end: #b91c1c;
+        --card-text: #ffffff;
+        --card-muted: rgba(255,255,255,0.8);
+        --icon-bg: rgba(255,255,255,0.18);
+        --icon-color: #ffffff;
+        --panel-border: rgba(255,255,255,0.1);
+      ">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start gap-2">
             <div class="flex-grow-1">
@@ -738,14 +798,22 @@
             </div>
             <div class="stat-icon"><i class="ti tabler-user-search"></i></div>
           </div>
-          <div class="mt-3" style="font-size:0.75rem; color:var(--muted);">Pengunjung portal publik</div>
+          <div class="mt-3" style="font-size:0.75rem; opacity:0.8;">Pengunjung portal publik</div>
         </div>
       </div>
     </div>
 
     {{-- Layanan Aktif --}}
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card stat-card h-100" style="--accent-color: #0284c7; --icon-bg: #e0f2fe;">
+      <div class="card stat-card h-100" style="
+        --gradient-start: #0284c7;
+        --gradient-end: #0369a1;
+        --card-text: #ffffff;
+        --card-muted: rgba(255,255,255,0.8);
+        --icon-bg: rgba(255,255,255,0.18);
+        --icon-color: #ffffff;
+        --panel-border: rgba(255,255,255,0.1);
+      ">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start gap-2">
             <div class="flex-grow-1">
@@ -754,14 +822,25 @@
             </div>
             <div class="stat-icon"><i class="ti tabler-layout-grid-add"></i></div>
           </div>
-          <div class="mt-3" style="font-size:0.75rem; color:var(--muted);">Jenis layanan tersedia</div>
+          <div class="mt-3" style="font-size:0.75rem; opacity:0.8;">Jenis layanan tersedia</div>
         </div>
       </div>
     </div>
 
     {{-- Total Tamu --}}
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card stat-card h-100" style="--accent-color: #7c3aed; --icon-bg: #f3e8ff;">
+      <div class="card stat-card h-100" style="
+        --gradient-start: #7c3aed;
+        --gradient-end: #6d28d9;
+        --card-text: #ffffff;
+        --card-muted: rgba(255,255,255,0.8);
+        --icon-bg: rgba(255,255,255,0.18);
+        --icon-color: #ffffff;
+        --chip-bg: rgba(255,255,255,0.2);
+        --chip-border: rgba(255,255,255,0.3);
+        --chip-color: #ffffff;
+        --panel-border: rgba(255,255,255,0.1);
+      ">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start gap-2">
             <div class="flex-grow-1">
@@ -770,7 +849,7 @@
             </div>
             <div class="stat-icon"><i class="ti tabler-users"></i></div>
           </div>
-          <div class="mt-3" style="font-size:0.75rem; color:var(--muted);">
+          <div class="mt-3" style="font-size:0.75rem; opacity:0.8;">
             <span class="today-chip">+{{ $tamuHariIni }} hari ini</span>
             &middot; {{ $tamuMingguIni }} minggu ini
           </div>
@@ -780,7 +859,15 @@
 
     {{-- Tamu Hari Ini --}}
     <div class="col-lg-3 col-md-6 col-sm-6">
-      <div class="card stat-card h-100" style="--accent-color: #0891b2; --icon-bg: #cffafe;">
+      <div class="card stat-card h-100" style="
+        --gradient-start: #0891b2;
+        --gradient-end: #0e7490;
+        --card-text: #ffffff;
+        --card-muted: rgba(255,255,255,0.8);
+        --icon-bg: rgba(255,255,255,0.18);
+        --icon-color: #ffffff;
+        --panel-border: rgba(255,255,255,0.1);
+      ">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start gap-2">
             <div class="flex-grow-1">
@@ -789,7 +876,7 @@
             </div>
             <div class="stat-icon"><i class="ti tabler-user-check"></i></div>
           </div>
-          <div class="mt-3" style="font-size:0.75rem; color:var(--muted);">
+          <div class="mt-3" style="font-size:0.75rem; opacity:0.8;">
             {{ $tamuBulanIni }} tamu bulan {{ \Carbon\Carbon::now()->locale('id')->isoFormat('MMMM') }}
           </div>
         </div>
@@ -798,7 +885,7 @@
 
     {{-- ── PERMOHONAN TERBARU ──────────────────────────── --}}
     <div class="col-12 col-xl-8">
-      <div class="panel h-100">
+      <div class="panel h-100" style="--panel-bg: linear-gradient(180deg, #f0fdf4 0%, #ffffff 100%); --panel-border: #dcfce7;">
         <div class="section-head">
           <div class="section-head-title">
             <span class="dot"></span>
@@ -877,7 +964,7 @@
 
     {{-- ── AKSES CEPAT ──────────────────────────────────── --}}
     <div class="col-12 col-xl-4">
-      <div class="panel h-100">
+      <div class="panel h-100" style="--panel-bg: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%); --panel-border: #fef3c7;">
         <div class="section-head">
           <div class="section-head-title">
             <span class="dot" style="background:var(--amber)"></span>
@@ -910,7 +997,7 @@
           </div>
 
           {{-- Shortcuts --}}
-          <div style="border-top: 1px solid var(--border); padding-top: 14px;">
+          <div style="border-top: 1px solid var(--panel-border, var(--border)); padding-top: 14px;">
             <p
               style="font-size:0.65rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:10px;">
               Shortcuts</p>
@@ -936,7 +1023,7 @@
 
     {{-- ── BUKU TAMU TERBARU ────────────────────────────── --}}
     <div class="col-12">
-      <div class="panel">
+      <div class="panel" style="--panel-bg: linear-gradient(180deg, #faf5ff 0%, #ffffff 100%); --panel-border: #f3e8ff;">
         <div class="section-head">
           <div class="section-head-title">
             <span class="dot" style="background:#7c3aed"></span>
