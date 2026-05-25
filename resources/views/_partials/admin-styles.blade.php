@@ -29,8 +29,8 @@
     --bg: {{ $themeBackground }};
     --border: {{ $themeBorder }};
     --border2: {{ $themeBorderLight }};
-    --r: 4px;
-    --r-sm: 3px;
+    --r: 5px;
+    --r-sm: 4px;
     --r-lg: 5px;
   }
 

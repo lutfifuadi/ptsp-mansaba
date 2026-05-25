@@ -14,7 +14,7 @@
 .alert,
 .toast,
 .offcanvas {
-    border-radius: 4px !important;
+    border-radius: 5px !important;
 }
 
 /* Form font size - slightly reduced */
@@ -42,7 +42,7 @@
 .rounded-5,
 .rounded-pill, 
 .rounded-circle {
-    border-radius: 4px !important;
+    border-radius: 5px !important;
 }
 
 /* Global Theme Overrides */
