@@ -8,14 +8,39 @@
 @section('title', 'Dashboard PTSP')
 
 @section('vendor-style')
-  @vite(['resources/assets/vendor/libs/apex-charts/apex-charts.scss'])
+  @vite([
+    'resources/assets/vendor/libs/apex-charts/apex-charts.scss',
+    'resources/assets/vendor/libs/swiper/swiper.scss',
+  ])
 @endsection
 
+
 @section('vendor-script')
-  @vite(['resources/assets/vendor/libs/apex-charts/apexcharts.js'])
+  @vite([
+    'resources/assets/vendor/libs/apex-charts/apexcharts.js',
+    'resources/assets/vendor/libs/swiper/swiper.js',
+  ])
+@endsection
+
+@section('page-script')
+  <script>
+    window.chartDailyData    = @json($chartDailyData);
+    window.chartWeeklyData   = @json($chartWeeklyData);
+    window.chartCompletionRate = {{ $chartCompletionRate }};
+    window.statTotal7Hari    = {{ $total7Hari }};
+    window.statSelesai7Hari  = {{ $selesai7Hari }};
+    window.statProses7Hari   = {{ $proses7Hari }};
+    window.statPending7Hari  = {{ $pending7Hari }};
+    window.statTotalTamu     = {{ $totalTamu }};
+    window.statTamuHariIni   = {{ $tamuHariIni }};
+    window.statTamuMingguIni = {{ $tamuMingguIni }};
+    window.statTamuBulanIni  = {{ $tamuBulanIni }};
+  </script>
+  @vite('resources/assets/js/dashboards-analytics.js')
 @endsection
 
 @section('page-style')
+  @vite('resources/assets/vendor/scss/pages/cards-advance.scss')
   <style>
     /* ── ROOT TOKENS ─────────────────────────────── */
     :root {
@@ -611,6 +636,214 @@
     .stat-card:nth-child(8) {
       animation-delay: 0.40s;
     }
+
+    /* ── ANALYTICS ENHANCED ──────────────────────────── */
+    .analytics-section {
+      margin-top: 8px;
+    }
+
+    .analytics-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .analytics-head-bar {
+      width: 4px;
+      height: 26px;
+      background: var(--p);
+      border-radius: 2px;
+    }
+
+    .analytics-head h5 {
+      font-weight: 800;
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .analytics-head small {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    /* Chart card consistent style */
+    .chart-card {
+      background: var(--surface) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: var(--r-lg) !important;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+      transition: box-shadow 0.2s;
+    }
+
+    .chart-card:hover {
+      box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    }
+
+    .chart-card .card-header {
+      padding: 16px 20px 10px;
+      background: transparent;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .chart-card .card-body {
+      padding: 16px 20px;
+    }
+
+    /* Earning report style card */
+    .earning-card .stat-block h2 {
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .earning-card .badge-growth {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--r-sm);
+    }
+
+    /* Tracker style */
+    .tracker-stat-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .tracker-stat-list li {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .tracker-stat-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .tracker-stat-list .t-badge {
+      width: 38px;
+      height: 38px;
+      border-radius: var(--r);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .tracker-stat-list h6 {
+      font-weight: 700;
+      font-size: 0.82rem;
+      margin: 0 0 2px;
+      color: var(--text);
+    }
+
+    .tracker-stat-list small {
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    /* Campaign / source visit style */
+    .campaign-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .campaign-list li {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .campaign-list li:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .campaign-list .c-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--r);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+      margin-right: 12px;
+    }
+
+    .campaign-list .c-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .campaign-list .c-sub {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .campaign-list .c-val {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .growth-up {
+      color: #059669;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .growth-neutral {
+      color: var(--muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    /* Breakdown detail box */
+    .detail-box {
+      border: 1px solid var(--border);
+      border-radius: var(--r);
+      padding: 14px 16px;
+      margin-top: 14px;
+    }
+
+    .detail-box-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .detail-box-item h4 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .detail-box-item .db-progress {
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .detail-box-item .db-bar {
+      height: 100%;
+      border-radius: 2px;
+      transition: width 1s ease;
+    }
   </style>
 @endsection
 
@@ -883,6 +1116,334 @@
       </div>
     </div>
 
+  </div>
+
+  {{-- ══════════════════════════════════════════════════ --}}
+  {{-- ── ANALYTICS SECTION (ENHANCED) ─────────────────── --}}
+  {{-- ══════════════════════════════════════════════════ --}}
+  <div class="analytics-section">
+
+    {{-- Section Header --}}
+    <div class="analytics-head mb-4">
+      <div class="analytics-head-bar"></div>
+      <div>
+        <h5>Analitik &amp; Grafik</h5>
+        <small>Ringkasan statistik dan tren layanan PTSP 7 hari terakhir</small>
+      </div>
+    </div>
+
+    {{-- ── ROW 1: Sparkline + Overview + Laporan Mingguan Full ── --}}
+    <div class="row g-3 mb-3">
+
+      {{-- Sparkline Harian --}}
+      <div class="col-xl-3 col-sm-6">
+        <div class="card chart-card h-100">
+          <div class="card-header pb-0">
+            <h5 class="mb-2 card-title" style="font-weight:800;">Permohonan Harian</h5>
+            <p class="mb-0" style="font-size:0.78rem; color:var(--muted);">Total 7 Hari Terakhir</p>
+            <h4 class="mb-0" style="font-weight:900; color:var(--p);">{{ number_format($total7Hari) }}</h4>
+          </div>
+          <div class="card-body px-0 pb-0">
+            <div id="averageDailySales"></div>
+          </div>
+        </div>
+      </div>
+
+      {{-- Overview Selesai vs Proses --}}
+      <div class="col-xl-3 col-sm-6">
+        <div class="card chart-card h-100">
+          <div class="card-header">
+            <div class="d-flex justify-content-between align-items-start">
+              <p class="mb-0" style="font-size:0.78rem; color:var(--muted);">Overview Layanan</p>
+              <span class="badge" style="background:#dcfce7; color:#14532d; font-size:0.7rem; font-weight:800; border-radius:var(--r-sm);">+{{ $total7Hari > 0 ? round(($selesai7Hari / $total7Hari) * 100, 1) : 0 }}%</span>
+            </div>
+            <h4 class="card-title mb-0" style="font-weight:900;">{{ number_format($selesai7Hari) }} Selesai</h4>
+            <small style="color:var(--muted); font-size:0.72rem;">dari {{ number_format($total7Hari) }} total permohonan</small>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-5">
+                <div class="d-flex gap-2 align-items-center mb-2">
+                  <span class="badge p-1 rounded" style="background:#dcfce7;"><i class="icon-base ti tabler-circle-check icon-sm" style="color:#059669;"></i></span>
+                  <p class="mb-0" style="font-size:0.78rem; font-weight:600;">Selesai</p>
+                </div>
+                <h5 class="mb-0 pt-1" style="font-weight:900;">{{ $total7Hari > 0 ? round(($selesai7Hari / $total7Hari) * 100, 1) : 0 }}%</h5>
+                <small style="color:var(--muted);">{{ number_format($selesai7Hari) }}</small>
+              </div>
+              <div class="col-2 d-flex align-items-center justify-content-center">
+                <div style="width:1px; height:40px; background:var(--border);"></div>
+              </div>
+              <div class="col-5 text-end">
+                <div class="d-flex gap-2 justify-content-end align-items-center mb-2">
+                  <p class="mb-0" style="font-size:0.78rem; font-weight:600;">Proses</p>
+                  <span class="badge p-1 rounded" style="background:#fef3c7;"><i class="icon-base ti tabler-clock icon-sm" style="color:#d97706;"></i></span>
+                </div>
+                <h5 class="mb-0 pt-1" style="font-weight:900;">{{ $total7Hari > 0 ? round(($proses7Hari / $total7Hari) * 100, 1) : 0 }}%</h5>
+                <small style="color:var(--muted);">{{ number_format($proses7Hari) }}</small>
+              </div>
+            </div>
+            <div class="mt-4">
+              <div class="progress w-100" style="height:8px; border-radius:4px;">
+                <div class="progress-bar" role="progressbar" style="width:{{ $total7Hari > 0 ? ($selesai7Hari / $total7Hari) * 100 : 0 }}%; background:var(--p);"></div>
+                <div class="progress-bar" role="progressbar" style="width:{{ $total7Hari > 0 ? ($proses7Hari / $total7Hari) * 100 : 0 }}%; background:#d97706;"></div>
+                <div class="progress-bar" role="progressbar" style="width:{{ $total7Hari > 0 ? ($pending7Hari / $total7Hari) * 100 : 0 }}%; background:#e2e8f0;"></div>
+              </div>
+              <div class="d-flex justify-content-between mt-2" style="font-size:0.65rem; color:var(--muted);">
+                <span>Selesai · Proses · Pending</span>
+                <span>Total: {{ number_format($total7Hari) }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{-- Laporan Permohonan Mingguan (Full-width Earning Reports Style) --}}
+      <div class="col-xl-6">
+        <div class="card chart-card earning-card h-100">
+          <div class="card-header d-flex justify-content-between align-items-start">
+            <div>
+              <h5 class="mb-1" style="font-weight:800;">Laporan Permohonan Mingguan</h5>
+              <p class="mb-0" style="font-size:0.78rem; color:var(--muted);">Ringkasan status permohonan 7 hari terakhir</p>
+            </div>
+          </div>
+          <div class="card-body">
+            <div class="d-flex gap-2 align-items-center mb-3 flex-wrap">
+              <h2 class="mb-0" style="font-size:2.2rem; font-weight:900; color:var(--text);">{{ number_format($total7Hari) }}</h2>
+              @if($total7Hari > 0)
+                <div class="badge" style="background:#dcfce7; color:#14532d; font-size:0.7rem; font-weight:700; padding:4px 10px; border-radius:var(--r-sm);">+{{ $chartCompletionRate }}%</div>
+              @endif
+              <span class="ms-2" style="font-size:0.85rem; color:var(--muted);">Total permohonan 7 hari terakhir</span>
+            </div>
+            
+            <div class="row g-3">
+              <div class="col-4 detail-box-item">
+                <div class="d-flex gap-2 align-items-center">
+                  <div class="badge rounded p-1" style="background:#dbeafe;"><i class="icon-base ti tabler-file-analytics icon-18px" style="color:#2563eb;"></i></div>
+                  <span style="font-size:0.75rem; font-weight:700;">Baru</span>
+                </div>
+                <h4 class="mt-2 mb-1" style="font-weight:800;">{{ number_format($pending7Hari) }}</h4>
+                <div class="db-progress">
+                  <div class="db-bar" style="width:{{ $total7Hari > 0 ? ($pending7Hari / $total7Hari) * 100 : 0 }}%; background:#2563eb;"></div>
+                </div>
+              </div>
+              <div class="col-4 detail-box-item">
+                <div class="d-flex gap-2 align-items-center">
+                  <div class="badge rounded p-1" style="background:#e0f2fe;"><i class="icon-base ti tabler-settings-automation icon-18px" style="color:#0284c7;"></i></div>
+                  <span style="font-size:0.75rem; font-weight:700;">Diproses</span>
+                </div>
+                <h4 class="mt-2 mb-1" style="font-weight:800;">{{ number_format($proses7Hari) }}</h4>
+                <div class="db-progress">
+                  <div class="db-bar" style="width:{{ $total7Hari > 0 ? ($proses7Hari / $total7Hari) * 100 : 0 }}%; background:#0284c7;"></div>
+                </div>
+              </div>
+              <div class="col-4 detail-box-item">
+                <div class="d-flex gap-2 align-items-center">
+                  <div class="badge rounded p-1" style="background:#dcfce7;"><i class="icon-base ti tabler-discount-check icon-18px" style="color:var(--p);"></i></div>
+                  <span style="font-size:0.75rem; font-weight:700;">Selesai</span>
+                </div>
+                <h4 class="mt-2 mb-1" style="font-weight:800;">{{ number_format($selesai7Hari) }}</h4>
+                <div class="db-progress">
+                  <div class="db-bar" style="width:{{ $total7Hari > 0 ? ($selesai7Hari / $total7Hari) * 100 : 0 }}%; background:var(--p);"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>{{-- end row 1 --}}
+
+    {{-- ── ROW 2: Tracker + Status Tamu + Breakdown Status ── --}}
+    <div class="row g-3">
+
+      {{-- Tracker Penyelesaian (Support Tracker style - besar) --}}
+      <div class="col-12 col-md-6">
+        <div class="card chart-card h-100">
+          <div class="card-header">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <h5 class="mb-1" style="font-weight:800;">Tracker Penyelesaian</h5>
+                <p class="mb-0" style="font-size:0.78rem; color:var(--muted);">Tingkat penyelesaian 7 hari terakhir</p>
+              </div>
+            </div>
+          </div>
+          <div class="card-body row align-items-center">
+            {{-- Stats list kiri --}}
+            <div class="col-12 col-sm-5">
+              <div class="mb-4">
+                <h2 class="mb-0" style="font-size:2.5rem; font-weight:900; color:var(--text);">{{ number_format($total7Hari) }}</h2>
+                <p class="mb-0" style="font-size:0.82rem; color:var(--muted);">Total Permohonan</p>
+              </div>
+              <ul class="tracker-stat-list">
+                <li>
+                  <div class="t-badge" style="background:#dbeafe;"><i class="ti tabler-ticket" style="color:#2563eb; font-size:1rem;"></i></div>
+                  <div>
+                    <h6>Permohonan Baru</h6>
+                    <small>{{ number_format($pending7Hari) }} pending</small>
+                  </div>
+                </li>
+                <li>
+                  <div class="t-badge" style="background:#e0f2fe;"><i class="ti tabler-settings-automation" style="color:#0284c7; font-size:1rem;"></i></div>
+                  <div>
+                    <h6>Sedang Diproses</h6>
+                    <small>{{ number_format($proses7Hari) }} permohonan</small>
+                  </div>
+                </li>
+                <li>
+                  <div class="t-badge" style="background:#dcfce7;"><i class="ti tabler-circle-check" style="color:#059669; font-size:1rem;"></i></div>
+                  <div>
+                    <h6>Selesai</h6>
+                    <small>{{ number_format($selesai7Hari) }} permohonan</small>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            {{-- Radial chart kanan --}}
+            <div class="col-12 col-sm-7">
+              <div id="supportTracker"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {{-- Ringkasan Status Tamu (Campaign State style) --}}
+      <div class="col-12 col-md-3">
+        <div class="card chart-card h-100">
+          <div class="card-header">
+            <h5 class="mb-1" style="font-weight:800;">Statistik Tamu</h5>
+            <p class="mb-0" style="font-size:0.78rem; color:var(--muted);">Kunjungan buku tamu</p>
+          </div>
+          <div class="card-body">
+            <ul class="campaign-list">
+              <li>
+                <div class="d-flex align-items-center">
+                  <div class="c-icon" style="background:#f3e8ff;"><i class="ti tabler-users" style="color:#7c3aed;"></i></div>
+                  <div>
+                    <p class="c-label">Total Tamu</p>
+                    <p class="c-sub">Semua waktu</p>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <div class="c-val">{{ number_format($totalTamu) }}</div>
+                </div>
+              </li>
+              <li>
+                <div class="d-flex align-items-center">
+                  <div class="c-icon" style="background:#dcfce7;"><i class="ti tabler-user-check" style="color:#059669;"></i></div>
+                  <div>
+                    <p class="c-label">Hari Ini</p>
+                    <p class="c-sub">{{ \Carbon\Carbon::now()->locale('id')->isoFormat('D MMMM') }}</p>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <div class="c-val">{{ number_format($tamuHariIni) }}</div>
+                  <div class="growth-up">Live</div>
+                </div>
+              </li>
+              <li>
+                <div class="d-flex align-items-center">
+                  <div class="c-icon" style="background:#e0f2fe;"><i class="ti tabler-calendar-week" style="color:#0284c7;"></i></div>
+                  <div>
+                    <p class="c-label">Minggu Ini</p>
+                    <p class="c-sub">Sen–Min</p>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <div class="c-val">{{ number_format($tamuMingguIni) }}</div>
+                </div>
+              </li>
+              <li>
+                <div class="d-flex align-items-center">
+                  <div class="c-icon" style="background:#fef3c7;"><i class="ti tabler-calendar-month" style="color:#d97706;"></i></div>
+                  <div>
+                    <p class="c-label">Bulan Ini</p>
+                    <p class="c-sub">{{ \Carbon\Carbon::now()->locale('id')->isoFormat('MMMM YYYY') }}</p>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <div class="c-val">{{ number_format($tamuBulanIni) }}</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      {{-- Breakdown Status Permohonan (Source Visits style) --}}
+      <div class="col-12 col-md-3">
+        <div class="card chart-card h-100">
+          <div class="card-header">
+            <h5 class="mb-1" style="font-weight:800;">Status Permohonan</h5>
+            <p class="mb-0" style="font-size:0.78rem; color:var(--muted);">{{ number_format($totalPermohonan) }} total permohonan</p>
+          </div>
+          <div class="card-body">
+            <ul class="campaign-list">
+              <li>
+                <div class="d-flex align-items-center">
+                  <div class="c-icon" style="background:#dbeafe;"><i class="ti tabler-folder-plus" style="color:#2563eb;"></i></div>
+                  <div>
+                    <p class="c-label">Total</p>
+                    <p class="c-sub">Semua status</p>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <div class="c-val">{{ number_format($totalPermohonan) }}</div>
+                  <div class="growth-neutral">100%</div>
+                </div>
+              </li>
+              <li>
+                <div class="d-flex align-items-center">
+                  <div class="c-icon" style="background:#fef3c7;"><i class="ti tabler-clock-hour-4" style="color:#d97706;"></i></div>
+                  <div>
+                    <p class="c-label">Pending</p>
+                    <p class="c-sub">Menunggu proses</p>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <div class="c-val">{{ number_format($pending) }}</div>
+                  <div class="growth-neutral">{{ $totalPermohonan > 0 ? round(($pending / $totalPermohonan) * 100, 1) : 0 }}%</div>
+                </div>
+              </li>
+              <li>
+                <div class="d-flex align-items-center">
+                  <div class="c-icon" style="background:#e0f2fe;"><i class="ti tabler-settings-automation" style="color:#0284c7;"></i></div>
+                  <div>
+                    <p class="c-label">Diproses</p>
+                    <p class="c-sub">Sedang berjalan</p>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <div class="c-val">{{ number_format($proses) }}</div>
+                  <div class="growth-neutral">{{ $totalPermohonan > 0 ? round(($proses / $totalPermohonan) * 100, 1) : 0 }}%</div>
+                </div>
+              </li>
+              <li>
+                <div class="d-flex align-items-center">
+                  <div class="c-icon" style="background:#dcfce7;"><i class="ti tabler-discount-check" style="color:#059669;"></i></div>
+                  <div>
+                    <p class="c-label">Selesai</p>
+                    <p class="c-sub">Sudah selesai</p>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <div class="c-val">{{ number_format($selesai) }}</div>
+                  <div class="growth-up">{{ $totalPermohonan > 0 ? round(($selesai / $totalPermohonan) * 100, 1) : 0 }}%</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </div>{{-- end row 2 --}}
+
+  </div>{{-- end analytics-section --}}
+
+  {{-- ══════════════════════════════════════════════════ --}}
+  {{-- ── TABEL DATA DETAIL (PALING BAWAH) ──────────────── --}}
+  {{-- ══════════════════════════════════════════════════ --}}
+  <div class="row g-3 mt-1">
+
     {{-- ── PERMOHONAN TERBARU ──────────────────────────── --}}
     <div class="col-12 col-xl-8">
       <div class="panel h-100" style="--panel-bg: linear-gradient(180deg, #f0fdf4 0%, #ffffff 100%); --panel-border: #dcfce7;">
@@ -934,10 +1495,10 @@
                       $st = $p->status;
                       $sc = match ($st) {
                           'pending' => 'st-pending',
-                          'proses' => 'st-proses',
+                          'proses'  => 'st-proses',
                           'selesai' => 'st-selesai',
                           'ditolak' => 'st-ditolak',
-                          default => 'st-default',
+                          default   => 'st-default',
                       };
                     @endphp
                     <span class="st-badge {{ $sc }}">{{ strtoupper($st) }}</span>
@@ -998,8 +1559,7 @@
 
           {{-- Shortcuts --}}
           <div style="border-top: 1px solid var(--panel-border, var(--border)); padding-top: 14px;">
-            <p
-              style="font-size:0.65rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:10px;">
+            <p style="font-size:0.65rem; font-weight:800; text-transform:uppercase; letter-spacing:1px; color:var(--muted); margin-bottom:10px;">
               Shortcuts</p>
             <div class="row g-2">
               <div class="col-6">
@@ -1080,5 +1640,6 @@
       </div>
     </div>
 
-  </div>
+  </div>{{-- end tabel data detail --}}
+
 @endsection
