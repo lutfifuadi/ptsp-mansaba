@@ -824,11 +824,21 @@
                   </td>
                   <td>
                     <div class="d-flex align-items-center gap-2">
-                      <div class="av">{{ substr($p->user->name ?? ($p->siswa->nama_lengkap ?? '?'), 0, 1) }}</div>
+                      @php
+                        $name = 'N/A';
+                        if($p->user_id) {
+                          $name = $p->user->name ?? 'N/A';
+                        } elseif($p->nisn) {
+                          $name = $p->siswa->nama_lengkap ?? 'Pemohon ('.$p->nisn.')';
+                        } elseif($p->data_form && ($p->data_form['nama_lengkap'] ?? null)) {
+                          $name = $p->data_form['nama_lengkap'];
+                        }
+                        $initials = collect(explode(' ', $name))->take(2)->map(fn($n) => strtoupper(substr($n, 0, 1)))->implode('');
+                      @endphp
+                      <div class="av">{{ $initials }}</div>
                       <div>
-          <div style="font-weight:700; font-size:0.88rem;">
-            {{ $p->user->name ?? ($p->siswa->nama_lengkap ?? 'N/A') }}</div>
-            <div style="font-size:0.75rem; color:var(--muted);">{{ $p->layanan->nama_layanan ?? '—' }}</div>
+                        <div style="font-weight:700; font-size:0.88rem;">{{ $name }}</div>
+                        <div style="font-size:0.75rem; color:var(--muted);">{{ $p->layanan->nama_layanan ?? '—' }}</div>
                       </div>
                     </div>
                   </td>

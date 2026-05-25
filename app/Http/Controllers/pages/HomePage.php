@@ -17,7 +17,7 @@ class HomePage extends Controller
     $selesai   = Permohonan::where('status', 'selesai')->count();
     $publik    = Permohonan::whereNull('user_id')->count();
     $totalLayanan = Layanan::where('is_active', true)->count();
-    $permohonanTerbaru = Permohonan::with(['layanan', 'siswa'])->latest()->take(5)->get();
+    $permohonanTerbaru = Permohonan::with(['layanan', 'siswa', 'user'])->latest()->take(5)->get();
 
     $totalTamu    = GuestBook::count();
     $tamuHariIni  = GuestBook::whereDate('created_at', now()->today())->count();
