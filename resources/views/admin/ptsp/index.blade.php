@@ -204,7 +204,6 @@
               </td>
               <td>
                 <div class="text-dark fw-medium small">{{ $p->created_at->locale('id')->translatedFormat('d F Y') }}</div>
-                <small class="text-muted">{{ $p->created_at->format('H:i') }} WIB</small>
               </td>
               <td class="text-center">
                 <a href="{{ route('admin.ptsp.show', $p->id) }}" class="btn btn-view btn-sm">
