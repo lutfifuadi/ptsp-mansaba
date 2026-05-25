@@ -203,7 +203,7 @@
                 <span class="st-badge st-{{ $p->status }}">{{ strtoupper($p->status) }}</span>
               </td>
               <td>
-                <div class="text-dark fw-medium small">{{ $p->created_at->format('d M Y') }}</div>
+                <div class="text-dark fw-medium small">{{ $p->created_at->locale('id')->translatedFormat('d F Y') }}</div>
                 <small class="text-muted">{{ $p->created_at->format('H:i') }} WIB</small>
               </td>
               <td class="text-center">
